@@ -1,2 +1,0 @@
-= Working with documents
-:page-topic-type: concept

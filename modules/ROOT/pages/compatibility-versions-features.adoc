@@ -1,0 +1,142 @@
+= Compatibility of Couchbase Features, Couchbase Versions and the Couchbase C (libcouchbase) SDK
+:navtitle: Compatibility
+
+== API Styles and versions
+
+Since the first release of libcouchbase 2.x in November 2012, we have added, in a compatible way, newer APIs to allow a faster and more efficient programming model.
+There are two broad categories of APIs in the library, one is known as _api2_ and the other is known as _api3_.
+
+API2 is the original C 2.0 API, and is available in all versions of libcouchbase, but is considered *deprecated* since version 2.6.0.
+It looks something like this:
+
+.API2 - Scheduling
+[source,c]
+----
+lcb_get_cmd_t gcmd = { 0 };
+lcb_get_cmd_t* gcmd_p = &gcmd;
+gcmd.version = 0;
+gcmd.v.v0.key = "key";
+gcmd.v.v0.nkey = nkey;
+lcb_get(instance, cookie, 1, &gcmd);
+lcb_wait(instance);
+----
+
+.API2 - Callback
+[source,c]
+----
+lcb_set_get_callback(get_callback);
+
+void get_callback(lcb_t instance, const void *cookie, lcb_error_t err, const lcb_resp_get_t *resp)
+{
+    if (err) {
+        // ...
+    } else {
+        printf("Value is: %.*s\n", (int)resp->v.v0.nbytes, resp->v.v0.bytes);
+    }
+}
+----
+
+API3 is available since version 2.5.6 (but see note below) and offers a more concise way of performing operations:
+
+.API3 - Scheduling
+[source,c]
+----
+lcb_CMDGET gcmd = { 0 };
+LCB_CMD_SET_KEY(&gcmd, "key", 3);
+lcb_get3(instance, cookie, &gcmd);
+----
+
+.API3 - Callback
+[source,c]
+----
+lcb_install_callback(instance, LCB_CALLBACK_GET, (lcb_RESPCALLBACK)get_callback);
+
+void get_callback(lcb_t instance, int cbtype, const lcb_RESPGET *resp)
+{
+    if (resp->rc) {
+        //
+    } else {
+        printf("Value is: %.*s\n", (int)resp->nvalue, resp->value);
+    }
+}
+----
+
+[NOTE]
+====
+While API3 is available from version 2.4.0, the above example will only work from version 2.5.6, although it will compile on any version.
+Versions prior to 2.5.6 require _explicit scheduling_ to be used in the application.
+Explicit scheduling requires invoking [.api]`lcb_sched_enter()` and [.api]`lcb_sched_leave()` around any code scheduling operations.
+Therefore the above snippet will work in version 2.4.0 and higher by using the following:
+
+[source,c]
+----
+lcb_sched_enter(instance);
+lcb_get3(instance, cookie, &gcmd);
+lcb_sched_leave(instance);
+----
+====
+
+It is recommended to upgrade to _api3_.
+Internally the older _api2_ implementation is simply a wrapper around _api3_, and _api3_ provides more concise code.
+Newer APIs and couchbase features will be added to _api3_ but not _api2_.
+Here are some things to keep in mind when porting:
+
+* You can mix and match callback and scheduling styles.
+This means that you can use [.api]`lcb_get3` together with [.api]`lcb_set_get_callback`, or [.api]`lcb_get` with [.api]`lcb_install_callback3`.
+* API3 allows you to have a single callback function that handles multiple operation types (refer to xref:document-operations.adoc[CRUD Document Operations using the C (libcouchbase) SDK with Couchbase Server]), so you can consolidate multiple `lcb_set_operation_callback` into a single _API3_ callback.
+* If you are using a version of libcouchbase prior to 2.5.6, be sure to invoke [.api]`lcb_sched_leave` _before_ [.api]`lcb_wait` (or before returning to the event loop, for non-blocking applications).
+Calling [.api]`lcb_sched_leave` is no longer required as of version 2.5.6
+* There is no explicit batching API in _api3_.
+If you wish to schedule multiple operations, simply invoke the relevant scheduling API (e.g.
+`lcb_operation3()`) multiple times, once for each set of input.
+* The memory ownership model and callback semantics are the same for both API versions.
+This means that key and value buffers provided to the library are copied into the library's buffers.
+Likewise this means that buffers received via callbacks are owned by the library's internal buffers.
+
+== Feature Compatibility
+
+To take advantage of all features offered by Couchbase Server, you need to know what version of the client provides compatibility for the features you want to use.
+The following matrix shows which versions of the C SDK client support the major features of each version of Couchbase Server.
+
+.Couchbase Server and SDK Supported Version Matrix
+[cols="6,5,5,5,5,5,5"]
+|===
+| Feature | Server 1.8 | Server 2.0 | Server 2.5 | Server 3.0 | Server 4.0 | Server 4.5
+
+7+| *Basic Features*
+
+| CRUD Operations
+6+| SDK 2.4.0
+
+| View Querying APIs
+6+| Partial support since SDK 2.4.0.
+Full row-based support since SDK 2.4.7
+
+7+| *Advanced Features*
+
+| Durability Requirements
+6+| 2.4.0
+
+| Fast (CCCP) Bootstrapping
+2+| Not Supported
+4+| 2.4.0
+
+| SSL Connectivity
+3+| Not Supported
+3+| 2.4.0
+
+| Partial Cross-SDK Data types
+2+| Not Supported
+4+| Since 2.0
+
+| N1QL Querying
+4+| Not Supported
+2+| Since 2.5.0
+
+7+| *Administrative Features*
+
+| Administrative API
+6+| Not Supported
+|===
+
+include::4.5@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]

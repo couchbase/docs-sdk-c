@@ -1,17 +1,50 @@
-= Connection string reference
+= Client Settings for the C (libcouchbase) SDK with Couchbase Server
+:navtitle: Client Settings
+:page-partial:
 
-[abstract]
-Connection strings have a variety of options that you can use.
+// tag::group[]
 
-Most of the information on this page applies to any component that uses the C SDK, assuming they accept a connection string as the way to connect to the cluster.
+== Configuring Overview
+
+In addition to the initial settings passed to the client via the connection string, you can adjust properties of the client to better function in your specific environment.
+The [.api]`lcb_cntl()` function is used to retrieve or modify library settings on a per-instance basis.
+The general syntax for retrieving a setting is:
+
+[source,c]
+----
+lcb_U32 curval;
+lcb_cntl(instance, LCB_CNTL_GET, LCB_CNTL_OPTIMEOUT, &curval);
+----
+
+And the general syntax for modifying a setting is:
+
+[source,c]
+----
+lcb_U32 newval = 4000000; // Set to 4 seconds
+lcb_cntl(instance, LCB_CNTL_SET, LCB_CNTL_OPTIMEOUT, &newval);
+----
+
+By design, this API works similarly to the `setsockopt()`, `getsockopt()`, and `ioctl()` interfaces.
+It is passed an instance to operate on, a _mode_ constant (what sort of access to perform), a _setting_ constant (which setting to access) and finally the _value_, which is either written to or read from depending on whether the _mode_ indicates a modification or a retrieval, respectively.
+
+The [.api]`lcb_cntl()` function returns an error code of `LCB_SUCCESS` if successful, `LCB_NOT_SUPPORTED` (or `LCB_ECTL_UNKNOWN`) if the _setting_ is not known.
+Always check the return code and be prepared to take action if the specific operation is not supported in the specific version of the library.
+
+The constants are well defined and do not change between versions.
+Thus, if you intend to modify an optional setting and also intend to compile against a possibly older version of the library where the constant is not defined, you can use the raw numeric literal (for example, `0x1E`) rather than the symbolic name.
+
+The most recent settings are always found in the [.path]_<libcouchbase/cntl.h>_ header file.
+
+Some options are also available in a simplified string format, in which the option names and values are strings.
+These may be set with the [.api]`lcb_cntl_string()` function or directly embedded into the connection string.
+
+Most of the information in this section applies to any component that uses the C SDK, assuming they accept a connection string as the way to connect to the cluster.
 Such is the case with the command-line tools or higher level SDKs that build on the C SDK.
 Some specific options are C-only and are marked as such.
 
-NOTE: This page provides connection string options as well as those options that can be passed to [.api]`lcb_cntl_string()` and only documents options that have a string alias.
+NOTE: This section provides connection string options as well as those options that can be passed to [.api]`lcb_cntl_string()` and only documents options that have a string alias.
 Other options are available directly via the [.api]`lcb_cntl()` function.
 For more details about those options, see the header file and API documentation for the [.api]`lcb_cntl()` function.
-
-== Connection string options
 
 The options listed in the following table can be passed to the connection string by using the form `couchbase://hosts/bucket?option1=value1&option2=value2` or via the [.api]`lcb_cntl_string()` function.
 Some options (where specified) are valid only in the connection string.
@@ -27,6 +60,13 @@ Some options were introduced in a later version (indicated next to the option).
 Almost all of the options have programmatic [.api]`lcb_cntl()` equivalents, which can be used instead.
 Some settings are only available via [.api]`lcb_cntl()` and are thus not listed here.
 
+[#settings-list]
+// tag::settings-list[]
+== Selected Configuration Options
+
+NOTE: This list does not contain _all_ possible settings, only the most common ones.
+See _<libcouchbase/cntl.h>_ for the full list of publically available settings.
+
 *Timeout values* should be specified using the decimal point, and are interpreted as seconds.
 To specify fractional second intervals, just use the fractional part of the value.
 For example, `operation_timeout=2.75` will set the timeout to 2750 milliseconds.
@@ -40,10 +80,21 @@ These values are only applicable for [.api]`lcb_cntl()` and only usable directly
 They indicate the value as a time interval specified in microseconds.
 The value itself should be a `lcb_U32`, a pointer to which is passed into [.api]`lcb_cntl()` as its last argument.
 
+[NOTE]
+====
+These settings may be combined in the connection string in a similar manner as query parameters in a URI; for example, you may use:
+
+----
+couchbase://cb1,cb2,cb3/bucket?operation_timeout=4&http_poolsize=0&fetch_mutation_tokens=1
+----
+
+To modify the operation timeout, disable HTTP socket pooling, and enable mutation tokens.
+====
+
 .Options reference
 [cols="100,100,293"]
 |===
-| Option Name (for use in connection string or [.api]`lcb_cntl_string()`) | Macro/Constant name (for use with [.api]`lcb_cntl()`) (_C Only_). | Description
+| Option Name (for use in connection string or [.api]`lcb_cntl_string()`) | Macro/Constant name (for direct use with the C SDK's[.api]``lcb_cntl()``). | Description
 
 | `operation_timeout` (Timeout)
 | [.opt]`LCB_CNTL_OP_TIMEOUT` (microseconds)
@@ -55,45 +106,96 @@ An operation might time-out if:
 * A server is taking too long to respond
 * An updated cluster configuration has not been promptly received
 
+When an operation times out, it will fail with the [.api]`LCB_ETIMEDOUT` error code.
+
+.Connection String Example
+----
+operation_timeout=2.5
+----
+
 | `config_total_timeout` (Timeout)
 | [.opt]`LCB_CNTL_CONFIGURATION_TIMEOUT` (microseconds)
-| This is how long the client will wait to obtain the initial configuration.
+a|
+This is how long the client will wait to obtain the initial configuration.
 This affects the maximum amount of time that the call to [.api]`lcb_wait()` will take after having called [.api]`lcb_connect()`.
-See also `config_node_timeout`
+If [.api]`lcb_get_bootstrap_status` is returning with [.api]`LCB_ETIMEDOUT` and you are running on a slow network, modifying this setting may increase the chances of success.
+
+See also `config_node_timeout`.
+
+.Connection String Example
+----
+config_total_timeout=5
+----
 
 | `config_node_timeout` (Timeout)
 | [.opt]`LCB_CNTL_CONFIG_NODE_TIMEOUT` (microseconds)
-| The per-node configuration timeout sets the amount of time to wait for each node within the bootstrap/configuration process.
+a|
+The per-node configuration timeout sets the amount of time to wait for each node within the bootstrap/configuration process.
 This interval is a subset of the `config_total_timeout` option mentioned above and is intended to ensure that the bootstrap process does not wait too long for a given node.
 
 Nodes that are physically offline may never respond, and it may take a long time until they are detected as being offline.
 See http://issues.couchbase.com/browse/CCBC-261[CCBC-261^] and http://issues.couchbase.com/browse/CCBC-313[CCBC-313^] for more reasons.
 
+.Connection String Example
+----
+config_node_timeout=2
+----
+
 | `views_timeout` (Timeout)
 | [.opt]`LCB_CNTL_VIEW_TIMEOUT` (Microseconds)
-| The I/O timeout for view operations
+a|
+The I/O timeout for view operations.
+
+.Connection String Example
+----
+view_timeout=75
+----
 
 | `n1ql_timoeut` (Timeout).
 Since 2.5.3
 | [.opt]`LCB_CNTL_N1QL_TIMEOUT` (Microseconds)
-| The I/O timeout for N1QL queries.
+a|
+The I/O timeout for N1QL queries.
+
+.Connection String Example
+----
+n1ql_timeout=75
+----
 
 | `durabilty_timeout` (Timeout)
 | [.opt]`LCB_CNTL_DURABILITY_TIMEOUT` (microseconds)
-| The default timeout for `lcb_durability_poll()` This is the time the client will spend sending repeated probes to a given key's vBucket masters and replicas before they are deemed not to have satisfied the durability requirements.
+a|
+The default timeout for `lcb_durability_poll()` This is the time the client will spend sending repeated probes to a given key's vBucket masters and replicas before they are deemed not to have satisfied the durability requirements.
+
+.Connection String Example
+----
+durability_timeout=5
+----
 
 | `durabilty_interval` (Timeout)
 | [.opt]`LCB_CNTL_DURABILITY_INTERVAL` (Microseconds)
-| This is the time the client will wait between repeated probes to a given server.
+a|
+This is the time the client will wait between repeated probes to a given server.
+
+.Connection String Example
+----
+durability_interval=0.0001
+----
 
 | `randomize_nodes` (Boolean)
 | _connection string only_
-| This option controls whether the connection attempts for configuration retrievals should be done in the supplied order or whether they should be randomized.
+a|
+This option controls whether the connection attempts for configuration retrievals should be done in the supplied order or whether they should be randomized.
 This setting is off by default.
 _To affect the order of the initial connection, this option must be supplied in the connection string_.
 
 For the initial connection, the default order is the list of hosts provided in the structure.
 For subsequent connections, this is the order of nodes as received by the server.
+
+.Connection String Example
+----
+randomize_nodes=1
+----
 
 | `config_cache` (Path)
 | [.opt]`LCB_CNTL_CONFIGCACHE` (Path, a pointer to `char` buffer).
@@ -106,14 +208,26 @@ Otherwise, the file will never be created.
 
 NOTE: Configuration cache is not supported for memcached buckets
 
+.Connection String Example
+----
+config_cache=/tmp/cb_config_cache
+----
+
 | `config_cache_ro` (Path).
 Since 2.4.8
 | [.opt]`LCB_CNTL_CONFIGCACHE_RO` (Path)
-| This is identical to the `config_cache` option, except that it guarantees that the library will never overwrite or otherwise modify the path specified.
+a|
+This is identical to the `config_cache` option, except that it guarantees that the library will never overwrite or otherwise modify the path specified.
+
+.Connection String Example
+----
+config_cache_ro=1
+----
 
 | `detailed_errcodes` (Boolean)
 | [.opt]`LCB_CNTL_DETAILED_ERRCODES` (Boolean)
-| Sets the behavior for reporting network errors.
+a|
+Sets the behavior for reporting network errors.
 By default network errors are returned as `LCB_NETWORK_ERROR`.
 Return codes for compatibility reasons.
 More detailed error codes may be available by enabling this option that will return appropriate error codes with a category `LCB_ERRTYPE_NETWORK`.
@@ -122,18 +236,36 @@ Using this option means your programming model is centered around the various `L
 
 For users of higher level languages (wrapping the library), this may result in different exceptions being thrown, but may also help debug network issues.
 
+.Connection String Example
+----
+detailed_errcodes=1
+----
+
 | `http_poolsize` (Integer)
 | [.opt]`LCB_CNTL_HTTP_POOLSIZE`
-| Set the maximum pool size for pooled HTTP (view or N1QL request) sockets.
+a|
+Set the maximum pool size for pooled HTTP (view or N1QL request) sockets.
+A setting of `0` disables pooling.
+
+.Connection String Example
+----
+http_poolsize=0
+----
 
 | `error_thresh_delay` (Timeout)
 | [.opt]`LCB_CNTL_CONFDELAY_ERRTHRESH` (microseconds)
-| This option controls refreshing the configuration upon the receipt of errors.
+a|
+This option controls refreshing the configuration upon the receipt of errors.
 The client throttles how many requests for a new configuration it will send in a given interval—this is to avoid sending many successive requests in the event of a non-transient error condition.
 
 This setting controls the duration of this interval.
 The value can be adjusted upwards if operating in an environment where it is normal to receive many timeouts, such as in a resource-contented server or network.
 It can be adjusted downwards if timeouts are expected only in situations where the cluster has changed state.
+
+.Connection String Example
+----
+error_thresh_delay=7.5
+----
 
 | `bootstrap_on` (String; see description)
 | _connection string only_
@@ -153,28 +285,45 @@ Possible values for this setting are:
 * `both`, which attempts both (as above).
 _This option can only be set from within the connection string_.
 
+.Connection String Example
+----
+bootstrap_on=http
+----
+
 | `fetch_mutation_tokens` (Boolean).
 Since 2.5.2
 | [.opt]`LCB_CNTL_FETCH_MUTATION_TOKENS` (Boolean)
-| Whether the server should send an additional 16 bytes of metadata for each mutation response.
-This option is off by default but is required for xref:durability.adoc#lcb_enhanced_dur[Enhanced Durability (Couchbase 4.0)].
+a|
+Whether the server should send an additional 16 bytes of metadata for each mutation response.
+This option is off by default but is required for xref:durability.adoc#enhanced-durability[Enhanced Durability].
 This option should be set either in the connection string, or _immediately_ calling [.api]`lcb_create()`.
 For non-C applications, this must always be in the connection string.
+
+.Connection String Example
+----
+fetch_mutation_tokens=1
+----
 
 | `dur_mutation_tokens` (Boolean).
 Since 2.5.2
 | [.opt]`LCB_CNTL_DURABILITY_MUTATION_TOKENS` (Boolean)
 a|
-Determines if xref:durability.adoc#lcb_enhanced_dur[Enhanced Durability (Couchbase 4.0)] is used automatically.
+Determines if xref:durability.adoc#enhanced-durability[Enhanced Durability] is used automatically.
 It is enabled by default if `fetch_synctokens` is also enabled.
 Applications can take advantage of this new feature without modifying any code other than enabling these settings.
 
 NOTE: If you are checking durability constraints across client instances, and `fetch_synctokens` is enabled, then this setting should be disabled.
 Otherwise, the client will fail to retrieve the [.api]`lcb_SYNCTOKEN` (see more about this in the Enhanced Durability section).
 Alternatively, you can supply the sync token directly in the command structure.
-|===
 
-== Connection string schemes
+.Connection String Example
+----
+dur_mutation_tokens=1
+----
+|===
+// end::settings-list[]
+
+== Connection String
 
 This section provides a reference point for various schemes and port parameters that they represent (in case alternate ports are required).
 
@@ -229,7 +378,7 @@ The bootstrap process will function identically to the `couchbase://` scheme.
 If using non-default ports, then only HTTP bootstrap will be performed
 
 ----
-http://localhost:9000/mybucket
+http://localhost:8091/mybucket
 ----
 
 | `memcached://` (*Experimental*)
@@ -251,6 +400,8 @@ This scheme is experimental but provides the highest degree of flexibility.
 The format is _host:port=type_ where _type_ is one of `mcd` (for couchbase Memcached), `mcds` (for SSL-enabled Memcached), `http` (for the HTTP REST API) and `mccompat` (for standalone Memcached)
 
 ----
-couchbase+explicit://host1:8091=http,host1:11210=mcd,host2:9000=http,host2:12000=mcd/mybucket
+couchbase+explicit://host1:8091=http,host1:11210=mcd,host2:8091=http,host2:12000=mcd/mybucket
 ----
 |===
+
+// end::group[]

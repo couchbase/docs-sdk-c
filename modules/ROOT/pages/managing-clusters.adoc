@@ -1,0 +1,81 @@
+= Managing Clusters Using the C (libcouchbase) SDK with Couchbase Server
+:navtitle: Managing Clusters
+
+The primary means for managing clusters is through the Couchbase Web UI which provides an easy to use interface for adding, removing, monitoring and modfying buckets.
+In some instances you may wish to have a programmatic interface, for example if running as part of a setup script, or if setting up buckets for testing.
+
+You may perform Couchbase management operations from any HTTP client (e.g.
+_libcurl_).
+The C SDk comes with an embedded HTTP client which may also be used to execute management operations.
+The SDK also provides high level management functions for dealing with N1QL indexes.
+
+== HTTP Client Overview
+
+The HTTP client is used via the [.api]`lcb_http3()` function.
+This function takes an [.api]`lcb_CMDHTTP` structure containing the endpoint to contact and any payload information.
+
+The [.param]`lcb_CMDHTTP::type` field should be set to the appropriate API type for the operation.
+The types are:
+
+* [.api]`LCB_HTTP_TYPE_VIEWS` for design document management
+* [.api]`LCB_HTTP_TYPE_MANAGEMENT` for adding/removing/modifying buckets
+
+You should also set the URL path via [.api]`LCB_CMD_SET_KEY`.
+The path should be the full path to the API endpoint, but without the host and scheme.
+
+Other important fields within the [.api]`lcb_CMDHTTP` structure are:
+
+* [.param]`username`, [.param]`password`: The username and password to use for authorization.
+This may be left empty (in which case, the bucket credentials are used), or populated with the administrative credentials in the case of cluster management operations.
+* [.param]`method`: The HTTP method to use.
+This is represented by one of the `LCB_HTTP_METHOD_*` constants, for example [.api]`LCB_HTTP_METHOD_POST` or [.api]`LCB_HTTP_METHOD_GET`.
+* [.param]`body`, [.param]`nbody`: If the request requires a payload, it should be specified in these fields, which contain the body buffer and its size, respectively.
+* [.param]`content_type`: If using a request _body_, many Couchbase REST APIs will also require that the `Content-Type` HTTP header be set.
+Be sure to set this to the appropriate value (usually `"application/json"`).
+
+[source,c]
+----
+// Install the callback..
+lcb_install_callback3(instance, LCB_CALLBACK_HTTP, (lcb_RESPCALLBACK)http_callback);
+
+// Create the required parameters according to the Couchbase REST API
+std::string path("/pools/default/buckets");
+
+std::string params;
+params += "name=newBucket&";
+params += "type=couchbase&";
+
+// authType should always be SASL. You can leave the saslPassword field
+// empty if you don't want to protect this bucket.
+params += "authType=sasl&saslPassword=&";
+params += "ramQuotaMB=256";
+printf("Using %s\n", params.c_str());
+
+lcb_CMDHTTP htcmd = { 0 };
+LCB_CMD_SET_KEY(&htcmd, path.c_str(), path.size());
+htcmd.body = params.c_str();
+htcmd.nbody = params.size();
+htcmd.content_type = "application/x-www-form-urlencoded";
+htcmd.method = LCB_HTTP_METHOD_POST;
+htcmd.type = LCB_HTTP_TYPE_MANAGEMENT;
+htcmd.username = "Administrator";
+htcmd.password = "123456";
+lcb_http3(instance, NULL, &htcmd);
+----
+
+And in the callback:
+
+[source,c]
+----
+static void
+http_callback(lcb_t, int, const lcb_RESPHTTP *resp)
+{
+    printf("Operation completed with HTTP code: %d\n", resp->htstatus);
+    printf("Payload: %.*s\n", (int)resp->nbody, resp->body);
+}
+----
+
+== N1QL Index Management
+
+You can manage N1QL indexes using the [.api]`lcb_n1x_create` family of functions which will create, destroy, and list N1QL indexes.
+Refer to the `<libcouchbase/ixmgmt.h>` file for more details.

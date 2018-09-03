@@ -1,91 +1,152 @@
-= Managing server connections
+= Managing Connections Using the C (libcouchbase) SDK with Couchbase Server
+:navtitle: Managing Connections
+:page-partial:
 :page-topic-type: concept
 
 [abstract]
-This section will guide you through the process and steps of configuring the client to talk to a variety of cluster setups and options.
+This section describes how to connect the C SDK to a Couchbase cluster and bucket.
+It contains best practices as well as information on the connection string,  SSL and other advanced connection options.
 
-[#concept_khq_vhq_44]
-== Connection parameters
+== Creating a handle
 
-The client object must first be instantiated using the [.api]``lcb_create_st``structure.
-It  contains fields needed to initialize the client with the proper parameters to connect to a bucket.
-The structure contains these notable fields: `connstr` and `passwd`.
-
-The `connstr` field accepts a specifier known as a [.term]_connection string_ that indicates which bucket to connect to and which hosts comprise the cluster.
-The `passwd`__ field should contain your bucket password if your bucket has been configured with authentication.
-
-In the simplest form, initialize your structure like so:
-
-[source,c]
-----
-struct lcb_create_st cropts;
-memset(&cropts, 0, sizeof cropts);
-cropts.version = 3;
-cropts.v.v3.connstr = "couchbase://localhost/mybucket";
-cropts.v.v3.passwd = "topsecret";
-----
-
-In the example, `localhost` is a host of your cluster, `mybucket` is the bucket you want to connect to, and `passwd` is the bucket password.
-
-For increased redundancy, you can specify _multiple_ hosts, separated by a semicolon, like `"couchbase://host1.net;host2.net/mybucket"`.
-Specifying multiple hosts allows the library to connect to the cluster as long as any of the hosts specified are up.
-
-== Initializing the client handle
-
-After the [.api]`lcb_create_st` structure has been initialized, you can create your instance object - or the opaque handle that represents the connection to your bucket:
+A library handle is created using the [.api]`lcb_create()` function which accepts an out-pointer to a handle and a parameters structure specifying some core options.
 
 [source,c]
 ----
 lcb_t instance = NULL;
-lcb_error_t err = lcb_create(&instance, &cropts);
-if (err != LCB_SUCCESS) {
-    fprintf(stderr, "Could not create library handle: %s\n", lcb_strerror(NULL, err));
+lcb_create_st options;
+memset(&options, 0, sizeof options);
+options.version = 3;
+options.v.v3.connstr = "couchbase://10.3.53.2/my-bucket";
+options.v.v3.passwd = "s3cr3t";
+lcb_error_t rc = lcb_create(&instance, &options);
+if (rc != LCB_SUCCESS) {
+    printf("Couldn't create handle: %s\n", lcb_strerror(NULL, rc));
 }
 ----
 
-The [.api]`lcb_create()` function initializes and allocates a new handle with the settings provided inside the [.api]`lcb_create_st` object.
+include::4.5@sdk:shared:partial$lcb-pars-shared.adoc[tag=connstr-intro]
 
-After the handle has been initialized, a connection to the cluster must be scheduled.
-Invoke the [.api]`lcb_connect()` call to initiate the connection sequence.
-After the connection is scheduled, you need to wait for the connection to actually complete by using the [.api]`lcb_wait()` function, which waits for pending I/O to complete on behalf of the library.
-Finally, when lcb_wait() returns, use the [.api]`lcb_get_bootstrap_status()` function to determine if the connection completed successfully or if an error occurred:
+Because the C SDK is used as a foundation for other SDKs, it allows for a common connection specification over all those other SDKs.
 
+NOTE: See xref:client-settings.adoc[Client Settings for the C (libcouchbase) SDK with Couchbase Server], which contains some additional connection string options.
+
+If the bucket is password protected, the [.param]`passwd` field may be set.
+Note that the bucket password (set when creating a bucket) is not the same as the administrative password for Couchbase.
+
+When creating a new handle, you can also specify an alternate event loop plugin to use.
+This is required if you want to use your library in non-blocking mode with your existing non-blocking application.
+
+Once your handle has been instantiated you may configure it additionally using the [.api]`lcb_cntl()` family of functions.
+
+Note that a successful [.api]`lcb_create` invocation does not mean the handle has been connected to the bucket, but rather that memory has been allocated for the handle so that it may be connected in subsequent calls.
+
+== Connecting a handle
+
+Once a handle has been instantiated it should be connected.
+Connecting a handle involves performing the following steps:
+
+. Calling [.api]`lcb_connect` to schedule the connection.
+. Yielding to network I/O, either explicitly via [.api]`lcb_wait` or implicitly by returning control to the event loop
+. Retrieving the connection status via [.api]`lcb_get_bootstrap_status`.
+If running in non-blocking mode, installing the bootstrap callback ([.api]`lcb_get_bootstrap_callback`) should have a similar effect
++
 [source,c]
 ----
-lcb_error_t err;
-lcb_connect(instance);
+lcb_error_t rc;
+rc = lcb_connect(instance);
+if (rc != LCB_SUCCESS) {
+    /* Couldn't schedule connection. Internal issue or problem with the socket */
+    printf("Couldn't schedule bootstrap!: %s\n", lcb_strerror(NULL, rc));
+    lcb_destroy(instance);
+}
 lcb_wait(instance);
-err = lcb_get_bootstrap_status(instance);
-if (err != LCB_SUCCESS) {
-  fprintf(stderr, "Couldn’t bootstrap: %s\n", lcb_strerror(instance, err));
+rc = lcb_get_bootstrap_status(instance);
+if (rc != LCB_SUCCESS) {
+    printf("Bootstrapping failed: %s\n", lcb_strerror(NULL, rc));
+    lcb_destroy(instance);
 }
 ----
 
+Always check the return value of [.api]`lcb_get_bootstrap_status` to ensure the handle is properly connected.
+Performing operations on a non-bootstrapped handle will fail with [.api]`LCB_CLIENT_ETMPFAIL`.
+
+== Handle lifetime
+
+The [.api]`lcb_t` object (commonly referred to as _instance_) represents a connection between your application and a Couchbase bucket.
+Because the bucket itself may consist of several TCP connections, and because there is a substantial amount of CPU and kernel overhead in creating and destroying these connections, it is recommended that [.api]`lcb_t` objects be kept alive for the lifetime of the application rather than creating and destroying them frequently.
+
+Once the [.api]`lcb_t` is no longer required, you can call [.api]`lcb_destroy()` on it.
+The handle should not be destroyed within a callback as it will likely cause it to crash.
+Additionally, memory leaks may occur if there are pending uncompleted operations (e.g.
+[.api]`lcb_get3`, [.api]`lcb_store3`).
+
+== Configuring the handle
+
+Once the handle is created, it may be xref:client-settings.adoc[configured] by the [.api]`lcb_cntl` and [.api]`lcb_cntl_string` functions.
+
+// tag::group[]
+
+[#ssl]
+// tag::ssl[]
 == Connecting with SSL
+
+include::4.5@sdk:shared:partial$lcb-pars-shared.adoc[tag=connstr-intro]
 
 Couchbase Sever features the ability to have clients communicate securely via SSL.
 
 To use SSL, you need Couchbase Server Enterprise 3.0 or later
 
-. Obtain the SSL certificate used by the Cluster (\...).
+. Obtain the SSl certificate used by the Cluster
 . Make the certificate available to the file system of the client host.
-. Employ the `couchbases://` scheme for the `connstr` field.
+. Employ the `couchbases://` scheme for the connection string.
 . Specify the local path to the certificate as the value for the `certpath` field.
 
-To connect to the `mybucket` bucket on SSL-enabled Cluster at the node 10.3.4.33, with the certificate saved as `/var/cbcert.pem`:
+To connect to a bucket on an SSL-enabled Cluster at the node 10.3.4.33, with the certificate saved as `/var/cbcert.pem`:
 
 [source,c]
 ----
-cropts.v.v3.connstr = "couchbases://10.3.4.33/mybucket?certpath=/var/cbcert.pem";
+couchbases://10.3.4.33?certpath=/var/cbcert.pem
+----
+// end::ssl[]
+
+[#multihost]
+// tag::multihost[]
+== Specifying Multiple Hosts
+
+You can specify multiple hosts in the connection string so that the client may be able to connect even if the cluster topology changed.
+To specify multiple hosts, separate them using a comma:
+
+----
+couchbase://host1.com,host2.com,host3.com
 ----
 
-== Closing the connection
+See xref:failure-considerations.adoc[Failure considerations for the C (libcouchbase) SDK in Couchbase] for more information about handling cluster topology changes.
 
-When you no longer need the connection, destroy the library handle by using [.api]`lcb_destroy()`.
+NOTE: You are not required to enumerate or pass all Couchbase cluster nodes to the client.
+The client only needs to know about a _single_ node which is a member of the cluster.
+Once the client has connected to the node, it will query that node about the cluster topology, which in turn contains information about all Couchbase nodes and the services they contain.
+// end::multihost[]
 
-[source,c]
-----
-lcb_destroy(instance);
-----
+[#configcache]
+// tag::configcache[]
+== Configuration Cache
 
-After [.api]`lcb_destroy()` is called on an instance, the instance may no longer be passed to any other function.
+In environments when lots of short-lived connections are made to Couchbase (for example, a small command-line utility or a fork-and-execute CGI application) the overhead in actually bootstrapping the client may be significant.
+This is because the client must retrieve the configuration from the cluster, and involves several additional TCP requests and in many cases an additional TCP connection.
+
+You can bypass the initial network bootstrap phase by using the `config_cache` directive in the connection string.
+The `config_cache` option accepts a path to a local file (the file should not exist when using for the first time).
+When performing the bootstrap process, the client will first check the contents of the given file to see if it contains an existing cluster configuration, and if it does, will use the file as the bootstrap source.
+If the file does not contain a configuration the client will then retrieve the configuration from the network and then write it to the file, so that future attempts will use the configuration file.
+
+NOTE: The `config_cache` feature is intended only for short-lived connections.
+During a cluster-side topology change the client _will_ need to retrieve the configuration from the network as the file-based configuration will become invalid.
+// end::configcache[]
+
+== Additional Options
+
+You can pass additional options in the connection string using the URL query format: `couchbase://location-info?option1=value1&option2=value2&optionN=valueN`.
+A list of options may be found in xref:client-settings.adoc[Client Settings]
+
+// end::group[]

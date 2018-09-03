@@ -1,0 +1,162 @@
+= Asynchronous Progamming Using the C (libcouchbase) SDK with Couchbase Server
+:navtitle: Asynchronous Programming
+:page-topic-type: concept
+
+[abstract]
+You can integrate the C SDK with many non-blocking (asynchronous, reactive) I/O frameworks, or _event loops_.
+When the C SDK is integrated with an event loop, it becomes a true non-blocking library that works in harmony with the rest of your non-blocking application.
+You can integrate with popular event loop libraries (if supported) through built-in plugins or write your own plugin for custom I/O libraries.
+
+When the library is used in non-blocking (or asynchronous mode), calls to [.api]`lcb_wait` are replaced with yielding to the event loop: Rather than calling [.api]`lcb_wait` to block until an operation is complete, the operation's event loop itself will wait for pending Couchbase operations to complete alongside other non-Couchbase I/O, if necessary.
+When the operation has been completed, the corresponding callback (usually set via [.api]`lcb_install_callback3`) is invoked with the result.
+
+== Using a Built-In I/O Plugin
+
+The library contains I/O plugins for common libraries such as _libevent_, _libev_, and _libuv_.
+If your application makes use of any of these libraries for its purposes, integrating with the library is as simple as providing an instance of such an implementation to the `lcb_create_st` structure.
+Here is an example using [.api]`libevent`:
+
+[source,c]
+----
+static void
+bootstrap_callback(lcb_t instance, lcb_error_t err)
+{
+    lcb_CMDSTORE cmd = { 0 };
+    LCB_CMD_SET_KEY(&cmd, "foo", 3);
+    LCB_CMD_SET_VALUE(&cmd, "bar", 3);
+    cmd.operation = LCB_SET;
+    err = lcb_store3(instance, NULL, &cmd);
+}
+
+static void get_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    const lcb_RESPGET *rg = (const lcb_RESPGET *)rb;
+    fprintf(stdout, "I stored and retrieved the key 'foo'. Value: %.*s.\n", (int)rg->nvalue, rg->value);
+    event_base_loopbreak((void *)lcb_get_cookie(instance));
+}
+
+static void store_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    lcb_error_t rc;
+    lcb_CMDGET gcmd =  { 0 };
+    LCB_CMD_SET_KEY(&gcmd, rb->key, rb->nkey);
+    rc = lcb_get3(instance, NULL, &gcmd);
+}
+
+static lcb_io_opt_t
+create_libevent_io_ops(struct event_base *evbase)
+{
+    struct lcb_create_io_ops_st ciops;
+    lcb_io_opt_t ioops;
+    lcb_error_t error;
+
+    memset(&ciops, 0, sizeof(ciops));
+    ciops.v.v0.type = LCB_IO_OPS_LIBEVENT;
+    ciops.v.v0.cookie = evbase;
+
+    error = lcb_create_io_ops(&ioops, &ciops);
+    if (error != LCB_SUCCESS) {
+        fprintf(stderr, "Failed to create an IOOPS structure for libevent: %s\n", lcb_strerror(NULL, error));
+        exit(EXIT_FAILURE);
+    }
+
+    return ioops;
+}
+
+static lcb_t
+create_libcouchbase_handle(lcb_io_opt_t ioops)
+{
+    lcb_t instance;
+    lcb_error_t error;
+    struct lcb_create_st copts;
+
+    memset(&copts, 0, sizeof(copts));
+
+    /* If NULL, will default to localhost */
+    copts.version = 3;
+    copts.v.v3.connstr = "couchbase://localhost/default";
+    copts.v.v0.io = ioops;
+    error = lcb_create(&instance, &copts);
+
+    /* Set up the callbacks */
+    lcb_set_bootstrap_callback(instance, bootstrap_callback);
+    lcb_install_callback3(instance, LCB_CALLBACK_GET, get_callback);
+    lcb_install_callback3(instance, LCB_CALLBACK_STORE, store_callback);
+    lcb_connect(instance);
+    return instance;
+}
+
+/* This example shows how we can hook ourself into an external event loop.
+ * You may find more information in the blogpost: http://goo.gl/fCTrX */
+int main(void)
+{
+    struct event_base *evbase = event_base_new();
+    lcb_io_opt_t ioops = create_libevent_io_ops(evbase);
+    lcb_t instance = create_libcouchbase_handle(ioops);
+
+    /*Store the event base as the user cookie in our instance so that
+     * we may terminate the program when we're done */
+    lcb_set_cookie(instance, evbase);
+
+    /* Run the event loop */
+    event_base_loop(evbase, 0);
+
+    /* Cleanup */
+    event_base_free(evbase);
+    lcb_destroy(instance);
+    exit(EXIT_SUCCESS);
+}
+----
+
+NOTE: The previous example has some error checking left out for brevity.
+A more complete example can be found inside the [.path]_example/libeventdirect_ directory within the source tree.
+
+In the above example, the [.api]`lcb_create_io_opts()` function is used to instantiate the built-in _libevent_ implementation of the IOPS API.
+Note that the `lcb_create_io_ops_st` structure contains a `cookie` field which should contain a pointer to an implementation-defined object; in the case of the _libevent_ implementation this should be a pointer to an existing `struct event_base` (which is an instance of the libevent loop itself).
+Each of the built-in implementations contains its own header file that provides more detail about what the cookie field is supposed to contain.
+The header files are named in the form of `+${TYPE}_io_opts.h+`, where `+${TYPE}+` is the name of the implementation.
+They are located inside the [.path]_libcouchbase_ include directory upon installation, and are located in the [.path]_plugins_ directory within the source tree.
+
+After the IOPS instance has been created, it is set in the `io` field of the `lcb_create_st` structure and the `lcb_t` object is created.
+
+== Creating a Custom I/O Implementation
+
+NOTE: The I/O interface is a work in progress and subject to change
+
+A custom I/O implementation can be created by implementing the interface, featured in [.path]_<libcouchbase/iops.h>_.
+The I/O abstraction layer known as IOPS (I/O OperationS) communicates with the underlying platform and I/O frameworks, instructing the implementation to:
+
+* Create and connect sockets
+* Reads and write from and to the socket (_I/O_)
+* Scheduling callbacks to be invoked when a socket is available for writing or reading (_events_)
+* Scheduling callbacks to be invoked after a certain period has elapsed (_timers_)
+
+== Usage Differences in Non-Blocking Mode
+
+For the most part, programming with libcouchbase is the same regardless of whether you're using it in a blocking or non-blocking application.
+There are some key differences to note, however:
+
+* [.api]`lcb_wait()` should not be called in non-blocking mode.
+By definition, the [.api]`lcb_wait()` routine will block the application until all pending I/O completes.
+In non-blocking mode the pending I/O is completed when control is returned back to the event loop.
+* You must not schedule operations until the bootstrap callback, [.api]`lcb_set_bootstrap_callback()`, has been invoked.
+This is because operations must be forwarded to a destination node in the cluster depending on the key specified within the operation.
+Until the client has been bootstrapped it does not know how to forward keys to any nodes.
++
+Unlike blocking mode where you may simply do:
++
+[source,c]
+----
+lcb_connect(instance);
+lcb_wait(instance);
+if (lcb_get_bootstrap_status(instance) == LCB_SUCCESS)) {
+  // Start operations
+}
+----
++
+You need to use the callback variant that notifies your application when the library is ready.
+
+* You are responsible for ensuring that the `iops` structure passed to the library remains valid until [.api]`lcb_destroy` is invoked.
+Likewise, you are responsible for freeing the `iops` structure via [.api]`lcb_destroy_io_opts()` when it is no longer required.
+* Currently the library does blocking DNS look-ups via the standard [.api]`getaddrinfo()` call.
+Typically this should not take a long time but may potentially block your application if an invalid host name is detected or the DNS server in use is slow to respond.
