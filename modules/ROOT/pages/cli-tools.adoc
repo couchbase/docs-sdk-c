@@ -1,0 +1,14 @@
+= Client command-line tools
+
+[abstract]
+Some command line utilities are available as an optional add-on with the C client library.
+These tools provide quick and common access to cluster operations without requiring you to write code.
+
+The C library contains several command line tools in its source repository.
+When distributed in binary form, they are available as an add-on package on Linux (`libcouchbase2-bin`).
+They come bundled with the default packages on OS X and Windows.
+
+NOTE: The C client tools are distinct from the Couchbase Server command-line tools that are available with the server installation
+
+The tools use the C SDK internally and thus function similarly in many respects to other libraries built on top of the C SDK.
+The full reference documentation is available in the API reference in HTML format and as standard Unix man pages (where applicable).

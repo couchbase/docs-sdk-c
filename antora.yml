@@ -1,0 +1,7 @@
+name: c-sdk
+version: '2.5'
+title: C SDK
+start_page: c-intro.adoc
+nav:
+- modules/ROOT/nav.adoc
+server_version: '4.1'

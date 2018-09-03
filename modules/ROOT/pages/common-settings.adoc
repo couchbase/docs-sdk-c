@@ -1,0 +1,57 @@
+= Common client settings
+:page-topic-type: concept
+
+[abstract]
+Common client settings can be modified via the [.api]`lcb_cntl()` API.
+
+== Operation timeouts
+
+Operation timeouts set the upper limit on the time the library will wait for an operation to receive a reply before invoking the callback for the operation with an error code of `LCB_ETIMEDOUT`.
+When using the library in blocking mode this also determines the amount of time your program can block before having control returned to your application.
+You should generally modify timeouts if you are in blocking mode and your application has a requirement for faster responsiveness (in this case, the timeouts should be lowered at the risk of receiving higher errors during network slowdowns) or if you have a slow network (in which case the timeouts should be increased, potentially increasing the time your application blocks).
+
+As there are several types of operations that can be done with the library, there are several timeout settings that can be applied.
+Here they are:
+
+.Operation Timeouts
+|===
+| Setting | Description
+
+| `LCB_CNTL_OP_TIMEOUT`
+| The timeout setting for key-value operations
+
+| `LCB_CNTL_VIEW_TIMEOUT`
+| The timeout setting for _view_ requests.
+In this sense, it means HTTP operations created with `LCB_HTTP_TYPE_VIEWS`
+
+| `LCB_CNTL_DURABILITY_TIMEOUT`
+| The timeout setting indicating how long to poll the nodes to ensure the persistence and/or replication of items to their respective nodes
+
+| `LCB_CNTL_HTTP_TIMEOUT`
+| The timeout setting for HTTP operations created with `LCB_HTTP_TYPE_MANAGEMENT`
+|===
+
+== Bootstrap options
+
+Bootstrap options control how the client requests a new configuration from the cluster.
+This affects both the initial connection to the cluster (i.e.
+[.api]`lcb_connect()`) as well as the behavior when the client determines a new configuration is needed.
+
+.Bootstrap Options
+|===
+| Setting | Description
+
+| `LCB_CNTL_CONFIGURATION_TIMEOUT`
+| Controls the total amount of time to wait for a new configuration to be received from the cluster.
+This is mainly useful during the initial bootstrap process (i.e.
+[.api]`lcb_connect()`).
+This sets the maximum amount of time that the library will spend trying to retrieve a configuration before the bootstrap callback is invoked with an error (and/or [.api]`lcb_wait()` returns after an initial [.api]`lcb_connect()`).
+
+| `LCB_CNTL_CONFIG_NODE_TIMEOUT`
+| When retrieving a configuration, this determines the maximum amount of time to wait for a node to respond before requesting the configuration from the next node in the list.
+Note that the `LCB_CNTL_CONFIGURATION_TIMEOUT` _overrides_ this option - in the sense that the client will never wait any longer than `LCB_CNTL_CONFIGURATION_TIMEOUT` time to retrieve the initial configuration.
+
+| `LCB_CNTL_RANDOMIZE_BOOTSTRAP_HOSTS`
+| When the library receives multiple nodes in the connection string (or there are multiple nodes in the cluster), it will start contacting the first node in the list and progress onwards when a new configuration is required.
+This setting determines whether this access should be random or whether to contact the nodes in the order they were passed.
+|===

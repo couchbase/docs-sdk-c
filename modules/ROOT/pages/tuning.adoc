@@ -1,0 +1,43 @@
+= Tuning and configuring
+:page-topic-type: concept
+
+[abstract]
+You can change library defaults and behavior to better adapt to your application.
+
+In addition to the initial settings passed to the client via the connection string, you can adjust properties of the client to better function in your specific environment.
+The [.api]`lcb_cntl()` function is used to retrieve or modify library settings on a per-instance basis.
+The general syntax for retrieving a setting is:
+
+[source,c]
+----
+lcb_U32 curval;
+lcb_cntl(instance, LCB_CNTL_GET, LCB_CNTL_OPTIMEOUT, &curval);
+----
+
+And the general syntax for modifying a setting is:
+
+[source,c]
+----
+lcb_U32 newval = 4000000; // Set to 4 seconds
+lcb_cntl(instance, LCB_CNTL_SET, LCB_CNTL_OPTIMEOUT, &newval);
+----
+
+By design, this API works similarly to the `setsockopt()`, `getsockopt()`, and `ioctl()` interfaces.
+It is passed an instance to operate on, a _mode_ constant (what sort of access to perform), a _setting_ constant (which setting to access) and finally the _value_, which is either written to or read from depending on whether the _mode_ indicates a modification or a retrieval, respectively.
+
+The [.api]`lcb_cntl()` function returns an error code of `LCB_SUCCESS` if successful, `LCB_NOT_SUPPORTED` (or `LCB_ECTL_UNKNOWN`) if the _setting_ is not known.
+Always check the return code and be prepared to take action if the specific operation is not supported in the specific version of the library.
+
+The constants are well defined and do not change between versions.
+Thus, if you intend to modify an optional setting and also intend to compile against a possibly older version of the library where the constant is not defined, you can use the raw numeric literal (for example, `0x1E`) rather than the symbolic name.
+
+The most recent settings are always found in the [.path]_<libcouchbase/cntl.h>_ header file.
+
+Some options are also available in a simplified string format, in which the option names and values are strings.
+These may be set with the [.api]`lcb_cntl_string()` function or directly embedded into the connection string.
+The xref:options.adoc[Connection string reference] page lists some of the options.
+
+For best performance, keep in mind the following points:
+
+* Only open a bucket once per application.
+* Connections are expensive to establish (bootstrap period) and expensive to maintain (connection count).

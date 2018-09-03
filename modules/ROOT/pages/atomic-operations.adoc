@@ -1,0 +1,41 @@
+= Atomic operations
+:page-topic-type: concept
+
+[abstract]
+The C SDK supports operations that allow one-step, atomic changes to documents.
+
+== Counter operations
+
+The counter method permits you to implement an atomic counter as a Couchbase document.
+These operations expect and are stored as UTF-8 encoded string representations of the number.
+You can either execute this operation against a previously created document, or create one if it does not exist using the `initial` and `create` fields.
+Keep in mind that `initial` will do nothing if the document already exists and that if the document needs to be created, it will be set to `initial`, not `initial+delta`.
+
+[source,c]
+----
+lcb_arithmetic_cmd_t cmd = { 0 };
+const lcb_arithmetic_cmd_t *cmdlist = &cmd;
+cmd.v.v0.key = "counter";
+cmd.v.v0.nkey = strlen("counter");
+cmd.v.v0.delta = 1; // Increment by one
+cmd.v.v0.initial = 42; // Set to 42 if it does not exist
+cmd.v.v0.create = 1; // Create item if it does not exist
+lcb_error_t err = lcb_arithmetic(instance, NULL, 1, &cmdlist);
+----
+
+== Appending and prepending to documents
+
+Documents can also be appended or prepended to.
+These methods provide an efficient way to add to the existing document without fetching the entire document over the network, modifying it, and then submitting it.
+
+WARNING: Appending or prepending data to documents might invalidate the JSON content.
+Use these operations only for documents that you do not intend to query using views.
+
+In libcouchbase, appending and prepending is done using the [.api]`lcb_store()` operation.
+When appending or prepending data, the `bytes` field describes the buffer of data to add to the existing value (either at the beginning or at the end, for prepend and append respectively).
+The following constants can be used in the operation field for these modifications:
+
+* [.opt]`LCB_APPEND`
+* [.opt]`LCB_PREPEND`
+
+For more information about using [.api]`lcb_store()`, see xref:updating.adoc[Updating documents].

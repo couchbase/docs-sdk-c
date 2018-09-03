@@ -1,0 +1,92 @@
+= Working with view queries
+:page-topic-type: concept
+
+[abstract]
+You can use MapReduce views to create queryable secondary indexes in Couchbase Server.
+
+The primary index for documents is the key you use when performing the standard CRUD methods.
+In the C client library, query results are delivered on a per-row basis to a given callback, which is specified at query time.
+
+The following example queries a `by_name` view in a beer design document.
+This view checks whether a document is a beer and has a name.
+If it does, it emits the beer's name into the index.
+This view allows beers to be queried for by name.
+For example, it's now possible to ask the question "What beers start with A?"
+
+[source,javascript]
+----
+function (doc, meta) {
+  if (doc.type && doc.type == "beer" && doc.name) {
+     emit(doc.name, null);
+  }
+}
+----
+
+Querying a view is performed through the [.api]`lcb_view_query()` function.
+To use this function, include the [.path]_<libcouchbase/views.h>_ file.
+
+First, a handler function is defined to deal with each row (and at the end, any metadata) of the query:
+
+.Per-Row callback
+[source,c]
+----
+static void viewCallback(lcb_t instance, int ign, const lcb_RESPVIEWQUERY *rv)
+{
+    if (rv->rflags & LCB_RESP_F_FINAL) {
+        printf("*** META FROM VIEWS ***\n");
+        fprintf(stderr, "%.*s\n", (int)rv->nvalue, rv->value);
+        return;
+    }
+
+    printf("Got row callback from LCB: RC=0x%X, DOCID=%.*s. KEY=%.*s\n",
+        rv->rc,
+        (int)rv->ndocid, rv->docid,
+        (int)rv->nkey, rv->key);
+
+    if (rv->docresp) {
+        printf("   Document for response. RC=0x%X. CAS=0x%lx\n",
+            rv->docresp->rc, rv->docresp->cas);
+    }
+}
+----
+
+This callback is invoked for each row.
+The end of the query (when no more rows to return) is signaled by having the `LCB_RESP_F_FINAL` bit set in the response's `rflags` field.
+
+The response structure contains a `key` and `nkey`, `value` and `nvalue`, and `docid` and `ndodic` fields that contain the buffer and lengths for the emitted keys and values of the view result and the corresponding document ID.
+The final row (the one with the `LCB_RESP_F_FINAL` flag set) contains the "shell" of the response (that is, any errors, debug information, and the `total_rows` field) in the `value` field.
+
+All the fields (except `docid`) are JSON encoded and should be decoded by a JSON decoder before use.
+
+To actually invoke the query, populate the request structure:
+
+[source,c]
+----
+lcb_CMDVIEWQUERY vq = { 0 };
+lcb_view_query_initcmd(&vq, "beer", "by_name", NULL, viewCallback);
+lcb_error_t rc = lcb_view_query(instance, NULL, &vq);
+if (rc != LCB_SUCCESS) {
+    // Handle error
+}
+lcb_wait(instance);
+----
+
+The [.api]`lcb_view_query_initcmd()` convenience function allows you to populate the command structure with common parameters.
+Unlike most library operations, the callback here is specific to the operation rather than global.
+
+Of course, the command structure can also be populated manually:
+
+[source,c]
+----
+lcb_CMDVIEWQUERY vq = { 0 };
+vq.ddoc = "beer";
+vq.nddoc = strlen(vq.ddoc);
+vq.view = "by_name";
+vq.nview = strlen(vq.view);
+vq.callback = viewCallback;
+lcb_error_t rc = lcb_view_query(instance, NULL, &vq);
+if (rc != LCB_SUCCESS) {
+    // ...
+}
+lcb_wait(instance);
+----

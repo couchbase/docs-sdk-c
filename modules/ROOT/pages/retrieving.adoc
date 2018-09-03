@@ -1,0 +1,69 @@
+= Retrieving documents
+:page-topic-type: concept
+
+[abstract]
+You can retrieve documents by using either regular reads or replica reads.
+
+Documents are retrieved by using the [.api]`lcb_get()` function, which requests the document from the cluster.
+To request a document from the server, initialize an [.api]`lcb_get_cmd_t` structure:
+
+[source,c]
+----
+static void got_document(lcb_t instance, const void *cookie, lcb_error_t err,
+   const lcb_get_resp_t *resp)
+{
+  if (err == LCB_SUCCESS) {
+    printf("Received document: %.*s\n", (int)resp->v.v0.nbytes, resp->v.v0.bytes);
+  } else {
+    fprintf(stderr, "Couldn’t retrieve item: %s\n", lcb_strerror(instance, err));
+  }
+}
+
+static void getDoc() {
+  // ...
+  lcb_set_get_callback(instance, got_document);
+
+  lcb_get_cmd_t cmd = { 0 };
+  const lcb_get_cmd_t *cmdlist[] = { &cmd };
+  const char *key = "a_simple_key";
+  cmd.v.v0.key = key;
+  cmd.v.v0.nkey = strlen(key);
+
+  lcb_error_t err = lcb_get(instance, NULL, 1, &cmdlist);
+  if (err == LCB_SUCCESS) {
+    lcb_wait(instance);
+  } else {
+    fprintf(stderr, "Couldn’t schedule get operation: %s\n", lcb_strerror(instance, err));
+ }
+----
+
+The previous block of code shows how to request a document from the cluster.
+The `key` and `nkey` fields describe the buffer and length of the key, while the [.api]`lcb_get()` function actually schedules the request to the server.
+In order to receive the document you must install a callback that will be invoked with the document as one of its parameters.
+
+== Reading from replicas
+
+In the event that a node fails, all the items hosted on that node will become temporarily unavailable until the node is _failed over_.
+The cluster may be configured to automatically fail over a node as early as 30 seconds after a failover is detected; however, some applications might need higher response times and availability in such cases.
+
+The replica read functionality allows the application to read data from a replica.
+The data might be _older_ in case the active copy of the data (on the node which failed) did not replicate in time to the replica.
+Issuing a replica read operation in the C SDK is similar to issuing a normal get operation.
+Just use the [.api]`lcb_get_replica_cmd_t` and l[.api]``cb_get_replica`` APIs:
+
+[source,c]
+----
+lcb_get_replica_cmd_t cmd = { 0 };
+lcb_get_replica_cmd_t *cmdlist[] = { &cmd };
+cmd.v.v0.key = "key";
+cmd.v.v0.nkey = strlen("key");
+cmd.v.v0.strategy = LCB_REPLICA_FIRST;
+err = lcb_get_replica(instance, NULL, 1, &cmdlist);
+----
+
+The callback for the operation is the same as the one for [.api]`lcb_get()`.
+The [.var]`strategy` field instructs the library how to fetch from the replica.
+In this case the library requests a copy from each replica (in sequence) and invoke the callback with the first successful reply.
+
+WARNING: Getting from a replica might return stale data.
+Use replica reads only in instances where having _any_ copy of the document (even a potentially stale one) is better than having _no copy_.

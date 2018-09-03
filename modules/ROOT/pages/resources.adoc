@@ -1,0 +1,15 @@
+= Resources
+:page-topic-type: concept
+
+[abstract]
+Additional resources include Release Notes and Issue Tracker.
+
+== Source code repository
+
+The source code for the library is hosted on Github at https://github.com/couchbase/libcouchbase[^].
+
+== Issue tracker
+
+The issue tracker for the library can be found at https://www.couchbase.com/issues/browse/CCBC[^].
+To file an issue, you must create an account with the issue tracker.
+After you create an account, file a new issue under the "Couchbase C Client Library" project.
