@@ -4,14 +4,8 @@
 This page will walk you through how some of the queries may be constructed using the C SDK.
 The sample app uses the C API with a C++ JSON library (https://github.com/open-source-parsers/jsoncpp[json-cpp^]), though you are free to use your own.
 
-[TIP]
-====
-This tutorial focuses on querying through N1QL and FTS rather than views.
-If you want information about using views, see the following resources:
-
-* General Information about views: xref:4.6@server:architecture:incremental-map-reduce-views.adoc[Incremental MapReduce Views]
-* Querying views: xref:4.6@server:indexes:querying-using-map-reduce-views.adoc[Querying using MapReduce views]
-====
+TIP: This tutorial focuses on querying through N1QL and FTS rather than views.
+If you want information about using views, see xref:6.0@server:understanding-couchbase:views/views-intro.adoc[Views].
 
 == Walking Through the API
 
@@ -34,6 +28,9 @@ lcb_create_st options;
 memset(&options, 0, sizeof options);
 options.version = 3;
 options.v.v3.connstr = "couchbase://localhost/travel-sample";
+/* Username and password for Couchbase 5.0+ */
+options.v.v3.username = "mark";
+options.v.v3.passwd = "secret";
 lcb_create(&instance, &options);
 lcb_connect(instance);
 lcb_wait(instance);
@@ -275,7 +272,7 @@ In this case, give a name to your index (`def_username`), specify the target buc
 
 *Relevant Documentation Topics*: xref:full-text-searching-with-sdk.adoc[Full Text Search (FTS) using the C (libcouchbase) SDK with Couchbase Server], xref:subdocument-operations.adoc[Sub-Document Operations].
 
-In this service, hotels are searched for using more fuzzy criterias, like the content of the address or the description of an hotel.
+In this service, hotels are searched for using more fuzzy criterias, like the content of the address or the description of a hotel.
 This is done using Full Text Search (FTS).
 When some results match the specified criteria, only the relevant data for each result to be displayed in the UI is fetched using the subdocument API.
 

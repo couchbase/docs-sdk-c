@@ -1,4 +1,4 @@
-= Compatibility of Couchbase Features, Couchbase Versions and the Couchbase C (libcouchbase) SDK
+= Compatibility
 :navtitle: Compatibility
 
 == API Styles and versions
@@ -93,50 +93,94 @@ If you wish to schedule multiple operations, simply invoke the relevant scheduli
 This means that key and value buffers provided to the library are copied into the library's buffers.
 Likewise this means that buffers received via callbacks are owned by the library's internal buffers.
 
-== Feature Compatibility
+== Couchbase Version/SDK Version Matrix
+
+Couchbase SDKs are tested against a variety of different environments to ensure both backward and forward compatibility with different versions of Couchbase Server.
+The matrix below denotes the version of Couchbase Server, the version of the C SDK client, and whether the SDK is:
+
+* ✖ *Unsupported*: This combination is not tested, and is not within the scope of technical support if you have purchased a support agreement.
+* ◎ *Compatible*: This combination has been tested previously, and should be compatible.
+This combination is not recommended by our technical support organization.
+It is best to upgrade either the SDK or the Couchbase version you are using.
+* ✔ *Supported*:This combination is subject to ongoing quality assurance, and is fully supported by our technical support organization.
+
+.Recommended SDK per Server Version Matrix
+[#table_sdk_versions]
+|===
+| | *SDK 2.5* | *SDK 2.6* | *SDK 2.7* | *SDK 2.8*
+
+| *Server 3.1*
+| ✔
+| ✔
+| *✔*
+| *✔*
+
+| *Server 4.0-4.6*
+| ✔
+| ✔
+| *✔*
+| *✔*
+
+| *Server 5.0-5.1*
+| ✔
+| ✔
+| *✔*
+| *✔*
+|===
+
+Note the https://www.couchbase.com/support-policy[End of Life dates^] for Couchbase Server and SDK versions.
+See the notes there for Support details.
 
 To take advantage of all features offered by Couchbase Server, you need to know what version of the client provides compatibility for the features you want to use.
 The following matrix shows which versions of the C SDK client support the major features of each version of Couchbase Server.
 
 .Couchbase Server and SDK Supported Version Matrix
-[cols="6,5,5,5,5,5,5"]
+[cols="6,5,5,5,5,5,5,5"]
 |===
-| Feature | Server 1.8 | Server 2.0 | Server 2.5 | Server 3.0 | Server 4.0, 4.1 | Server 4.5, 4.6
+| Feature | Server 1.8 | Server 2.0 | Server 2.5 | Server 3.0 | Server 4.0, 4.1 | Server 4.5, 4.6 | Server 5.0
 
-7+| *Basic Features*
+8+| *Basic Features*
 
 | CRUD Operations
-6+| SDK 2.4.0
+7+| SDK 2.4.0
 
 | View Querying APIs
-6+| Partial support since SDK 2.4.0.
+7+| Partial support since SDK 2.4.0.
 Full row-based support since SDK 2.4.7
 
-7+| *Advanced Features*
+8+| *Advanced Features*
 
 | Durability Requirements
-6+| 2.4.0
+7+| 2.4.0
 
 | Fast (CCCP) Bootstrapping
 2+| Not Supported
-4+| 2.4.0
+5+| 2.4.0
 
 | SSL Connectivity
 3+| Not Supported
-3+| 2.4.0
+4+| 2.4.0
 
 | Partial Cross-SDK Data types
 2+| Not Supported
-4+| Since 2.0
+5+| Since 2.0
 
 | N1QL Querying
 4+| Not Supported
-2+| Since 2.5.0
+3+| Since 2.5.0
 
-7+| *Administrative Features*
+| Extended Attributes
+6+| Not Supported
+| Since 2.7.5
+
+8+| *Administrative Features*
 
 | Administrative API
+7+| Not Supported
+
+| RBAC
 6+| Not Supported
+| Since 2.7.4
 |===
 
-include::4.6@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]
+include::6.0@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]

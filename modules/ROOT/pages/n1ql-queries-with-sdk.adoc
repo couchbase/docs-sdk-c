@@ -29,7 +29,7 @@ static void rowCallback(lcb_t instance, int cbtype, const lcb_RESPN1QL *resp) {
 
 To issue the actual query, populate an `lcb_CMDN1QL` structure with appropriate parameters.
 Some of the internals of this structure may be populated using the `lcb_N1QLPARAMS` object.
-The `lcb_N1QLPARAMS` object is provided as a higher-level means by which to construct N1QL queries, and supports N1QL features such as query placeholders and prepared statements.
+The `lcb_N1QLPARAMS` object is provided as a higher-level means by which to construct N1QL queries and supports N1QL features such as query placeholders and prepared statements.
 A named or positional parameter is a placeholder for a value in the WHERE, LIMIT or OFFSET clause of a query.
 For example, to issue a query with a placeholder:
 
@@ -94,6 +94,17 @@ lcb_error_t rc = lcb_n1ql_query(instance, NULL, &cmd);
 
 NOTE: Versions prior to 2.5.3 require the `content_type` field to be set to `application/json`.
 Since version 2.5.3, all queries must be in JSON, and the `content_type` field is ignored.
+
+[#at_plus]
+== Scan Consistency
+
+Setting a https://developer.couchbase.com/documentation/server/5.1/architecture/querying-data-with-n1ql.html#story-h2-2[staleness parameter for queries^], with `scan_consistency`, enables a tradeoff between latency and (eventual) consistency.
+A N1QL query using the default *Not Bounded* Scan Consistency will not wait for any indexes to finish updating before running the query and returning results, meaning that results are returned quickly, but the query will not return any documents yet to be indexed.
+
+With Scan Consistency set to *RequestPlus*, all document changes and index updates are processed before the query is run.
+Select this when consistency is always more important than performance.
+For a middle ground, *AtPlus* is a "read your own write" (RYOW) option, which means it just waits for the new documents that you specify to be indexed, rather than an entire index of multiple documents.
+See the xref:scan-consistency-examples.adoc[examples] for how to use *AtPlus* for the best performance balance for many circumstances.
 
 == Prepared Statements
 

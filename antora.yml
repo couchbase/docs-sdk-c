@@ -1,7 +1,7 @@
 name: c-sdk
-version: '2.7'
+version: '2.8'
 title: C SDK
 start_page: start-using-sdk.adoc
 nav:
 - modules/ROOT/nav.adoc
-server_version: '4.6'
+server_version: '6.0'

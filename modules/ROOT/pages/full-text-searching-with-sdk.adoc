@@ -8,8 +8,6 @@ This page describes how to use Full Text Search using the C SDK.
 Couchbase offers Full-Text search support, allowing you to search for documents that contain certain words or phrases.
 In the C SDK, you can search full-text indexes by using the row-based [.api]`lcb_fts_query()` API (`#include <libcouchbase/cbft.h>` first, though!)
 
-include::4.6@sdk:shared:partial$experimental-pars.adoc[tag=fts]
-
 To use the [.api]`lcb_fts_query` function, first create an [.api]`lcb_CMDFTS` structure, and populate it with a query.
 The query should be specified as a JSON-encoded string and can be generated using any JSON encoder:
 
@@ -47,16 +45,16 @@ The callback (i.e.
 [.api]`lcb_CMDFTS::callback`) is invoked once for each query hit, and one more time (with the [.api]`LCB_RESP_F_FINAL` flag set in the [.api]`lcb_RESPFTS::rflags` field) with the query response metadata.
 The metadata contains things such as response xref:full-text-search-overview.adoc#facets[_facets_]
 
-Refer to xref:4.6@server:fts:fts-queries.adoc[Queries] for more information about the encoded query format.
-A general introduction to FTS, with pointers to detailed descriptions of its principal features, is provided in xref:4.6@server:fts:full-text-intro.adoc[Full Text Search: Fundamentals].
+Refer to xref:6.0@server:fts:fts-queries.adoc[Understanding Queries] for more information about the encoded query format.
+A general introduction to FTS, with pointers to detailed descriptions of its principal features, is provided in xref:6.0@server:fts:full-text-intro.adoc[Full Text Search: Fundamentals].
 
 == Detailed Examples
 
 The code example below demonstrates the Full Text Search API.
 The example assumes that Couchbase Server is running, and that the username `Administrator` and the password `password` provide authorization for performing the searches.
 It also assumes that the `travel-sample` bucket has been installed.
-For information on creating users and managing roles, see xref:4.6@server:security:security-authorisation.adoc[Authorization].
-For information on installing sample buckets, see xref:4.6@server:settings:settings.adoc[Settings].
+For information on creating users and managing roles, see xref:6.0@server:security:security-authorization.adoc[Authorization].
+For information on installing sample buckets, see xref:6.0@server:settings:settings.adoc[Settings].
 Don't forget to create an lcb_CMDFTS structure, and populate it with a query, as in the first example, above.
 
 The example also assumes the existence of three specific Full Text Indexes, defined on the `travel-sample` bucket.
@@ -67,7 +65,8 @@ These are:
 * `travel-sample-index-hotel-description`: Indexes only the `description` fields of `hotel` documents, and disables the `default` type mapping.
 The index has a custom analyzer named `myUnicodeAnalyzer` defined on it: the analyzer's main characteristic is that it uses the *unicode* tokenizer.
 
-See xref:4.6@server:fts:fts-creating-indexes.adoc[Creating Indexes] for details on how to create these indexes: they can be created interactively, by means of the Couchbase Web Console; however, there may be greater efficiency in using the Couchbase REST API, as described in the section xref:4.6@server:fts:fts-creating-indexes.adoc#index-creation-with-the-rest-api[Index Creation with the REST API].
+See xref:6.0@server:fts:fts-creating-indexes.adoc[Creating Indexes] for details on how to create these indexes: they can be created interactively, by means of the Couchbase Web Console; however, there may be greater efficiency in using the Couchbase REST API, as described in the section xref:6.0@server:fts:fts-creating-indexes.adoc#index-creation-with-the-rest-api[Index Creation with the REST API].
+The JSON objects that constitute index-definitions (for inclusion as bodies to the index-creation REST calls), are provided in xref:6.0@server:fts:fts-demonstration-indexes.adoc[Demonstration Indexes].
 
 The example https://github.com/couchbase/libcouchbase/blob/master/example/fts/fts.c[example/fts/fts.c^] features the following Full Text Searches on the `travel-sample` bucket, within Couchbase Server:
 

@@ -16,7 +16,7 @@ The C SDK is also commonly used as a core dependency of SDKs written in other la
 * Pluggable non-blocking event loops such as *libevent*, *libev*, and *libuv*- integrate with your own non-blocking application, or use [.api]`lcb_wait` in blocking code
 
 Note that SSL and N1QL features depend on server support.
-See xref:compatibility-versions-features.adoc[Compatibility of Couchbase Features, Couchbase Versions and the Couchbase C (libcouchbase) SDK] to see which server versions support which features.
+See xref:compatibility-versions-features.adoc[Compatibility] to see which server versions support which features.
 
 == Platform support and installation
 
@@ -33,8 +33,8 @@ The following examples download and install _couchbase-release_ repsitory, a C a
 [source,bash]
 ----
 # Only needed during first-time setup:
-wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-3-amd64.deb
-sudo dpkg -i couchbase-release-1.0-3-amd64.deb
+wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-4-amd64.deb
+sudo dpkg -i couchbase-release-1.0-4-amd64.deb
 # Will install or upgrade packages
 sudo apt-get update
 sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
@@ -44,8 +44,8 @@ sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
 [source,bash]
 ----
 # Only needed during first-time setup:
-wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-2-x86_64.rpm
-sudo rpm -iv couchbase-release-1.0-2-x86_64.rpm
+wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-4-x86_64.rpm
+sudo rpm -iv couchbase-release-1.0-4-x86_64.rpm
 # Will install or upgrade existing packages
 sudo yum install libcouchbase-devel libcouchbase2-bin gcc gcc-c++
 ----
@@ -94,11 +94,6 @@ Information on new features, fixes, known issues as well as information on how t
 A simple example below (requires version 2.5.6 or higher to function).
 Error checking is omitted for brevity.
 
-FASTPATH: Couchbase Server 5.0 introduces _Role-Based Access Control_ (RBAC), whereby bucket-access requires authentication by means of username and, typically, password.
-To access Couchbase Server 5.0-based clusters, you can continue using your existing SDK-version.
-Alternatively, you can upgrade to the most recent SDK-version, which provides an optimized authentication interface, for use with RBAC.
-See https://developer.couchbase.com/documentation/server/5.0/sdk/c/sdk-authentication-overview.html[Authentication^], for information.
-
 [source,c]
 ----
 #include <libcouchbase/couchbase.h>
@@ -123,12 +118,15 @@ int main(int argc, char **argv)
 {
     assert(lcb_version_g >= 0x020506 && "This example requires 2.5.6 or greater");
 
-    lcb_t instance = NULL;
-    lcb_create_st crst;
-    memset(&crst, 0, sizeof crst);
-    crst.version = 3;
-    crst.v.v3.connstr = "couchbase://localhost";
-    lcb_create(&instance, &crst);
+    lcb_t instance;
+    lcb_create_st options;
+    memset(&options, 0, sizeof options);
+    options.version = 3;
+    options.v.v3.connstr = "couchbase://localhost/bucketname";
+    options.v.v3.username = "mark";
+    options.v.v3.passwd = "s3cr3t";
+    lcb_error_t rc = lcb_create(&instance, &options);
+    lcb_create(&instance, &options);
     lcb_connect(instance);
     lcb_wait(instance);
 

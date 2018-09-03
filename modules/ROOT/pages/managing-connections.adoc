@@ -7,6 +7,19 @@
 This section describes how to connect the C SDK to a Couchbase cluster and bucket.
 It contains best practices as well as information on the connection string,  SSL and other advanced connection options.
 
+[#RBAC_and_the_SDK]
+// tag::RBAC_and_the_SDK[]
+== RBAC and the SDK
+
+Couchbase Server 5.0 Enterprise Edition introduced xref:6.0@server:security:security-authorization.adoc[Role-Based Access Control] (RBAC).
+In order to access cluster-resources, programs, including those supported by the Couchbase SDK, must authenticate with Couchbase Server, and so be identified as existing users, each associated with one or more roles.
+Authentication requires the passing of _credentials_; which consist of a _username_ and (in most cases) a _password_.
+Users may be defined either locally to Couchbase Server, or externally (for example, by means of an LDAP server).
+
+Once authentication has succeeded, an _authorization_ process checks the roles associated with the identified user.
+If role-associated privileges correspond to the level of resource-access requested by the user, access is duly granted; otherwise, it is denied.
+// end::RBAC_and_the_SDK[]
+
 == Creating a handle
 
 A library handle is created using the [.api]`lcb_create()` function which accepts an out-pointer to a handle and a parameters structure specifying some core options.
@@ -18,6 +31,7 @@ lcb_create_st options;
 memset(&options, 0, sizeof options);
 options.version = 3;
 options.v.v3.connstr = "couchbase://10.3.53.2/my-bucket";
+options.v.v3.username = "jo";
 options.v.v3.passwd = "s3cr3t";
 lcb_error_t rc = lcb_create(&instance, &options);
 if (rc != LCB_SUCCESS) {
@@ -25,14 +39,11 @@ if (rc != LCB_SUCCESS) {
 }
 ----
 
-include::4.6@sdk:shared:partial$lcb-pars-shared.adoc[tag=connstr-intro]
+include::6.0@sdk:shared:partial$lcb-pars-shared.adoc[tag=connstr-intro]
 
 Because the C SDK is used as a foundation for other SDKs, it allows for a common connection specification over all those other SDKs.
 
 NOTE: See xref:client-settings.adoc[Client Settings for the C (libcouchbase) SDK with Couchbase Server], which contains some additional connection string options.
-
-If the bucket is password protected, the [.param]`passwd` field may be set.
-Note that the bucket password (set when creating a bucket) is not the same as the administrative password for Couchbase.
 
 When creating a new handle, you can also specify an alternate event loop plugin to use.
 This is required if you want to use your library in non-blocking mode with your existing non-blocking application.
@@ -91,13 +102,13 @@ Once the handle is created, it may be xref:client-settings.adoc[configured] by t
 // tag::ssl[]
 == Connecting with SSL
 
-include::4.6@sdk:shared:partial$lcb-pars-shared.adoc[tag=connstr-intro]
+include::6.0@sdk:shared:partial$lcb-pars-shared.adoc[tag=connstr-intro]
 
 Couchbase Sever features the ability to have clients communicate securely via SSL.
 
-To use SSL, you need Couchbase Server Enterprise 3.0 or later
+To use SSL, you need Couchbase Server Enterprise 3.0 or later (not available in the Community Edition).
 
-. Obtain the SSl certificate used by the Cluster
+. Obtain the SSL certificate used by the Cluster
 . Make the certificate available to the file system of the client host.
 . Employ the `couchbases://` scheme for the connection string.
 . Specify the local path to the certificate as the value for the `certpath` field.
@@ -121,14 +132,14 @@ To specify multiple hosts, separate them using a comma:
 couchbase://host1.com,host2.com,host3.com
 ----
 
-See xref:failure-considerations.adoc[Failure considerations for the C (libcouchbase) SDK in Couchbase] for more information about handling cluster topology changes.
+See xref:failure-considerations.adoc[Failure Considerations for the C (libcouchbase) SDK in Couchbase] for more information about handling cluster topology changes.
 
 NOTE: You are not required to enumerate or pass all Couchbase cluster nodes to the client.
 The client only needs to know about a _single_ node which is a member of the cluster.
 Once the client has connected to the node, it will query that node about the cluster topology, which in turn contains information about all Couchbase nodes and the services they contain.
 // end::multihost[]
 
-include::4.6@sdk:shared:partial$dnssrv-pars.adoc[tag=dnssrv]
+include::6.0@sdk:shared:partial$dnssrv-pars.adoc[tag=dnssrv]
 
 In the above example, you would specify `couchbase://example.com` as the bootstrap host, and the library would check for the record.
 If no such record exists, it will treat `example.com` as an ordinary bootstrap node and try to bootstrap from it.
