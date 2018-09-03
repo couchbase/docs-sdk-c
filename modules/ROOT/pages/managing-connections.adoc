@@ -25,7 +25,7 @@ if (rc != LCB_SUCCESS) {
 }
 ----
 
-include::4.5@sdk:shared:partial$lcb-pars-shared.adoc[tag=connstr-intro]
+include::4.6@sdk:shared:partial$lcb-pars-shared.adoc[tag=connstr-intro]
 
 Because the C SDK is used as a foundation for other SDKs, it allows for a common connection specification over all those other SDKs.
 
@@ -91,7 +91,7 @@ Once the handle is created, it may be xref:client-settings.adoc[configured] by t
 // tag::ssl[]
 == Connecting with SSL
 
-include::4.5@sdk:shared:partial$lcb-pars-shared.adoc[tag=connstr-intro]
+include::4.6@sdk:shared:partial$lcb-pars-shared.adoc[tag=connstr-intro]
 
 Couchbase Sever features the ability to have clients communicate securely via SSL.
 
@@ -127,6 +127,12 @@ NOTE: You are not required to enumerate or pass all Couchbase cluster nodes to t
 The client only needs to know about a _single_ node which is a member of the cluster.
 Once the client has connected to the node, it will query that node about the cluster topology, which in turn contains information about all Couchbase nodes and the services they contain.
 // end::multihost[]
+
+include::4.6@sdk:shared:partial$dnssrv-pars.adoc[tag=dnssrv]
+
+In the above example, you would specify `couchbase://example.com` as the bootstrap host, and the library would check for the record.
+If no such record exists, it will treat `example.com` as an ordinary bootstrap node and try to bootstrap from it.
+Note that if you pass more than one bootstrap host, DNS SRV lookup will not be attempted, and the hosts will be interepreted as normal Couchbase nodes.
 
 [#configcache]
 // tag::configcache[]

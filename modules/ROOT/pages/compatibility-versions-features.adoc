@@ -101,7 +101,7 @@ The following matrix shows which versions of the C SDK client support the major 
 .Couchbase Server and SDK Supported Version Matrix
 [cols="6,5,5,5,5,5,5"]
 |===
-| Feature | Server 1.8 | Server 2.0 | Server 2.5 | Server 3.0 | Server 4.0 | Server 4.5
+| Feature | Server 1.8 | Server 2.0 | Server 2.5 | Server 3.0 | Server 4.0, 4.1 | Server 4.5, 4.6
 
 7+| *Basic Features*
 
@@ -139,4 +139,4 @@ Full row-based support since SDK 2.4.7
 6+| Not Supported
 |===
 
-include::4.5@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]
+include::4.6@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]

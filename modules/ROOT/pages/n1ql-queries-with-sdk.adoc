@@ -29,8 +29,8 @@ static void rowCallback(lcb_t instance, int cbtype, const lcb_RESPN1QL *resp) {
 
 To issue the actual query, populate an `lcb_CMDN1QL` structure with appropriate parameters.
 Some of the internals of this structure may be populated using the `lcb_N1QLPARAMS` object.
-The `lcb_N1QLPARAMS` object is provided as a higher-level means by which to construct N1QL queries and supports N1QL features such as query placeholders and prepared statements.
-A named or poditional parameter is a placeholder for a value in the WHERE, LIMIT or OFFSET clause of a query.
+The `lcb_N1QLPARAMS` object is provided as a higher-level means by which to construct N1QL queries, and supports N1QL features such as query placeholders and prepared statements.
+A named or positional parameter is a placeholder for a value in the WHERE, LIMIT or OFFSET clause of a query.
 For example, to issue a query with a placeholder:
 
 . Create the `params` object ([.api]`lcb_n1p_new()`).

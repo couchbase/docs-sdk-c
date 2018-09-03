@@ -1,7 +1,7 @@
 = Failure considerations for the C (libcouchbase) SDK in Couchbase
 :navtitle: Failure Considerations
 
-include::4.5@sdk:shared:partial$env-errors.adoc[tag=group]
+include::4.6@sdk:shared:partial$env-errors.adoc[tag=group]
 
 == Handling unresponsive servers
 

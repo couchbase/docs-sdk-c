@@ -151,7 +151,7 @@ The I/O timeout for view operations.
 view_timeout=75
 ----
 
-| `n1ql_timoeut` (Timeout).
+| `n1ql_timeout` (Timeout).
 Since 2.5.3
 | [.opt]`LCB_CNTL_N1QL_TIMEOUT` (Microseconds)
 a|
