@@ -94,7 +94,7 @@ To modify the operation timeout, disable HTTP socket pooling, and enable mutatio
 .Options reference
 [cols="100,100,293"]
 |===
-| Option Name (for use in connection string or [.api]`lcb_cntl_string()`) | Macro/Constant name (for direct use with the C SDK's[.api]``lcb_cntl()``). | Description
+| Option Name (for use in connection string or [.api]`lcb_cntl_string()`) | Macro/Constant name (for direct use with the C SDK's [.api]``lcb_cntl()``). | Description
 
 | `operation_timeout` (Timeout)
 | [.opt]`LCB_CNTL_OP_TIMEOUT` (microseconds)
