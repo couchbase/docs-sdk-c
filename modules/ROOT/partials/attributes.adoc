@@ -1,2 +1,2 @@
-:lcb-api-link: http://docs.couchbase.com/sdk-api/couchbase-c-client-2.8.7
-:lcb-current-version: 2.8.7
+:lcb-api-link: http://docs.couchbase.com/sdk-api/couchbase-c-client-2.9.4
+:lcb-current-version: 2.9.4
