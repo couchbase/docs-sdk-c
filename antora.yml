@@ -1,5 +1,5 @@
 name: c-sdk
-version: '2.9'
+version: '2.10'
 title: C SDK
 start_page: start-using-sdk.adoc
 nav:
