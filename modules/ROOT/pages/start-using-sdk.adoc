@@ -68,11 +68,11 @@ brew install libcouchbase
 [#install-windows]
 == Installation on Microsoft Windows
 
-See xref:relnotes-java-sdk.adoc[Installation and Release Notes] section for details.
+See xref:relnotes-c-sdk.adoc[Installation and Release Notes] section for details.
 
 == Installing from Source Code
 
-You may install the library from source code, either via a repository checkout or using a release tarball (download links may be found at xref:relnotes-java-sdk.adoc[Installation and Release Notes].
+You may install the library from source code, either via a repository checkout or using a release tarball (download links may be found at xref:relnotes-c-sdk.adoc[Installation and Release Notes].
 Follow the instructions in the [.path]_README.markdown_ file at the top of the source tree.
 
 == Documentation and Examples
@@ -87,7 +87,7 @@ Follow the instructions in the [.path]_README.markdown_ file at the top of the s
 Note that these tools may use internal APIs not intended for public use.
 * C++11 wrapper (https://github.com/couchbaselabs/libcouchbase-cxx[^], _not officially supported_)
 
-Information on new features, fixes, known issues as well as information on how to install older release versions is available in the xref:relnotes-java-sdk.adoc[release notes].
+Information on new features, fixes, known issues as well as information on how to install older release versions is available in the xref:relnotes-c-sdk.adoc[release notes].
 
 == Hello Couchbase
 
