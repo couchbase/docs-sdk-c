@@ -32,7 +32,7 @@
 * xref:collecting-information-and-logging.adoc[Collecting Information]
 
 .Project Docs
-* xref:relnotes-c-sdk.adoc#_2_7_7_august_17_2017[Release Notes]
+* xref:relnotes-c-sdk.adoc#2-7-7-august-17-2017[Release Notes]
 * xref:compatibility-versions-features.adoc[Compatibility]
 * xref:sdk-licenses.adoc[Licenses]
 * xref:get-involved.adoc[Get involved]
