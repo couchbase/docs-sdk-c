@@ -212,29 +212,29 @@ Correctly convert non-null terminated tag buffers to `Json::Value`.
 |===
 | Platform	| Architecture	| File
 
-| Checksums	| Any |	libcouchbase-2.9.5.sha256sum
-| Source Archive	| Any	| libcouchbase-2.9.5.tar.gz
-| Ubuntu 14.04	| x86	| libcouchbase-2.9.5_ubuntu1404_i386.tar
-| Ubuntu 14.04	| x64	| libcouchbase-2.9.5_ubuntu1404_amd64.tar
-| Ubuntu 16.04	| x86	| libcouchbase-2.9.5_ubuntu1604_i386.tar
-| Ubuntu 16.04	| x64	| libcouchbase-2.9.5_ubuntu1604_amd64.tar
-| Ubuntu 18.04	| x86	| libcouchbase-2.9.5_ubuntu1804_i386.tar
-| Ubuntu 18.04	| x64	| libcouchbase-2.9.5_ubuntu1804_amd64.tar
-| Debian Jessie	| x86	| libcouchbase-2.9.5_jessie_i386.tar
-| Debian Jessie	| x64	| libcouchbase-2.9.5_jessie_amd64.tar
-| Debian Stretch	| x86	| libcouchbase-2.9.5_stretch_i386.tar
-| Debian Stretch	| x64	| libcouchbase-2.9.5_stretch_amd64.tar
-| Enterprise Linux 6	| x86	| libcouchbase-2.9.5_centos62_i686.tar
-| Enterprise Linux 6	| x64	| libcouchbase-2.9.5_centos62_x86_64.tar
-| Enterprise Linux 7	| x64	| libcouchbase-2.9.5_centos7_x86_64.tar
-| Visual Studio 2008	| x86	| libcouchbase-2.9.5_x86_vc9.zip
-| Visual Studio 2008	| x64	| libcouchbase-2.9.5_amd64_vc9.zip
-| Visual Studio 2010	| x86	| libcouchbase-2.9.5_x86_vc10.zip
-| Visual Studio 2010	| x64	| libcouchbase-2.9.5_amd64_vc10.zip
-| Visual Studio 2012	| x86	| libcouchbase-2.9.5_x86_vc11.zip
-| Visual Studio 2012	| x64	| libcouchbase-2.9.5_amd64_vc11.zip
-| Visual Studio 2015	| x86	| libcouchbase-2.9.5_x86_vc14.zip
-| Visual Studio 2015	| x64	| libcouchbase-2.9.5_amd64_vc14.zip
+| Checksums	| Any |	http://packages.couchbase.com/clients/c/libcouchbase-2.9.5.sha256sum[libcouchbase-2.9.5.sha256sum]
+| Source Archive	| Any	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5.tar.gz[libcouchbase-2.9.5.tar.gz]
+| Ubuntu 14.04	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_ubuntu1404_i386.tar[libcouchbase-2.9.5_ubuntu1404_i386.tar]
+| Ubuntu 14.04	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_ubuntu1404_amd64.tar[libcouchbase-2.9.5_ubuntu1404_amd64.tar]
+| Ubuntu 16.04	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_ubuntu1604_i386.tar[libcouchbase-2.9.5_ubuntu1604_i386.tar]
+| Ubuntu 16.04	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_ubuntu1604_amd64.tar[libcouchbase-2.9.5_ubuntu1604_amd64.tar]
+| Ubuntu 18.04	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_ubuntu1804_i386.tar[libcouchbase-2.9.5_ubuntu1804_i386.tar]
+| Ubuntu 18.04	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_ubuntu1804_amd64.tar[libcouchbase-2.9.5_ubuntu1804_amd64.tar]
+| Debian Jessie	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_jessie_i386.tar[libcouchbase-2.9.5_jessie_i386.tar]
+| Debian Jessie	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_jessie_amd64.tar[libcouchbase-2.9.5_jessie_amd64.tar]
+| Debian Stretch	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_stretch_i386.tar[libcouchbase-2.9.5_stretch_i386.tar]
+| Debian Stretch	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_stretch_amd64.tar[libcouchbase-2.9.5_stretch_amd64.tar]
+| Enterprise Linux 6	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_centos62_i686.tar[libcouchbase-2.9.5_centos62_i686.tar]
+| Enterprise Linux 6	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_centos62_x86_64.tar[libcouchbase-2.9.5_centos62_x86_64.tar]
+| Enterprise Linux 7	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_centos7_x86_64.tar[libcouchbase-2.9.5_centos7_x86_64.tar]
+| Visual Studio 2008	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_x86_vc9.zip[libcouchbase-2.9.5_x86_vc9.zip]
+| Visual Studio 2008	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_amd64_vc9.zip[libcouchbase-2.9.5_amd64_vc9.zip]
+| Visual Studio 2010	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_x86_vc10.zip[libcouchbase-2.9.5_x86_vc10.zip]
+| Visual Studio 2010	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_amd64_vc10.zip[libcouchbase-2.9.5_amd64_vc10.zip]
+| Visual Studio 2012	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_x86_vc11.zip[libcouchbase-2.9.5_x86_vc11.zip]
+| Visual Studio 2012	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_amd64_vc11.zip[libcouchbase-2.9.5_amd64_vc11.zip]
+| Visual Studio 2015	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_x86_vc14.zip[libcouchbase-2.9.5_x86_vc14.zip]
+| Visual Studio 2015	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.9.5_amd64_vc14.zip[libcouchbase-2.9.5_amd64_vc14.zip]
 |===
 
 == 2.9.4 (August 28 2018)
