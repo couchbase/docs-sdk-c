@@ -212,6 +212,7 @@ Correctly convert non-null terminated tag buffers to `Json::Value`.
 [cols="12,^8,23"]
 |===
 | Platform	| Architecture	| File
+
 | Checksums	| Any	libcouchbase-2.9.5.sha256sum
 | Source Archive	| Any	| libcouchbase-2.9.5.tar.gz
 | Ubuntu 14.04	| x86	| libcouchbase-2.9.5_ubuntu1404_i386.tar
