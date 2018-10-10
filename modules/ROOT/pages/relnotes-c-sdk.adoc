@@ -213,7 +213,7 @@ Correctly convert non-null terminated tag buffers to `Json::Value`.
 |===
 | Platform	| Architecture	| File
 
-| Checksums	| Any	libcouchbase-2.9.5.sha256sum
+| Checksums	| Any |	libcouchbase-2.9.5.sha256sum
 | Source Archive	| Any	| libcouchbase-2.9.5.tar.gz
 | Ubuntu 14.04	| x86	| libcouchbase-2.9.5_ubuntu1404_i386.tar
 | Ubuntu 14.04	| x64	| libcouchbase-2.9.5_ubuntu1404_amd64.tar
