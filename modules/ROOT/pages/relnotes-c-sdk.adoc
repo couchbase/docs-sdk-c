@@ -7,7 +7,7 @@ You can install the C SDK from a repository for your platform, download prebuilt
 === Quick Installation - Linux
 
 For installation on Linux, install the _couchbase-release_ repository, and then install the _libcouchbase_ packages. 
-The following examples download and install _couchbase-release_ repsitory, a C and C++ compiler, and the C SDK core (_libcouchbase2-core_), command line tools (_libcouchbase2-bin_), and the development tools
+The following examples download and install _couchbase-release_ repository, a C and C++ compiler, and the C SDK core (_libcouchbase2-core_), command line tools (_libcouchbase2-bin_), and the development tools
 (_libcouchbase-devel_ [RPM] or _libcouchbase-dev_ [DEB]).
 
 *Debian and Ubuntu*
