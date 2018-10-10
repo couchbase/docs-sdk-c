@@ -45,7 +45,7 @@
 * xref:tracing-from-the-sdk.adoc[Tracing from the SDK]
 
 .Project Docs
-* xref:relnotes-c-sdk.adoc#2-9-4-august-28-2018[Release Notes]
+* xref:relnotes-c-sdk.adoc#2-9-5-september-21-2018[Release Notes]
 * xref:compatibility-versions-features.adoc[Compatibility]
 * xref:sdk-licenses.adoc[Licenses]
 * xref:get-involved.adoc[Get involved]
