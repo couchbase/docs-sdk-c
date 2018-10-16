@@ -91,11 +91,13 @@ Information on new features, fixes, known issues as well as information on how t
 
 == Hello Couchbase
 
-A simple example below (requires version 2.5.6 or higher to function).
+
+The simple example below (which requires version 2.5.6 or higher to function) can be integrated into an existing application, or added to a CLI skeleton to make a demo app.
 Error checking is omitted for brevity.
 
 [source,c]
 ----
+#include <string.h>
 #include <libcouchbase/couchbase.h>
 
 static void
@@ -114,7 +116,7 @@ opCallback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb) {
     }
 }
 
-int main(int argc, char **argv)
+int storeAndRetrieveKey()
 {
     assert(lcb_version_g >= 0x020506 && "This example requires 2.5.6 or greater");
 
