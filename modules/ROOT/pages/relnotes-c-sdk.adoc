@@ -6,7 +6,7 @@ You can install the C SDK from a repository for your platform, download prebuilt
 
 === Quick Installation - Linux
 
-For installation on Linux, install the _couchbase-release_ repository, and then install the _libcouchbase_ packages. 
+For installation on Linux, install the _couchbase-release_ repository, and then install the _libcouchbase_ packages.
 The following examples download and install _couchbase-release_ repository, a C and C++ compiler, and the C SDK core (_libcouchbase2-core_), command line tools (_libcouchbase2-bin_), and the development tools
 (_libcouchbase-devel_ [RPM] or _libcouchbase-dev_ [DEB]).
 
@@ -59,11 +59,11 @@ The various Linux distributions contain the following packages:
 
 === Configuring yum repositories (CentOS, Redhat)
 
-This section assumes you know how to add an external http://yum.baseurl.org/[yum] repository and Linux quick start explains the steps it will perform on your distribution. 
+This section assumes you know how to add an external http://yum.baseurl.org/[yum] repository and Linux quick start explains the steps it will perform on your distribution.
 To configure the repository:
 
-. Find the appropriate repository location for your distribution in the following table. 
-CentOS and RHEL allow 32-bit packages to be installed on a 64-bit system. 
+. Find the appropriate repository location for your distribution in the following table.
+CentOS and RHEL allow 32-bit packages to be installed on a 64-bit system.
 This is usually not what you want, soensure that you use the 64-bit repository for your 64-bit system (unless you specifically want the 32-bit SDK).
 
 [cols="1,1,3"]
@@ -75,7 +75,7 @@ This is usually not what you want, soensure that you use the 64-bit repository f
 | 7 | 64-bit | http://packages.couchbase.com/rpm/7/x86_64
 |===
 
-. Create a `couchbase.repo` file in your `/etc/yum.repos.d` directory. 
+. Create a `couchbase.repo` file in your `/etc/yum.repos.d` directory.
 It should look similar to the following:
 
 [source]
@@ -90,14 +90,14 @@ gpgkey = http://packages.couchbase.com/rpm/couchbase-rpm.key
 
 === Configuring APT repositories (Debian, Ubuntu)
 
-This section assumes some knowledge of https://wiki.debian.org/Apt[apt] and Linux quick start explains the steps it will perform on your distribution. 
+This section assumes some knowledge of https://wiki.debian.org/Apt[apt] and Linux quick start explains the steps it will perform on your distribution.
 To configure the repository:
 
 . Download the Couchbase GPG key from http://packages.couchbase.com/ubuntu/couchbase.key.
-. Add the key to the list of trusted package keys. 
+. Add the key to the list of trusted package keys.
 Use the `apt-key add` command. For example, ``apt-key add couchbase.key``.
-. Create a couchbase.list file in ``/etc/apt/sources.list.d``. 
-The file should contain the repository for your distribution. 
+. Create a couchbase.list file in ``/etc/apt/sources.list.d``.
+The file should contain the repository for your distribution.
 Repositories are available for the following distributions:
 
 [cols=".<2,.^9"]
@@ -162,13 +162,13 @@ libcouchbase-dev_2.2.0-2453_amd64.deb libcouchbase2-bin_2.2.0-2453_amd64.deb
 === Installation from source
 
 You may install the library from source either by downloading a source archive, or by checking out the https://github.com/couchbase/libcouchbase[git
-repository]. 
+repository].
 Follow the instructions in the archive's README.md for further instructions.
 
 === Windows Installation
 
-Windows binary packages can be found as downloads for each version listed below. 
-Included are the header files, release and debug variants of the DLLs and import libraries, and release and debug variants of the command line tools. 
+Windows binary packages can be found as downloads for each version listed below.
+Included are the header files, release and debug variants of the DLLs and import libraries, and release and debug variants of the command line tools.
 Note that the C SDK does not have any preferred installation path, and it is up to you to determine where to place ``libcouchbase.dll``.
 
 Be sure to select the proper package for the compiler and architecture your application is using.
@@ -176,37 +176,78 @@ Be sure to select the proper package for the compiler and architecture your appl
 [NOTE]
 ====
 If there are no binaries available for your visual studio version, then using a binary from any other visual studio version is _likely_ to work.
-Most of the issues related to mixing Visual Studio binary versions involve changing and incompatible C++ APIs or incompatible C Runtime (CRT) objects and functions. 
-Since the Couchbase C SDK does not expose a C++ API, and since it does not directly expose any CRT functionality, it should be safe for use so long as your application can link to the library at compile-time. 
+Most of the issues related to mixing Visual Studio binary versions involve changing and incompatible C++ APIs or incompatible C Runtime (CRT) objects and functions.
+Since the Couchbase C SDK does not expose a C++ API, and since it does not directly expose any CRT functionality, it should be safe for use so long as your application can link to the library at compile-time.
 The windows runtime linker will ensure that each binary is using the appropriate version of the Visual C Runtime (``MSVCRT.DLL``).
 ====
 
 If for some reason you cannot use any of the prebuilt Windows binaries, follow the instructions in xref:#_installation_from_source[_installation from source_ (above)] to build on Windows.
 
 
+== 2.10.0 (October 12 2018)
+
+http://docs.couchbase.com/sdk-api/couchbase-c-client-2.10.0[API Reference]
+
+* https://issues.couchbase.com/browse/CCBC-982[CCBC-982]: Support analytics for N1QL service in `lcb_ping3`.
+
+* https://issues.couchbase.com/browse/CCBC-989[CCBC-989]: Write bucket capabilities into config cache, so that the client which was bootstrapped from the cache will be able to reason about features availability (e.g. views).
+
+* https://issues.couchbase.com/browse/CCBC-987[CCBC-987]: Document tracing options for cbc tools.
+
+* https://issues.couchbase.com/browse/CCBC-988[CCBC-988]: Update cbc-pillowfight to work with by-id collections. It still does not use any changes in protocol yet. The collection API will be exposed in 3.0 release.
+
+[cols="12,^8,23"]
+|===
+| Platform	| Architecture	| File
+
+| Checksums	| Any |	http://packages.couchbase.com/clients/c/libcouchbase-2.10.0.sha256sum[libcouchbase-2.10.0.sha256sum]
+| Source Archive	| Any	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0.tar.gz[libcouchbase-2.10.0.tar.gz]
+| Ubuntu 14.04	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_ubuntu1404_i386.tar[libcouchbase-2.10.0_ubuntu1404_i386.tar]
+| Ubuntu 14.04	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_ubuntu1404_amd64.tar[libcouchbase-2.10.0_ubuntu1404_amd64.tar]
+| Ubuntu 16.04	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_ubuntu1604_i386.tar[libcouchbase-2.10.0_ubuntu1604_i386.tar]
+| Ubuntu 16.04	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_ubuntu1604_amd64.tar[libcouchbase-2.10.0_ubuntu1604_amd64.tar]
+| Ubuntu 18.04	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_ubuntu1804_i386.tar[libcouchbase-2.10.0_ubuntu1804_i386.tar]
+| Ubuntu 18.04	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_ubuntu1804_amd64.tar[libcouchbase-2.10.0_ubuntu1804_amd64.tar]
+| Debian Jessie	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_jessie_i386.tar[libcouchbase-2.10.0_jessie_i386.tar]
+| Debian Jessie	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_jessie_amd64.tar[libcouchbase-2.10.0_jessie_amd64.tar]
+| Debian Stretch	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_stretch_i386.tar[libcouchbase-2.10.0_stretch_i386.tar]
+| Debian Stretch	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_stretch_amd64.tar[libcouchbase-2.10.0_stretch_amd64.tar]
+| Enterprise Linux 6	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_centos62_i686.tar[libcouchbase-2.10.0_centos62_i686.tar]
+| Enterprise Linux 6	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_centos62_x86_64.tar[libcouchbase-2.10.0_centos62_x86_64.tar]
+| Enterprise Linux 7	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_centos7_x86_64.tar[libcouchbase-2.10.0_centos7_x86_64.tar]
+| Visual Studio 2008	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_vc9_x86.zip[libcouchbase-2.10.0_vc9_x86.zip]
+| Visual Studio 2008	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_vc9_amd64.zip[libcouchbase-2.10.0_vc9_amd64.zip]
+| Visual Studio 2010	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_vc10_x86.zip[libcouchbase-2.10.0_vc10_x86.zip]
+| Visual Studio 2010	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_vc10_amd64.zip[libcouchbase-2.10.0_vc10_amd64.zip]
+| Visual Studio 2012	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_vc11_x86.zip[libcouchbase-2.10.0_vc11_x86.zip]
+| Visual Studio 2012	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_vc11_amd64.zip[libcouchbase-2.10.0_vc11_amd64.zip]
+| Visual Studio 2015	| x86	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_vc14_x86.zip[libcouchbase-2.10.0_vc14_x86.zip]
+| Visual Studio 2015	| x64	| http://packages.couchbase.com/clients/c/libcouchbase-2.10.0_vc14_amd64.zip[libcouchbase-2.10.0_vc14_amd64.zip]
+|===
+
 == 2.9.5 (September 21 2018)
 
 http://docs.couchbase.com/sdk-api/couchbase-c-client-2.9.5/[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-980[CCBC-980]: 
+* https://issues.couchbase.com/browse/CCBC-980[CCBC-980]:
 Make idle timeout for HTTP pool tunable.
 
-* https://issues.couchbase.com/browse/CCBC-977[CCBC-977]: 
+* https://issues.couchbase.com/browse/CCBC-977[CCBC-977]:
 Update documentation analytics. Add example demonstrating analytics queries.
 
-* https://issues.couchbase.com/browse/CCBC-968[CCBC-968]: 
+* https://issues.couchbase.com/browse/CCBC-968[CCBC-968]:
 Improve log message for SELECT_BUCKET on EACCESS. Add note saying that this error code might be because of missing bucket.
 
-* https://issues.couchbase.com/browse/CCBC-976[CCBC-976]: 
+* https://issues.couchbase.com/browse/CCBC-976[CCBC-976]:
 Keep HTTP connections pooled after `lcb_ping3`.
 
-* https://issues.couchbase.com/browse/CCBC-975[CCBC-975]: 
+* https://issues.couchbase.com/browse/CCBC-975[CCBC-975]:
 Make sure kv service is only enabled if in nodes list.
 
-* https://issues.couchbase.com/browse/CCBC-972[CCBC-972]: 
+* https://issues.couchbase.com/browse/CCBC-972[CCBC-972]:
 Fix memory issues reported by valgrind.
 
-* https://issues.couchbase.com/browse/CCBC-973[CCBC-973]: 
+* https://issues.couchbase.com/browse/CCBC-973[CCBC-973]:
 Correctly convert non-null terminated tag buffers to `Json::Value`.
 
 [cols="12,^8,23"]
@@ -242,24 +283,24 @@ Correctly convert non-null terminated tag buffers to `Json::Value`.
 
 http://docs.couchbase.com/sdk-api/couchbase-c-client-2.9.4/[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-970[CCBC-970]: 
+* https://issues.couchbase.com/browse/CCBC-970[CCBC-970]:
 Update list of retriable errors for analytics
-* https://issues.couchbase.com/browse/CCBC-965[CCBC-965]: 
+* https://issues.couchbase.com/browse/CCBC-965[CCBC-965]:
 Update log level in config cache provider
-* https://issues.couchbase.com/browse/CCBC-967[CCBC-967]: 
+* https://issues.couchbase.com/browse/CCBC-967[CCBC-967]:
 Optimize Threshold Tracer queues/sorting
-* https://issues.couchbase.com/browse/CCBC-963[CCBC-963]: 
+* https://issues.couchbase.com/browse/CCBC-963[CCBC-963]:
 Remove global state from random generator, and make it thread-safe.
-* https://issues.couchbase.com/browse/CCBC-966[CCBC-966]: 
+* https://issues.couchbase.com/browse/CCBC-966[CCBC-966]:
 Return current network for LCB_CNTL_NETWORK
-* https://issues.couchbase.com/browse/CCBC-969[CCBC-969]: 
+* https://issues.couchbase.com/browse/CCBC-969[CCBC-969]:
 Allow to skip version from git tags
-* https://issues.couchbase.com/browse/CCBC-961[CCBC-961]: 
+* https://issues.couchbase.com/browse/CCBC-961[CCBC-961]:
 Add examples for FTS queries
-* https://issues.couchbase.com/browse/CCBC-971[CCBC-971]: 
+* https://issues.couchbase.com/browse/CCBC-971[CCBC-971]:
 Disable dead socket detection for older libuv (fixes build on platforms, where old libuv-dev package installed).
 * Report `HELO` features to logger in the single line.
-* Allow to select compression mode in connection string. 
+* Allow to select compression mode in connection string.
 This might be useful for debugging purposes. For example, to bypass inflation step when receiving data.
 +
 [source,bash]
@@ -301,31 +342,31 @@ cbc cat -U $CONNSTRING 00000000.json > bindoc.dat
 
 http://docs.couchbase.com/sdk-api/couchbase-c-client-2.9.3/[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-955[CCBC-955]: 
-Parse uint32 as unsigned ints instead of timeouts. 
-Some settings were interpreted as time values, while they should not (e.g. console_log_level, compression_min_size etc). 
+* https://issues.couchbase.com/browse/CCBC-955[CCBC-955]:
+Parse uint32 as unsigned ints instead of timeouts.
+Some settings were interpreted as time values, while they should not (e.g. console_log_level, compression_min_size etc).
 This issue forced the library to misinterpret user input (converter was multiplying all values to 1000000, e.g. log level was always `TRACE`).
 * https://issues.couchbase.com/browse/CCBC-957[CCBC-957]:
 Automatically disable SSL support, when OpenSSL is unavailable.
-* https://issues.couchbase.com/browse/CCBC-954[CCBC-954]: 
+* https://issues.couchbase.com/browse/CCBC-954[CCBC-954]:
 Define `EFTYPE` error code if it does not exist. Fixes support of libuv 1.21 and higher.
-* https://issues.couchbase.com/browse/CCBC-951[CCBC-951]: 
+* https://issues.couchbase.com/browse/CCBC-951[CCBC-951]:
 Remove experimental warning from subdoc API.
-* https://issues.couchbase.com/browse/CCBC-948[CCBC-948]: 
+* https://issues.couchbase.com/browse/CCBC-948[CCBC-948]:
 Consider retry queue with only 0xb5 as empty. This allows a breakout from `lcb_wait` earlier (when application operates in synchronous style).
 The old behaviour, where lcb_wait does not breakout until the library gets the first successful configuration, still can be restored with lcb_cntl(..., LCB_CNTL_WAIT_FOR_CONFIG, ...).
-* https://issues.couchbase.com/browse/CCBC-939[CCBC-939]: 
-Optimize the performance of built-in tracer. 
+* https://issues.couchbase.com/browse/CCBC-939[CCBC-939]:
+Optimize the performance of built-in tracer.
 It now uses `sllist` for tags container instead of ``Json::Value``.
-* https://issues.couchbase.com/browse/CCBC-958[CCBC-958]: 
+* https://issues.couchbase.com/browse/CCBC-958[CCBC-958]:
 Check tracing span tags argument more pedantically and return error if arguments are not valid.
-* https://issues.couchbase.com/browse/CCBC-956[CCBC-956]: 
+* https://issues.couchbase.com/browse/CCBC-956[CCBC-956]:
 Combine operation id and name into single field in the threshold tracer.
-* https://issues.couchbase.com/browse/CCBC-949[CCBC-949]: 
-Do not hardcode libevent dependencies in DEB packages. 
-Instead let `dh_shlibdeps` script to detect dependencies for each platform. 
+* https://issues.couchbase.com/browse/CCBC-949[CCBC-949]:
+Do not hardcode libevent dependencies in DEB packages.
+Instead let `dh_shlibdeps` script to detect dependencies for each platform.
 This fixes useless dependency on libevent-1 for ubuntu 18.04.
-* https://issues.couchbase.com/browse/CCBC-947[CCBC-947]: 
+* https://issues.couchbase.com/browse/CCBC-947[CCBC-947]:
 Fix build scripts for examples (when built with -DLCB_BUILD_EXAMPLES=ON).
 
 And other small fixes and improvements.
@@ -363,7 +404,7 @@ And other small fixes and improvements.
 
 http://docs.couchbase.com/sdk-api/couchbase-c-client-2.9.2/[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-946[CCBC-946]: 
+* https://issues.couchbase.com/browse/CCBC-946[CCBC-946]:
 Restore broken ABI in https://github.com/couchbase/libcouchbase/commit/360ea68ef7738d543bbd3feac3f2c3c6c8ff976b[360ea68]
 
 [cols="12,^8,23"]
@@ -399,23 +440,23 @@ Restore broken ABI in https://github.com/couchbase/libcouchbase/commit/360ea68ef
 
 http://docs.couchbase.com/sdk-api/couchbase-c-client-2.9.1/[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-942[CCBC-942] 
+* https://issues.couchbase.com/browse/CCBC-942[CCBC-942]
 Expose new error codes for subdocument operations.
-* https://issues.couchbase.com/browse/CCBC-866[CCBC-866] 
+* https://issues.couchbase.com/browse/CCBC-866[CCBC-866]
 Check cached provider isn't NULL.
-* https://issues.couchbase.com/browse/CCBC-890[CCBC-890] 
+* https://issues.couchbase.com/browse/CCBC-890[CCBC-890]
 Always check if SSL used when getting ports.
-* https://issues.couchbase.com/browse/CCBC-945[CCBC-945] 
+* https://issues.couchbase.com/browse/CCBC-945[CCBC-945]
 Allow to specify logger in lcb_create().
-* https://issues.couchbase.com/browse/CCBC-935[CCBC-935] 
+* https://issues.couchbase.com/browse/CCBC-935[CCBC-935]
 Display orphan tracer report on WARN log level.
-* https://issues.couchbase.com/browse/CCBC-936[CCBC-936] 
+* https://issues.couchbase.com/browse/CCBC-936[CCBC-936]
 Update default tracing interval to 10 seconds.
-* https://issues.couchbase.com/browse/CCBC-937[CCBC-937] 
+* https://issues.couchbase.com/browse/CCBC-937[CCBC-937]
 Implement support for alternate addresses.
-* https://issues.couchbase.com/browse/CCBC-943[CCBC-943] 
-Implement option to dump TCP packets. This change introduces new cmake option, which will force library to report all incoming/outgoing TCP packets on TRACE log level. 
-It renders the bytes in Base64 encoding. 
+* https://issues.couchbase.com/browse/CCBC-943[CCBC-943]
+Implement option to dump TCP packets. This change introduces new cmake option, which will force library to report all incoming/outgoing TCP packets on TRACE log level.
+It renders the bytes in Base64 encoding.
 Also there is simple extraction tool, which beautifies packet traces, and could be used like this:
 
 [source,bash]
@@ -459,15 +500,15 @@ http://docs.couchbase.com/sdk-api/couchbase-c-client-2.9.0/[API Reference]
 This release is mostly about API visibility bump from uncommited to
 committed, but also includes several bug fixes.
 
-* https://issues.couchbase.com/browse/CCBC-930[CCBC-930]: 
+* https://issues.couchbase.com/browse/CCBC-930[CCBC-930]:
 Dump threshold logging tracer queues before destroying the tracer.
-* Updates in crypto API as per RFC. 
-This basically change of the API (ABI has preserved compatible, but v0 crypto API will return runtime error with 2.9.0 library. 
-From this release, all encryption key management encapsulated into crypto provider, so it does not need to expose key loader interface. 
+* Updates in crypto API as per RFC.
+This basically change of the API (ABI has preserved compatible, but v0 crypto API will return runtime error with 2.9.0 library.
+From this release, all encryption key management encapsulated into crypto provider, so it does not need to expose key loader interface.
 In addition, that user API is changed to conform RFC, and use noun fields instead of document (__e.g.__ ``lcbcrypt_encrypt_fields)``.
-* https://issues.couchbase.com/browse/CCBC-925[CCBC-925]: 
+* https://issues.couchbase.com/browse/CCBC-925[CCBC-925]:
 Fix existence checks for registered crypto providers.
-* https://issues.couchbase.com/browse/CCBC-924[CCBC-924]: 
+* https://issues.couchbase.com/browse/CCBC-924[CCBC-924]:
 Initialize flag for JSON server feature. Otherwise it might be left uninitialized and the library will send JSON datatype to servers, which do not support it.
 * https://issues.couchbase.com/browse/PCBC-543[PCBC-543],
 https://issues.couchbase.com/browse/CCBC-932[CCBC-932],
@@ -1410,7 +1451,7 @@ a node had been failed over (e.g. by hitting the "fail over" button
 in the UI).
  ** Issues: https://issues.couchbase.com/browse/CCBC-761[CCBC-761]
 
- 
+
 [cols="12,^8,23"]
 |===
 |  Platform           |  Architecture  | File
@@ -1453,7 +1494,7 @@ replica node is available. Users may work around this issue by:
 * Bringing the failed over node online
 * Downgrading to 2.7.0 or lower.
 
- 
+
 
 *Additions and bug fixes in this version:*
 
@@ -1553,7 +1594,7 @@ intended for possible future materialized XATTRs.
 * Add ``LCB_SDSPEC_F_XATTR_DELETED_OK``, which maps to the protocol
 flag of roughly the same name.
 
- 
+
 [cols="12,^8,23"]
 |===
 |  Platform            | Architecture  | File
