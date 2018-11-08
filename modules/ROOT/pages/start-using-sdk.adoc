@@ -141,7 +141,7 @@ int storeAndRetrieveKey()
     assert(lcb_version_g >= 0x020506 && "This example requires 2.5.6 or greater");
 
     lcb_t instance;
-    lcb_create_st options;
+    struct lcb_create_st options;
     memset(&options, 0, sizeof options);
     options.version = 3;
     options.v.v3.connstr = "couchbase://localhost/bucketname";
