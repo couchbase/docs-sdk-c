@@ -46,6 +46,7 @@ sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
 
 Note that as of Couchbase Data Platform 6.0, _couchbase-release_ (1.0.4) supports Debian 7 and 8, and Ubuntu 12.04, 14.04, and 16.04. If you wish to install a Couchbase SDK on a more recent Ubuntu or Debian, follow these steps (but note that beyond Ubuntu 18.04, other platforms are not necessarily supported):
 
+// tag::new_ubuntu[]
 .Adding repo manually
 [source,bash]
 ----
@@ -57,6 +58,7 @@ sudo echo "deb http://packages.couchbase.com/ubuntu bionic bionic/main" > /etc/a
 sudo apt-get update
 sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
 ----
+// end::new_ubuntu[]
 
 .RHEL and CentOS
 [source,bash]
