@@ -1,4 +1,5 @@
 = Install and Start Using the C (libcouchbase) SDK with Couchbase Server
+:page-partial:
 :navtitle: Start Using the SDK
 include::partial$attributes.adoc[]
 
@@ -18,16 +19,19 @@ The C SDK is also commonly used as a core dependency of SDKs written in other la
 Note that SSL and N1QL features depend on server support.
 See xref:compatibility-versions-features.adoc[Compatibility] to see which server versions support which features.
 
+// tag::platform_support[]
 == Platform support and installation
 
-The Couchbase C SDK can be installed via apt or deb repositories on Linux; homebrew on Mac OS X; and <<install-windows,binary archives for Microsoft Windows>>.
+The Couchbase C SDK can be installed via apt or yum repositories on Linux; homebrew on Mac OS X; and <<install-windows,binary archives for Microsoft Windows>>.
 It may also be https://github.com/couchbase/libcouchbase[built from source^] on any of the platforms mentioned above, and more.
+// end::platform_support[]
 
+// tag::linux[]
 [#install-linux]
 == Installing on Linux
 
 For installation on Linux, install the _couchbase-release_ repository, and then install the _libcouchbase_ packages.
-The following examples download and install _couchbase-release_ repsitory, a C and C++ compiler, and the C SDK core (_libcouchbase2-core_), command line tools (_libcouchbase2-bin_), and the development tools (_libcouchbase-devel_ [RPM] or _libcouchbase-dev_ [DEB]).
+The following examples download and install _couchbase-release_ repository, a C and C++ compiler, and the C SDK core (_libcouchbase2-core_), command line tools (_libcouchbase2-bin_), and the development tools (_libcouchbase-devel_ [RPM] or _libcouchbase-dev_ [DEB]).
 
 .Debian and Ubuntu
 [source,bash]
@@ -36,6 +40,20 @@ The following examples download and install _couchbase-release_ repsitory, a C a
 wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-4-amd64.deb
 sudo dpkg -i couchbase-release-1.0-4-amd64.deb
 # Will install or upgrade packages
+sudo apt-get update
+sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
+----
+
+Note that as of Couchbase Data Platform 6.0, _couchbase-release_ (1.0.4) supports Debian 7 and 8, and Ubuntu 12.04, 14.04, and 16.04. If you wish to install a Couchbase SDK on a more recent Ubuntu or Debian, follow these steps (but note that beyond Ubuntu 18.04, other platforms are not necessarily supported):
+
+.Adding repo manually
+[source,bash]
+----
+# Install Couchbase's GPG key
+sudo wget -O - http://packages.couchbase.com/ubuntu/couchbase.key | sudo apt-key add -
+# Adding Ubuntu 18.04 LTS repo to apt/sources.list
+sudo echo "deb http://packages.couchbase.com/ubuntu bionic bionic/main" > /etc/apt/sources.list.d/couchbase.list
+# To install or upgrade packages
 sudo apt-get update
 sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
 ----
@@ -52,7 +70,9 @@ sudo yum install libcouchbase-devel libcouchbase2-bin gcc gcc-c++
 
 NOTE: You should install the `libcouchbase2-libevent` or `libcouchbase2-libev` plugin in case your application will use more than 1024 file descriptors.
 The default `select()` based event loop only supports 1024 file descriptors.
+// end::linux[]
 
+// tag::macos[]
 [#install-osx]
 == Installation on Mac OS X
 
@@ -64,11 +84,12 @@ Once _homebrew_ is configured:
 brew update # get list of latest packages
 brew install libcouchbase
 ----
+// end::macos[]
 
 [#install-windows]
 == Installation on Microsoft Windows
 
-See xref:relnotes-c-sdk.adoc[Installation and Release Notes] section for details.
+See xref:relnotes-c-sdk.adoc#_windows_installation[Installation and Release Notes] section for details.
 
 == Installing from Source Code
 

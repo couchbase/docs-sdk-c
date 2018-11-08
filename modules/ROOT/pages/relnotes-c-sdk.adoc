@@ -1,49 +1,12 @@
-= Couchbase C Release Notes and Archives
+= Couchbase C Release Notes and Download Archives
 
 == Installation
 
-You can install the C SDK from a repository for your platform, download prebuilt binaries or compile from source.
+You can install the C SDK from a repository for your platform, download prebuilt binaries, or compile from source.
 
-=== Quick Installation - Linux
+include::start-using-sdk.adoc[tag=macos]
 
-For installation on Linux, install the _couchbase-release_ repository, and then install the _libcouchbase_ packages.
-The following examples download and install _couchbase-release_ repository, a C and C++ compiler, and the C SDK core (_libcouchbase2-core_), command line tools (_libcouchbase2-bin_), and the development tools
-(_libcouchbase-devel_ [RPM] or _libcouchbase-dev_ [DEB]).
-
-*Debian and Ubuntu*
-
-[source,bash]
-----
- # Only needed during first-time setup:
- wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-4-amd64.deb
- sudo dpkg -i couchbase-release-1.0-4-amd64.deb
- # Will install or upgrade packages
- sudo apt-get update
- sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
-----
-
-*RHEL and CentOS*
-
-[source,bash]
-----
- # Only needed during first-time setup:
- wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-4-x86_64.rpm
- sudo rpm -iv couchbase-release-1.0-4-x86_64.rpm
- # Will install or upgrade existing packages
- sudo yum install libcouchbase-devel libcouchbase2-bin gcc gcc-c++
-----
-
-xref:start-using-sdk.adoc#install-osx[Installation on Mac OS X]
-
-=== Quick installation - Mac OS X
-
-To install the library on Mac OS X, first install the de facto package manager for OS X: http://brew.sh/[homebrew]. Once _homebrew_ is configured:
-
-[source,bash]
-----
-brew update # get list of latest packages
-brew install libcouchbase
-----
+include::start-using-sdk.adoc[tag=linux]
 
 === Installing Manually - Linux
 
@@ -159,13 +122,13 @@ libcouchbase-dev_2.2.0-2453_amd64.deb libcouchbase2-bin_2.2.0-2453_amd64.deb
 > ldconfig deferred processing now taking place
 ----
 
-=== Installation from source
+== Installation from source
 
 You may install the library from source either by downloading a source archive, or by checking out the https://github.com/couchbase/libcouchbase[git
 repository].
-Follow the instructions in the archive's README.md for further instructions.
+Follow the instructions in the archive's https://github.com/couchbase/libcouchbase/blob/master/README.markdown[README] for further instructions.
 
-=== Windows Installation
+== Windows Installation
 
 Windows binary packages can be found as downloads for each version listed below.
 Included are the header files, release and debug variants of the DLLs and import libraries, and release and debug variants of the command line tools.
@@ -175,13 +138,13 @@ Be sure to select the proper package for the compiler and architecture your appl
 
 [NOTE]
 ====
-If there are no binaries available for your visual studio version, then using a binary from any other visual studio version is _likely_ to work.
+If there are no binaries available for your Visual Studio version, then using a binary from any other Visual Studio version is _likely_ to work.
 Most of the issues related to mixing Visual Studio binary versions involve changing and incompatible C++ APIs or incompatible C Runtime (CRT) objects and functions.
 Since the Couchbase C SDK does not expose a C++ API, and since it does not directly expose any CRT functionality, it should be safe for use so long as your application can link to the library at compile-time.
 The windows runtime linker will ensure that each binary is using the appropriate version of the Visual C Runtime (``MSVCRT.DLL``).
 ====
 
-If for some reason you cannot use any of the prebuilt Windows binaries, follow the instructions in xref:#_installation_from_source[_installation from source_ (above)] to build on Windows.
+If for some reason you cannot use any of the prebuilt Windows binaries, follow the instructions in xref:#_installation_from_source[__installation from source__ (above)] to build on Windows.
 
 
 == 2.10.0 (October 12 2018)
