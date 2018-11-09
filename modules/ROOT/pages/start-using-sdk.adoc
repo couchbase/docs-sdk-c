@@ -126,7 +126,7 @@ int storeAndRetrieveKey()
     assert(lcb_version_g >= 0x020506 && "This example requires 2.5.6 or greater");
 
     lcb_t instance = NULL;
-    lcb_create_st crst;
+    struct lcb_create_st crst = {0};
     memset(&crst, 0, sizeof crst);
     crst.version = 3;
     crst.v.v3.connstr = "couchbase://localhost";
