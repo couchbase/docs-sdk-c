@@ -163,7 +163,7 @@ The following matrix shows which versions of the C SDK client support the major 
 5+| *Advanced Features*
 
 | Durability Requirements
-4+| Since 1.1
+4+| Since All Versions
 
 | Carrier Publication Configuration
 4+| All Versions
