@@ -104,26 +104,34 @@ This combination is not recommended by our technical support organization.
 It is best to upgrade either the SDK or the Couchbase version you are using.
 * ✔ *Supported*:This combination is subject to ongoing quality assurance, and is fully supported by our technical support organization.
 
+
 .Recommended SDK per Server Version Matrix
 [#table_sdk_versions]
+[cols="40,25,25,20,20"]
 |===
-| | *SDK 2.5* | *SDK 2.6* | *SDK 2.7* | *SDK 2.8*
+| | SDK 2.6, 2.7 | SDK 2.8 | SDK 2.9 | SDK 2.10
 
-| *Server 3.1*
-| ✔
-| ✔
+| *Server 4.0-4.5*
+| ◎
 | *✔*
-| *✔*
-
-| *Server 4.0-4.6*
-| ✔
-| ✔
 | *✔*
 | *✔*
 
-| *Server 5.0-5.1*
-| ✔
-| ✔
+| *Server 4.6*
+| ◎
+| *✔*
+| *✔*
+| *✔*
+
+| *Server 5.0-5.5*
+| ◎
+| *✔*
+| *✔*
+| *✔*
+
+| *Server 6.0*
+| *✖*
+| *✔*
 | *✔*
 | *✔*
 |===
@@ -131,56 +139,92 @@ It is best to upgrade either the SDK or the Couchbase version you are using.
 Note the https://www.couchbase.com/support-policy[End of Life dates^] for Couchbase Server and SDK versions.
 See the notes there for Support details.
 
+== Couchbase Feature Availability Matrix
+
 To take advantage of all features offered by Couchbase Server, you need to know what version of the client provides compatibility for the features you want to use.
 The following matrix shows which versions of the C SDK client support the major features of each version of Couchbase Server.
 
 .Couchbase Server and SDK Supported Version Matrix
-[cols="6,5,5,5,5,5,5,5"]
+[cols="<25,.^23,.^24,.^18,.^19"]
 |===
-| Feature | Server 1.8 | Server 2.0 | Server 2.5 | Server 3.0 | Server 4.0, 4.1 | Server 4.5, 4.6 | Server 5.0
+| | Server 4.0, 4.1 | Server 4.5, 4.6 | Server 5.x | Server 6.0
 
-8+| *Basic Features*
+5+| *Basic Features*
 
 | CRUD Operations
-7+| SDK 2.4.0
+4+| All Versions
 
 | View Querying APIs
-7+| Partial support since SDK 2.4.0.
-Full row-based support since SDK 2.4.7
+4+| All Versions
 
-8+| *Advanced Features*
+| Geospatial Views
+4+| All Versions
+
+5+| *Advanced Features*
 
 | Durability Requirements
-7+| 2.4.0
+4+| All Versions
 
-| Fast (CCCP) Bootstrapping
-2+| Not Supported
-5+| 2.4.0
+| Carrier Publication Configuration
+4+| All Versions
 
 | SSL Connectivity
-3+| Not Supported
-4+| 2.4.0
+4+| All Versions
 
-| Partial Cross-SDK Data types
-2+| Not Supported
-5+| Since 2.0
+| Bulk Operations
+4+| All Versions
 
 | N1QL Querying
-4+| Not Supported
-3+| Since 2.5.0
+4+| All Versions
+
+| Multi-Dimensional Scaling
+4+| All Versions
+
+| Sub-document API
+4+| Since 2.6
+
+| Full Text Search
+| Since 2.6 (Experimental)
+3+| Since 2.7
+
+| Global Secondary Indexes (GSI)
+4+| All Versions
+
+| Memory Optimized Indexes (MOI)
+| Not Supported
+3+| All SDK versions
+
+| Plasma Storage for Indexes
+2+| Not Supported
+2+| All SDK versions
+
+| FTS Index Management from the SDK
+2+| Not Supported
+2+| Since 2.3
+
+| Data Structures
+| Not Supported
+3+| Since 2.3
 
 | Extended Attributes
-6+| Not Supported
-| Since 2.7.5
-
-8+| *Administrative Features*
-
-| Administrative API
-7+| Not Supported
+2+| Not Supported
+2+| Since 2.7.5
 
 | RBAC
-6+| Not Supported
-| Since 2.7.4
+2+| Not Supported
+2+| Since 2.7.4
+
+| Analytics
+2+| Not supported
+| DP in 5.5 with 2.9
+| Since 2.10
+
+5+| *Administrative Features*
+
+| Administrative API
+4+| All Versions
 |===
+
+IMPORTANT: With xref:sdk-authentication-overview.adoc[RBAC], in Couchbase Server 5.0, authentication will depend upon access privileges, and upgrading to 5.0 with existing buckets, or upgrading Server, will require taking these changes into account.
 
 include::6.0@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]
