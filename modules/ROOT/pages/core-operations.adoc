@@ -1,1 +1,809 @@
-include::6.0@sdk:pages:partial$core-operations.adoc[]
+= Core Operations
+include::partial$attributes.adoc[]
+
+[abstract]
+At the core of a database is its ability to store and retrieve data.
+This section discusses the various ways in which you can access data (Documents) in Couchbase: creating, updating, retrieving, querying, and deleting documents.
+
+== Document
+
+A [.term]_document_ refers to an entry in the database (other databases may refer to the same concept as a _row_).
+A document has an ID (_primary key_ in other databases), which is unique to the document and by which it can be located.
+The document also has a value which contains the actual application data.
+
+*Document IDs* are assigned by application.
+A valid document ID must:
+
+* Conform to UTF-8 encoding
+* Be no longer than 250 bytes
++
+NOTE: There is a difference between bytes and characters: most non-Latin characters occupy more than a single byte.
+
+You are free to choose any ID for your document, so long as they conform to the above restrictions.
+Unlike some other database, Couchbase does not automatically generate IDs for you, though you may use a separate <<devguide_kvcore_counter_generic,counter>> to increment a serial number.
+
+The *document value* contains the actual application data; for example, a _product_ document may contain information about the price and description.
+Documents are usually (xref:nonjson.adoc[but not always]) stored as JSON on the server.
+Because JSON is a structured format, it can be subsequently searched and queried.
+
+[source,json]
+----
+{
+    "type": "product",
+    "sku": "CBSRV45DP",
+    "msrp": [5.49, "USD"],
+    "ctime": "092011",
+    "mfg": "couchbase",
+    "tags": ["server", "database", "couchbase", "nosql", "fast", "json", "awesome"]
+}
+----
+
+[#crud-overview]
+== Primitive Key-Value Operations
+
+[source,python]
+----
+upsert(docid, document)
+insert(docid, document)
+replace(docid, document)
+get(docid)
+remove(docid)
+----
+
+In Couchbase documents are stored using one of the operations: _upsert_, _insert_, and _replace_.
+These operations will all write a JSON document with a given document ID (key) to the database.
+The update methods differ in behavior in respect to the existing state of the document:
+
+* _insert_ will only create the document if the given ID is not found within the database.
+* _replace_ will only replace the document if the given ID already exists within the database.
+* _upsert_ will always replace the document, ignoring whether the ID has already existed or not.
+
+Documents can be retrieved using the _get_ operation, and finally removed using the _remove_ operations.
+
+Since Couchbase’s KV store may be thought of as a distributed hashmap or dictionary, the following code samples are explanatory of Couchbase’ update operations in pseudo-code:
+
+[source,cpp]
+----
+map<string,object> KV_STORE;
+
+void insert(string doc_id, object value) {
+    if (!KV_STORE.contains(doc_id)) {
+        KV_STORE.put(doc_id, value);
+    } else {
+        throw DocumentAlreadyExists();
+    }
+}
+
+void replace(string doc_id, object value) {
+    if (KV_STORE.contains(doc_id)) {
+        KV_STORE.put(doc_id, value);
+    } else {
+        throw DocumentNotFound();
+    }
+}
+
+void upsert(string doc_id, object value) {
+    KV_STORE.put(doc_id, value);
+}
+
+object get(string doc_id) {
+    if (KV_STORE.contains(doc_id)) {
+        return KV_STORE.get(doc_id);
+    } else {
+        throw DocumentNotFound();
+    }
+}
+----
+
+You can also use xref:n1ql-query.adoc[N1QL queries] and xref:full-text-search-overview.adoc[Full Text Search] to access documents by means other than their IDs, however these query operations Couchbase eventually translate into primitive key-value operations, and exist as separate services outside the data store.
+
+== Storing and Updating Documents
+
+Documents can be stored and updated using either the SDK, Command line, or Web UI.
+When using a storage operation, the _full content_ of the document is replaced with a new value.
+
+The following example shows a document being stored using the xref:webui-cli-access.adoc#cli-access[`cbc`] utility.
+The ID of the document is `docid` and its value is JSON containing a single field (`json`) with the value of `value`.
+When storing JSON data using cbc, ensure it is properly quoted for your shell:
+
+....
+$ cbc create docid --value '{"json":"value"}' --mode upsert \
+        -U couchbase://cluster-node/bucket-name
+docid               Stored. CAS=0x8234c3c0f213
+....
+
+Equivalent code using libcouchbase API would be:
+
+[source,cpp]
+----
+#include <inttypes.h> /* for PRI* macros */
+
+static void store_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    if (rb->rc == LCB_SUCCESS) {
+	printf("%.*s Stored. CAS=0x%" PRIx64 "\n",
+	    (int)rb->nkey, (char *)rb->key, rb->cas);
+    } else {
+        printf("Unable to store document: %s\n", lcb_strerror_short(rb->rc));
+    }
+}
+
+...
+
+lcb_install_callback3(instance, LCB_CALLBACK_STORE, store_callback);
+
+...
+
+lcb_CMDSTORE cmd = { 0 };
+cmd.operation = LCB_UPSERT;
+LCB_CMD_SET_KEY(&cmd, key, nkey);
+LCB_CMD_SET_VALUE(&cmd, bytes, nbytes);
+lcb_error_t err = lcb_store3(instance, NULL, &cmd);
+if (err != LCB_SUCCESS) {
+    printf("Unable to schedule store: %s\n", lcb_strerror_short(err));
+}
+----
+
+You can also specify additional options when storing a document in Couchbase
+
+* <<expiry,Expiry>> (or _TTL_) value which will instruct the server to delete the document after a given amount of time.
+This option is useful for transient data (such as sessions).
+By default documents do not expire.
+See <<expiry,Expiry>> for more information on expiration.
+* xref:concurrent-mutations-cluster.adoc[CAS] value to protect against concurrent updates to the same document.
+See xref:concurrent-mutations-cluster.adoc[CAS] for a description on how to use CAS values in your application.
+* xref:durability.adoc[Durability Requirements]
+
+[NOTE]
+====
+If you wish to only modify certain parts of a document, you can use xref:subdocument-operations.adoc[sub-document] operations which operate on specific subsets of documents:
+
+[source,cpp]
+----
+#include <inttypes.h> /* for PRI* macros */
+
+static void subdoc_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    const lcb_RESPSUBDOC *resp = (const lcb_RESPSUBDOC *)rb;
+    if (rb->rc == LCB_SUCCESS) {
+	printf("%.*s. CAS=0x%" PRIx64 "\n",
+	    (int)rb->nkey, (char *)rb->key, rb->cas);
+    } else {
+        printf("Unable to subdoc document: %s\n", lcb_strerror_short(rb->rc));
+    }
+
+    lcb_SDENTRY cur;
+    size_t vii = 0, oix = 0;
+    while (lcb_sdresult_next(resp, &cur, &vii)) {
+        int index = oix++;
+        if (cbtype == LCB_CALLBACK_SDMUTATE) {
+            index = cur.index;
+        }
+        printf("%d. Size=%lu, RC=%s\n", index, (unsigned long)cur.nvalue,
+               lcb_strerror_short(cur.status));
+        if (cur.nvalue > 0) {
+            fwrite(cur.value, 1, cur.nvalue, stdout);
+            printf("\n");
+        }
+    }
+}
+
+...
+
+lcb_install_callback3(instance, LCB_CALLBACK_SDMUTATE, subdoc_callback);
+
+...
+
+lcb_SDSPEC spec = {0};
+spec.sdcmd = LCB_SDCMD_ARRAY_ADD_UNIQUE;
+const char *path = "tags";
+LCB_SDSPEC_SET_PATH(&spec, path, strlen(path));
+const char *value = "\"fast\"";
+LCB_SDSPEC_SET_VALUE(&spec, value, strlen(value));
+spec.options = LCB_SDSPEC_F_MKINTERMEDIATES;
+
+lcb_CMDSUBDOC cmd = {0};
+const char *key = "docid";
+LCB_CMD_SET_KEY(&cmd, key, strlen(key));
+cmd.nspecs = 1;
+cmd.specs = &spec;
+lcb_error_t err = lcb_subdoc3(instance, NULL, &cmd);
+if (err != LCB_SUCCESS) {
+    printf("Unable to schedule subdoc: %s\n", lcb_strerror_short(err));
+}
+----
+
+[source,bash]
+----
+$ cbc subdoc
+subdoc> array-add-unique -i -p tags="fast" docid
+docid                CAS=0x156a054617df0000
+0. Size=0, RC=0x00 Success (Not an error)
+
+subdoc> get docid
+docid                CAS=0x156a054617df0000
+0. Size=32, RC=0x00 Success (Not an error)
+{"json":"value","tags":["fast"]}
+----
+
+or xref:{version-server}@server:n1ql:n1ql-language-reference/update.adoc[N1QL UPDATE] to update documents based on specific query criteria:
+
+[source,sql]
+----
+update `default` SET sale_price = msrp * 0.75 WHERE msrp < 19.95;
+----
+====
+
+[#devguide_kvcore_get_generic]
+== Retrieving Documents
+
+FASTPATH: This section discusses retrieving documents using their IDs, or primary keys.
+Documents can also be accessed using secondary lookups via xref:n1ql-query.adoc[N1QL queries] and MapReduce.
+Primary key lookups are performed using the key-value API, which simplifies use and increases performance (as applications may interact with the KV store directly, rather than a secondary index or query processor).
+
+In Couchbase, documents are stored with their IDs.
+Retrieving a document via its ID is the simplest and quickest operation in Couchbase.
+
+[source,cpp]
+----
+#include <inttypes.h> /* for PRI* macros */
+
+static void get_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    if (rb->rc == LCB_SUCCESS) {
+	printf("%.*s. CAS=0x%" PRIx64 "\n",
+	    (int)rb->nkey, (char *)rb->key, rb->cas);
+        const lcb_RESPGET *resp = (const lcb_RESPBASE *)rb;
+        fwrite(resp->value, 1, resp->nvalue, stdout);
+    } else {
+        printf("Unable to get document: %s\n", lcb_strerror_short(rb->rc));
+    }
+}
+
+...
+
+lcb_install_callback3(instance, LCB_CALLBACK_GET, get_callback);
+
+...
+
+const char *key = "docid";
+lcb_CMDGET cmd = {0};
+LCB_CMD_SET_KEY(&cmd, key, strlen(key));
+lcb_error_t err = lcb_get3(instance, NULL, &cmd);
+if (err != LCB_SUCCESS) {
+    printf("Unable to schedule get: %s\n", lcb_strerror_short(err));
+}
+----
+
+[source,bash]
+----
+$ cbc get docid
+docid                CAS=0x8234c3c0f213, Flags=0x0. Size=16
+{"json":"value"}
+----
+
+Once a document is retrieved, it is accessible in the native format by which it was stored; meaning that if you stored the document as a list, it is now available as a list again.
+The SDK will automatically deserialize the document from its stored format (usually JSON) to a native language type.
+It is possible to store and retrieve non-JSON documents as well, using a xref:nonjson.adoc[transcoder].
+
+You can also modify a document's expiration time while retrieving it; this is known as _get-and-touch_ and allows you to keep temporary data alive while retrieving it in one atomic and efficient operation.
+
+Documents can also be retrieved with N1QL.
+While N1QL is generally used for secondary queries, it can also be used to retrieve documents by their primary keys (ID) (though it is recommended to use the key-value API if the ID is known).
+Lookups may be done either by comparing the `META(from-term).id` or by using the `USE KEYS` [\...] keyword:
+
+[source,sql]
+----
+SELECT * FROM default USE KEYS ["docid"];
+----
+
+or
+
+[source,sql]
+----
+SELECT * FROM default WHERE META(default).id = "docid";
+----
+
+With libcouchbase API it will be:
+
+[source,cpp]
+----
+static void query_callback(lcb_t instance, int cbtype, const lcb_RESPN1QL *resp)
+{
+    if (resp->rflags & LCB_RESP_F_FINAL) {
+        if (resp->rc != LCB_SUCCESS) {
+            printf("Unable to perform query: %s\n", lcb_strerror_short(resp->rc));
+            if (resp->htresp) {
+                printf("Inner HTTP request failed with library code %s and HTTP status %d\n",
+                    lcb_strerror_short(resp->htresp->rc),
+                    resp->htresp->htstatus);
+                /* also we could dump htresp->headers and htresp->body here */
+            }
+        }
+        if (resp->row) {
+            printf("META: %.*s\n", (int)resp->nrow, resp->row);
+        }
+    } else {
+        printf("ROW: %.*s\n", (int)resp->nrow, resp->row);
+    }
+}
+
+...
+lcb_error_t err;
+lcb_N1QLPARAMS *builder = lcb_n1p_new();
+const char *statement = "SELECT * FROM default WHERE META(default).id = $key";
+err = lcb_n1p_setqueryz(builder, statement, LCB_N1P_QUERY_STATEMENT);
+if (err != LCB_SUCCESS) {
+    printf("Unable to set query statement\n");
+    lcb_n1p_free(builder);
+    return;
+}
+err = lcb_n1p_namedparamz(builder, "key", "\"docid\"");
+if (err != LCB_SUCCESS) {
+    printf("Unable to set named parameter\n");
+    lcb_n1p_free(builder);
+    return;
+}
+
+lcb_N1QL cmd = {0};
+rc = lcb_n1p_mkcmd(builder, &cmd);
+if (rc != LCB_SUCCESS) {
+    printf("Unable to render builder into command\n");
+    lcb_n1p_free(builder);
+    return;
+}
+cmd.callback = query_callback;
+rc = lcb_n1ql_query(instance, NULL, &cmd);
+lcb_n1p_free(builder);
+if (rc != LCB_SUCCESS) {
+    printf("Unable to schedule query\n");
+}
+----
+
+[source,bash]
+----
+$ cbc query 'SELECT * FROM default WHERE META(default).id = $key' --qarg 'key="docid"'
+---> Encoded query: {"$key":"docid","statement":"SELECT * FROM default WHERE META(default).id = $key"}
+
+{"default":{"json":"value"}},
+---> Query response finished
+{
+"requestID": "fb3474a9-c49e-48b9-913b-ab0eaaed2d69",
+"signature": {"*":"*"},
+"results": [
+],
+"status": "success",
+"metrics": {"elapsedTime": "2.468751ms","executionTime": "2.276236ms","resultCount": 1,"resultSize": 28}
+}
+----
+
+You can also retrieve _parts_ of documents using xref:subdocument-operations.adoc[sub-document operations], by specifying one or more sections of the document to be retrieved
+
+[source,cpp]
+----
+#include <inttypes.h> /* for PRI* macros */
+
+static void subdoc_lookup_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    const lcb_RESPSUBDOC *resp = (const lcb_RESPSUBDOC *)rb;
+    if (rb->rc == LCB_SUCCESS) {
+	printf("%.*s. CAS=0x%" PRIx64 "\n",
+	    (int)rb->nkey, (char *)rb->key, rb->cas);
+    } else {
+        printf("Unable to lookup: %s\n", lcb_strerror_short(rb->rc));
+    }
+
+    lcb_SDENTRY cur;
+    size_t vii = 0, oix = 0;
+    while (lcb_sdresult_next(resp, &cur, &vii)) {
+        printf("%d. Size=%lu, RC=%s\n", oix++, (unsigned long)cur.nvalue,
+               lcb_strerror_short(cur.status));
+        if (cur.nvalue > 0) {
+            fwrite(cur.value, 1, cur.nvalue, stdout);
+            printf("\n");
+        }
+    }
+}
+
+...
+
+lcb_install_callback3(instance, LCB_CALLBACK_SDLOOKUP, subdoc_lookup_callback);
+
+...
+
+lcb_SDSPEC specs[2] = {0};
+specs[0].sdcmd = LCB_SDCMD_GET;
+const char *path1 = "contact.name";
+LCB_SDSPEC_SET_PATH(&specs[0], path1, strlen(path1));
+specs[1].sdcmd = LCB_SDCMD_GET;
+const char *ath2 = "contact.email";
+LCB_SDSPEC_SET_PATH(&specs[1], path2, strlen(path2));
+
+lcb_CMDSUBDOC cmd = {0};
+const char *key = "user:kingarthur";
+LCB_CMD_SET_KEY(&cmd, key, strlen(key));
+cmd.nspecs = 2;
+cmd.specs = specs;
+lcb_error_t err = lcb_subdoc3(instance, NULL, &cmd);
+if (err != LCB_SUCCESS) {
+    printf("Unable to schedule lookup: %s\n", lcb_strerror_short(err));
+}
+----
+
+[source,bash]
+----
+$ cbc subdoc
+subdoc> get -p contact.name -p contact.email user:kingarthur
+user:kingarthur      CAS=0x156a05c9f47e0000
+0. Size=13, RC=0x00 Success (Not an error)
+"King Arthur"
+1. Size=19, RC=0x00 Success (Not an error)
+"arthur@britain.uk"
+----
+
+[#devguide_kvcore_counter_generic]
+== Counters
+
+You can atomically increment or decrement the numerical value of special counter document
+
+NOTE: Do not increment or decrement counters if using XDCR.
+Within a single cluster the `incr()` is atomic, as is `decr()`; across XDCR however, if two clients connecting to two different (bidirectional) clusters issue `incr` concurrently, this may (and most likely will) result in the value only getting incremented once in total.
+The same is the case for `decr()`.
+
+A document may be used as a counter if its value is a simple ASCII number, like `42`.
+Couchbase allows you to increment and decrement these values atomically using a special [.api]`counter` operation.
+The example below (in Python) shows how to use counters:
+
+[source,cpp]
+----
+#include <inttypes.h> /* for PRI* macros */
+
+static void counter_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    if (rb->rc == LCB_SUCCESS) {
+	printf("%.*s. CAS=0x%" PRIx64 "\n",
+	    (int)rb->nkey, (char *)rb->key, rb->cas);
+    } else {
+        printf("Unable to perform counter operation: %s\n",
+           lcb_strerror_short(rb->rc));
+    }
+}
+
+...
+
+lcb_install_callback3(instance, LCB_CALLBACK_COUNTER, counter_callback);
+
+...
+
+lcb_CMDCOUNTER cmd = { 0 };
+const char *key = "counter_id";
+LCB_CMD_SET_KEY(&cmd, key, strlen(key));
+cmd.delta = 20;     /* negative to decrement */
+cmd.create = 1;     /* true/false */
+cmd.initial = 100;  /* value, if counter is missing */
+cmd.exptime = 0;    /* never expire */
+lcb_error_t err = lcb_counter3(instance, NULL, &cmd);
+if (err != LCB_SUCCESS) {
+    printf("Unable to schedule store: %s\n", lcb_strerror_short(err));
+}
+----
+
+[source,bash]
+----
+$ cbc incr --initial=100 --delta 20 counter_id
+counter_id          Current value is 100. CAS=0x156a048cc1960000
+
+$ cbc incr --initial=100 --delta 20 counter_id
+counter_id          Current value is 120. CAS=0x156a048d4e270000
+
+$ cbc incr --initial=100 --delta 20 counter_id
+counter_id          Current value is 140. CAS=0x156a048dbdec0000
+----
+
+In the above example, a counter is created by using the [.api]`counter` Python method with an [.param]`initial` value.
+The initial value is the value the counter uses if the counter ID does not yet exist.
+
+Once created, the counter can be incremented or decremented atomically by a given _amount_ or _delta_.
+Specifying a positive delta increments the value and specifying a negative one decrements it.
+When a counter operation is complete, the application receives the current value of the counter, after the increment.
+
+Couchbase counters are 64-bit unsigned integers in Couchbase and do not wrap around if decremented beyond 0.
+However, counters will wrap around if incremented past their maximum value (which is the maximum value contained within a 64-bit integer).
+Many SDKs will limit the _delta_ argument to the value of a _signed_ 64-bit integer.
+
+<<expiry,Expiration>> times can also be specified when using counter operations.
+
+xref:concurrent-mutations-cluster.adoc[CAS] values are not used with counter operations since counter operations are atomic.
+The intent of the counter operation is to simply increment the current server-side value of the document.
+If you wish to only increment the document if it is at a certain value, then you may use a normal [.api]`upsert` function with CAS:
+
+[source,cpp]
+----
+#include <inttypes.h> /* for PRI* macros */
+
+static void store_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    if (rb->rc == LCB_SUCCESS) {
+	printf("%.*s Stored. CAS=0x%" PRIx64 "\n",
+	    (int)rb->nkey, (char *)rb->key, rb->cas);
+    } else {
+        printf("Unable to store document: %s\n", lcb_strerror_short(rb->rc));
+    }
+}
+
+static void get_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    if (rb->rc == LCB_SUCCESS) {
+        lcb_RESPGET *resp = (lcb_RESPGET *)rb;
+        if (should_increment_value(resp)) {
+            const char *value = calculate_new_value(resp);
+	    lcb_CMDSTORE cmd = { 0 };
+	    cmd.operation = LCB_UPSERT;
+            cmd.cas = rb->cas; /* optimistic lock */
+	    LCB_CMD_SET_KEY(&cmd, rb->key, rb->nkey);
+	    LCB_CMD_SET_VALUE(&cmd, value, strlen(value));
+	    lcb_error_t err = lcb_store3(instance, NULL, &cmd);
+	    if (err != LCB_SUCCESS) {
+		printf("Unable to schedule store: %s\n", lcb_strerror_short(err));
+	    }
+        }
+    } else {
+        printf("Unable to get document: %s\n", lcb_strerror_short(rb->rc));
+    }
+}
+
+...
+
+lcb_install_callback3(instance, LCB_CALLBACK_GET, get_callback);
+lcb_install_callback3(instance, LCB_CALLBACK_STORE, store_callback);
+
+...
+
+const char *key = "counter_id";
+lcb_CMDGET cmd = {0};
+LCB_CMD_SET_KEY(&cmd, key, strlen(key));
+lcb_error_t err = lcb_get3(instance, NULL, &cmd);
+if (err != LCB_SUCCESS) {
+    printf("Unable to schedule get: %s\n", lcb_strerror_short(err));
+}
+----
+
+You can also use xref:subdocument-operations.adoc#ul_fp2_2yw_mv[sub-document counter operations] to increment numeric values _within_ a document containing other content.
+
+[#devguide_kvcore_append_prepend_generic]
+== Raw Byte Concatenation
+
+[#messagepanel_xx2_btg_vt]
+[WARNING]
+====
+The following methods should not be used with JSON documents.
+
+The append and prepend operations operate at the byte level and are unsuitable for dealing with JSON documents.
+Use these methods only when explicitly dealing with binary or UTF-8 documents.
+Using the append and prepend methods may invalidate an existing JSON document.
+You can use xref:subdocument-operations.adoc[sub-document operations] if you want to have true JSON-aware prepend and append operations which add values to JSON arrays.
+====
+
+[source,bash]
+----
+$ cbc create docid --mode upsert --value '-yyy-'
+docid               Stored. CAS=0x156a06a0046e0000
+
+$ cbc create docid --mode append --value 'zzz'
+docid               Stored. CAS=0x156a06a1dd2a0000
+
+$ cbc create docid --mode prepend --value 'xxx'
+docid               Stored. CAS=0x156a06a363b20000
+
+$ cbc get docid
+docid                CAS=0x156a06a363b20000, Flags=0x0, Size=11, Datatype=0x00
+xxx-yyy-zzz
+----
+
+The _append_ and _prepend_ operations atomically add bytes to the end or beginning of a binary document.
+They are an efficient alternative to retrieving a binary document in its entirety, appending the contents locally, and then saving the contents back to the server.
+
+Because these methods do raw string manipulation, they are only suitable for non-JSON documents: Prepending or appending anything to a JSON document will invalidate the JSON and make it unparseable by standard JSON parsers.
+
+The semantics of the _append_ and _prepend_ operations are similar to those of the _upsert_ family of operations, except that they accept the fragment to append as their value, rather than the entire document.
+These functions may be used to add efficiency for custom binary data structures (such as logs), as they avoid transferring the contents of the entire document for each operation.
+Consider the following versions (which are equivalent)
+
+.Append using get() and replace() (slow)
+[source,cpp]
+----
+#include <inttypes.h> /* for PRI* macros */
+
+const char *payload_1 = "\x01";
+const char *payload_2 = "\x02";
+
+static void store_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    if (rb->rc == LCB_SUCCESS) {
+	printf("%.*s Stored. CAS=0x%" PRIx64 "\n",
+	    (int)rb->nkey, (char *)rb->key, rb->cas);
+    } else {
+        printf("Unable to store document: %s\n", lcb_strerror_short(rb->rc));
+    }
+}
+
+static void get_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    if (rb->rc == LCB_SUCCESS) {
+        lcb_RESPGET *resp = (lcb_RESPGET *)rb;
+	lcb_CMDSTORE cmd = { 0 };
+	cmd.operation = LCB_REPLACE; /* we want to be sure we mutate existing doc */
+	cmd.cas = rb->cas; /* optimistic lock */
+	LCB_CMD_SET_KEY(&cmd, rb->key, rb->nkey);
+        /* instead of copy+concatenate, use IO vector */
+        lcb_IOV iov[2];
+        iov[0].iov_base = resp->value;
+        iov[0].iov_len = resp->nvalue;
+        iov[1].iov_base = payload_2;
+        iov[1].iov_len = strlen(payload_2);
+        cmd.value.vtype = LCB_IOV_COPY;
+        cmd.value.u_buf.multi.iov = iov;
+        cmd.value.u_buf.multi.niov = 2;
+	lcb_error_t err = lcb_store3(instance, NULL, &cmd);
+	if (err != LCB_SUCCESS) {
+	    printf("Unable to schedule store: %s\n", lcb_strerror_short(err));
+	}
+    } else {
+        printf("Unable to get document: %s\n", lcb_strerror_short(rb->rc));
+    }
+}
+
+...
+
+lcb_install_callback3(instance, LCB_CALLBACK_GET, get_callback);
+lcb_install_callback3(instance, LCB_CALLBACK_STORE, store_callback);
+
+...
+
+lcb_error_t err;
+const char *key = "binary_doc";
+
+{
+    lcb_CMDSTORE cmd = { 0 };
+    cmd.operation = LCB_UPSERT;
+    LCB_CMD_SET_KEY(&cmd, key, nkey);
+    LCB_CMD_SET_VALUE(&cmd, payload_1, strlen(payload_1));
+    err = lcb_store3(instance, NULL, &cmd);
+    if (err != LCB_SUCCESS) {
+	printf("Unable to schedule store: %s\n", lcb_strerror_short(err));
+        return;
+    }
+}
+lcb_wait(instance); /* wait for UPSERT to complete */
+
+{
+    lcb_CMDGET cmd = {0};
+    LCB_CMD_SET_KEY(&cmd, key, strlen(key));
+    err = lcb_get3(instance, NULL, &cmd);
+    if (err != LCB_SUCCESS) {
+	printf("Unable to schedule get: %s\n", lcb_strerror_short(err));
+    }
+}
+----
+
+.Append using append() (fast)
+[source,cpp]
+----
+#include <inttypes.h> /* for PRI* macros */
+
+const char *payload_1 = "\x01";
+const char *payload_2 = "\x02";
+
+static void store_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+{
+    if (rb->rc == LCB_SUCCESS) {
+	printf("%.*s Stored. CAS=0x%" PRIx64 "\n",
+	    (int)rb->nkey, (char *)rb->key, rb->cas);
+    } else {
+        printf("Unable to store document: %s\n", lcb_strerror_short(rb->rc));
+    }
+}
+
+...
+
+lcb_install_callback3(instance, LCB_CALLBACK_STORE, store_callback);
+
+...
+
+lcb_error_t err;
+const char *key = "binary_doc";
+
+{
+    lcb_CMDSTORE cmd = { 0 };
+    cmd.operation = LCB_UPSERT;
+    LCB_CMD_SET_KEY(&cmd, key, nkey);
+    LCB_CMD_SET_VALUE(&cmd, payload_1, strlen(payload_1));
+    err = lcb_store3(instance, NULL, &cmd);
+    if (err != LCB_SUCCESS) {
+	printf("Unable to schedule store: %s\n", lcb_strerror_short(err));
+        return;
+    }
+}
+lcb_wait(instance); /* wait for UPSERT to complete */
+
+{
+    lcb_CMDSTORE cmd = { 0 };
+    cmd.operation = LCB_APPEND; /* or LCB_PREPEND */
+    LCB_CMD_SET_KEY(&cmd, key, strlen(key));
+    LCB_CMD_SET_VALUE(&cmd, payload_2, strlen(payload_2));
+    lcb_error_t err = lcb_store3(instance, NULL, &cmd);
+    if (err != LCB_SUCCESS) {
+        printf("Unable to schedule store: %s\n", lcb_strerror_short(err));
+    }
+}
+----
+
+Note that since the _append_ operation is done atomically, there is no need for a CAS check (though one can still be supplied if the document must be at a specific state).
+
+Users of the _append_ and _prepend_ operations should ensure that the resulting documents do not become too large.
+Couchbase has a hard document size limit of 20MB.
+
+Using _append_ and _prepend_ on larger documents may cause performance degradation and memory fragmentation at the server level, as for each append operation the server must allocate memory for the new document size and then append the fragment to the new memory.
+The performance impact may be significant when document sizes reach beyond 100KB.
+
+Finally, note that while append saves network traffic from the client to server (by only specifying the fragment to append), the entire document is replicated for each mutation.
+Five append operations on a single 10MB document will result in 50MB of traffic to each replica.
+
+[#expiry]
+== Expiration Overview
+
+Most data in a database is there to be persisted and long-lived.
+However, the need for transient or temporary data does arise in applications, such as in the case of user sessions, caches, or temporary documents representing a given process ownership.
+You can use expiration values on documents to handle transient data.
+
+In databases without a built-in expiration feature, dealing with transient data may be cumbersome.
+To provide "expiration" semantics, applications are forced to record a time stamp in a record, and then upon each access of the record check the time stamp and, if invalid, delete it.
+
+Since some logically ‘expired’ documents might never be accessed by the application, to ensure that temporary records do not persist and occupy storage, a scheduled process is typically also employed to scan the database for expired entries routinely, and to purge those entries that are no longer valid.
+
+Workarounds such as those described above are not required for Couchbase, as it allows applications to declare the lifetime of a given document, eliminating the need to embed "validity" information in documents and eliminating the need for a routine "purge" of logically expired data.
+
+When an application attempts to access a document which has already expired, the server will indicate to the client that the item is not found.
+The server internally handles the process of determining the validity of the document and removing older, expired documents.
+
+== Setting Document Expiration
+
+By default, Couchbase documents do not expire.
+However, the expiration value may be set for the _upsert_, _replace_, and _insert_ operations when modifying data.
+
+Couchbase offers two additional operations for setting the document's expiration without modifying its contents:
+
+* The _get-and-touch_ operation allows an application to retrieve a document while modifying its expiration time.
+This method is useful when reading session data from the database: since accessing the data is indicative of it still being "alive", _get-and-touch_ provides a natural way to extend its lifetime.
+* The _touch_ operation allows an application to modify a document’s expiration time without otherwise accessing the document.
+This method is useful when an application is handling a user session but does not need to access the database (for example, if a particular  document is already cached locally).
+
+For Couchbase SDKs which accept simple integer expiry values (as opposed to a proper date or time object) allow expiration to be specified in two flavors.
+
+. As an offset from the current time.
+. As an absolute Unix time stamp
+
+If the absolute value of the expiry is less than 30 days (such as `60 * 60 * 24 * 30`), it is considered an _offset_.
+If the value is greater, it is considered an _absolute time stamp_.
+
+It might be preferable for applications to normalize the expiration value, such as by always converting it to an absolute time stamp.
+The conversion is performed to avoid issues when the intended offset is larger than 30 days, in which case it is taken to mean a Unix time stamp and, as a result,  the document will expire automatically as soon as it is stored.
+
+[IMPORTANT,caption=Remember]
+====
+* If you wish to use the expiry feature, then you should supply the expiry value for every mutation operation.
+* When dealing with expiration, it is important to note that most operations will implicitly remove any existing expiration.
+Thus, when modifying a document with expiration, it is important to pass the desired expiration time.
+* A document is expired as soon as the current time on the Couchbase Server node responsible for the document exceeds the expiration value.
+Bear this in mind in situations where the time on your application servers differs from the time on your Couchbase Server nodes.
+====
+
+Note that expired documents are not deleted from the server as soon as they expire.
+While a request to the server for an expired document will receive a response indicating the document does not exist, expired documents are actually deleted (i.e.
+cease to occupy storage and RAM) when an _expiry pager_ is run.
+The _expiry pager_ is a routine internal process which scans the database for items which have expired and promptly removes them from storage.
+
+When gathering resource usage statistics, note that expired-but-not-purged items (such as the expiry pager has not scanned this item yet) will still be considered with respect to the overall storage size and item count.
+
+NOTE: Although the API only sets expiry values _per document_, it is possible that elsewhere in the server, an expiry value is being set for https://developer.couchbase.com/documentation/server/5.5/architecture/core-data-access-bucket-expiration.html[every document in a bucket^].
+Should this be the case, the document TTL may be reduced, and the document may become unavailable to the app sooner than expected.
