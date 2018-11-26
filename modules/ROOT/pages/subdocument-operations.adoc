@@ -170,7 +170,7 @@ customer123. ERROR: LCB_SUBDOC_MULTI_FAILURE (0x49)
 Multiple operations can be combined as well:
 
 .Combine multiple lookup operations
-[source,php]
+[source,c]
 ----
 lcb_SDSPEC specs[2] = {0};
 specs[0].sdcmd = LCB_SDCMD_GET;
@@ -1114,8 +1114,9 @@ Considering the document
 {"literal[]bracket": {"literal.dot": true}}
 ----
 
-A path such as `pass:c[`literal[]bracket`.`literal.dot`]`.
-You can use double-backticks (`pass:c[``]`) to reference a literal backtick.
+A path such as 
+ `literal[]bracket`.`literal.dot`.
+You can use double-backticks (pass:c[``]) to reference a literal backtick.
 
 If you need to combine both JSON _and_ path-syntax literals you can do so by escaping the component from any JSON string characters (e.g.
 a quote or backslash) and then encapsulating it in backticks (`pass:c[`path`]`).
