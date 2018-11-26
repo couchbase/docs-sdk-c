@@ -1115,7 +1115,7 @@ Considering the document
 ----
 
 A path such as 
- ``literal[]bracket``.``literal.dot``.
+ \`literal[]bracket\`.\`literal.dot\`.
 You can use double-backticks (pass:c[``]) to reference a literal backtick.
 
 If you need to combine both JSON _and_ path-syntax literals you can do so by escaping the component from any JSON string characters (e.g.
