@@ -52,6 +52,8 @@ From Couchbase C SDK 2.9.1, [.api]`AlternateAddress` is implemented, for connect
 
 If using __Docker Swarm__, or otherwise running the SDK inside the NAT, then you will want to disable with `network = default` in the connection string, or an xref:client-settings.adoc[environmental setting] can be made.
 
+The `default` network is not the same thing as default behavior; default behavior is to compare the hostname/port used to fetch the configuration against the internal address, and if it matches, should use the internal information - and otherwise to choose the external alternate names if available.
+
 Note that any SSL/TLS certificates must be set up at the point where the connections are being made.  The Couchbase SDKs will honor any valid SSL/TLS certificates.
 
 ====
