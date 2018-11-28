@@ -53,7 +53,8 @@ From Couchbase C SDK 2.9.1, [.api]`AlternateAddress` is implemented, for connect
 If using __Docker Swarm__, or otherwise running the SDK inside the NAT, then you will want to disable with `network = default` in the connection string, or an xref:client-settings.adoc[environmental setting] can be made.
 
 Note that any SSL/TLS certificates must be set up at the point where the connections are being made.  The Couchbase SDKs will honor any valid SSL/TLS certificates.
- ====
+
+====
 
 Because the C SDK is used as a foundation for other SDKs, it allows for a common connection specification over all those other SDKs.
 
