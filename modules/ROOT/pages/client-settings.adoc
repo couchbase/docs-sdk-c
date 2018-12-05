@@ -148,7 +148,7 @@ The I/O timeout for view operations.
 
 .Connection String Example
 ----
-view_timeout=75
+views_timeout=75
 ----
 
 | `n1ql_timeout` (Timeout).
