@@ -11,7 +11,7 @@ It contains best practices as well as information on the connection string,  SSL
 // tag::RBAC_and_the_SDK[]
 == RBAC and the SDK
 
-Couchbase Server 5.0 Enterprise Edition introduced xref:6.0@server:security:security-authorization.adoc[Role-Based Access Control] (RBAC).
+Couchbase Server 5.0 Enterprise Edition introduced xref:6.0@server:learn:security/authorization-overview.adoc[Authorization].
 In order to access cluster-resources, programs, including those supported by the Couchbase SDK, must authenticate with Couchbase Server, and so be identified as existing users, each associated with one or more roles.
 Authentication requires the passing of _credentials_; which consist of a _username_ and (in most cases) a _password_.
 Users may be defined either locally to Couchbase Server, or externally (for example, by means of an LDAP server).
