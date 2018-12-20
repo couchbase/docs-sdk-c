@@ -151,15 +151,23 @@ If for some reason you cannot use any of the prebuilt Windows binaries, follow t
 
 http://docs.couchbase.com/sdk-api/couchbase-c-client-2.10.3[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-1008[CCBC-1008]: jsoncpp: use `unique_ptr` instead of `auto_ptr`.
+* https://issues.couchbase.com/browse/CCBC-1008[CCBC-1008]: 
+jsoncpp: use `unique_ptr` instead of `auto_ptr`.
+Replaced use of deprecated compiler feature with newer, standardized variant of smart pointers.
 
-* https://issues.couchbase.com/browse/CCBC-1011[CCBC-1011]: Port vbucketkeygen tool to cbc-keygen. The tool generates list of keys, that distributed over all vBuckets in the bucket.
+* https://issues.couchbase.com/browse/CCBC-1011[CCBC-1011]: 
+Port vbucketkeygen tool to cbc-keygen. 
+The tool generates list of keys, that distributed over all vBuckets in the bucket.
 
-* https://issues.couchbase.com/browse/CCBC-1006[CCBC-1006]: Cleanup pending queue of pipeline on retry
+* https://issues.couchbase.com/browse/CCBC-1006[CCBC-1006]: 
+Cleanup pending queue of pipeline on retry.
+LCB was (incorrectly) retrying mutations after timeout errors; it will no longer do this.
 
-* https://issues.couchbase.com/browse/CCBC-1007[CCBC-1007]: allow using trusted store path without key file
+* https://issues.couchbase.com/browse/CCBC-1007[CCBC-1007]: 
+Trusted store path will now work without key file.
 
-* https://issues.couchbase.com/browse/MB-31875[MB-31875]: cliopts: grow list only if needed
+* https://issues.couchbase.com/browse/MB-31875[MB-31875]: 
+cliopts: grow list only if needed.
 
 
 [cols="12,^8,23"]
