@@ -23,16 +23,50 @@ CAS, on the server-side might be implemented along these lines
 
 [source,c]
 ----
-uint Replace(string docid, object newvalue, uint oldCas=0) {
-    object existing = this.kvStore.get(docid);
-    if (!existing) {
-        throw DocumentDoesNotExist();
-    } else if (oldCas != 0 && oldCas != existing.cas) {
-        throw CasMismatch();
+static void replace_value(lcb_t instance, const char *key, int nkey, const char *val, int nval, lcb_CAS cas)
+{
+    lcb_error_t rc, res = LCB_SUCCESS;
+    int attempts = 3;
+L_STORE :
+    {
+        lcb_CMDSTORE cmd = {};
+        cmd.operation = LCB_REPLACE;
+        // Assign the CAS from the previous result
+        cmd.cas = cas;
+        LCB_CMD_SET_KEY(&cmd, key, nkey);
+        LCB_CMD_SET_VALUE(&cmd, val, nval);
+        rc = lcb_store3(instance, &res, &cmd);
+        if (rc != LCB_SUCCESS) {
+            fprintf(stderr, "failed to store document: %s\n", lcb_strerror_short(rc));
+            return;
+        }
+        lcb_wait(instance);
     }
-    uint newCas = ++existing.cas;
-    existing.value = newValue;
-    return newCas;
+
+    if (res == LCB_SUCCESS) {
+        printf("successfully stored\n");
+    } else if (res == LCB_KEY_EEXISTS) {
+        if (attempts == 0) {
+            printf("CAS mismatch. giving up..\n");
+            return;
+        }
+        attempts--;
+        printf("CAS mismatch. retrying..\n");
+        {
+            lcb_CMDGET cmd = {};
+            LCB_CMD_SET_KEY(&cmd, key, nkey);
+
+            rc = lcb_get3(instance, &cas, &cmd);
+            if (rc != LCB_SUCCESS) {
+                fprintf(stderr, "failed to get document: %s\n", lcb_strerror_short(rc));
+                return;
+            }
+            lcb_wait(instance);
+        }
+        goto L_STORE;
+    } else {
+        fprintf(stderr, "failed to store store document: %s\n", lcb_strerror_short(res));
+    }
 }
 ----
 
