@@ -304,3 +304,121 @@ int main()
     lcb_destroy(instance);
 }
 ----
+
+
+== Virtual Extended Attributes Example
+
+Using the Sub-Document API, xref:sdk-xattr-overview.adoc#_virtual_extended_attributes[Virtual XATTR] can be used to fetch metadata about a document, via the `$document` virtual XATTR.
+This is how you would use the C SDK to obtain the whole content of the Virtual XATTRs in `$document`:
+
+[source,c]
+----
+static void get_xattr_wholedoc(lcb_t instance, int type, const lcb_RESPSUBDOC *resp)
+{
+    if (resp->rc != LCB_SUCCESS && resp->rc != LCB_SUBDOC_MULTI_FAILURE) {
+        printf("failed to get expiration for \"%.*s\": %s\n", (int)resp->nkey, resp->key, lcb_strerror_short(resp->rc));
+        return;
+    }
+
+    {
+        lcb_SDENTRY ent;
+        size_t iter = 0;
+        size_t index = 0;
+
+        while (lcb_sdresult_next(resp, &ent, &iter)) {
+            if (index == 0) {
+                if (ent.status == LCB_SUCCESS) {
+                    printf("XATTR \"$document\" content:\n%.*\n", (int)ent.nvalue, ent.value);
+                } else {
+                    printf("failed to get \"$document\" for \"%.*s\": %s\n", (int)resp->nkey, resp->key,
+                           lcb_strerror_short(ent.status));
+                }
+            }
+            index++;
+        }
+    }
+}
+
+
+    // Retrieve expiration time of the document
+    {
+        lcb_CMDSUBDOC cmd = {};
+        lcb_SDSPEC specs[1] = {};
+        char *key = "test";
+
+        {
+            char *path = "$document";
+            specs[0].sdcmd = LCB_SDCMD_GET;
+            specs[0].options = LCB_SDSPEC_F_XATTRPATH;
+            LCB_SDSPEC_SET_PATH(&specs[0], path, strlen(path));
+        }
+        LCB_CMD_SET_KEY(&cmd, key, strlen(key));
+        cmd.specs = specs;
+        cmd.nspecs = 1;
+
+        lcb_install_callback3(instance, LCB_CALLBACK_SDLOOKUP, (lcb_RESPCALLBACK)get_xattr_expiration);
+        rc = lcb_subdoc3(instance, NULL, &cmd);
+        assert(rc == LCB_SUCCESS);
+    }
+    lcb_wait(instance);
+----
+
+=== Expiration Metadata - TTL
+
+
+A common use case is discovering documentation expiration metadata, or TTL. You can xref:../assets/code/subdoc-virtual-xattrs.c[download a complete example] of how to do this, but the example below shows the essentials of getting XATTR `$document.exptime`:
+
+[source,c]
+----
+static void get_xattr_expiration(lcb_t instance, int type, const lcb_RESPSUBDOC *resp)
+{
+    if (resp->rc != LCB_SUCCESS && resp->rc != LCB_SUBDOC_MULTI_FAILURE) {
+        printf("failed to get expiration for \"%.*s\": %s\n", (int)resp->nkey, resp->key, lcb_strerror_short(resp->rc));
+        return;
+    }
+
+    {
+        lcb_SDENTRY ent;
+        size_t iter = 0;
+        size_t index = 0;
+
+        while (lcb_sdresult_next(resp, &ent, &iter)) {
+            if (index == 0) {
+                if (ent.status == LCB_SUCCESS) {
+                    printf("expiration time of \"%.*s\" is %.*s seconds\n", (int)resp->nkey, resp->key, (int)ent.nvalue,
+                           ent.value);
+                } else {
+                    printf("failed to get expiration for \"%.*s\": %s\n", (int)resp->nkey, resp->key,
+                           lcb_strerror_short(ent.status));
+                }
+            }
+            index++;
+        }
+    }
+}
+
+
+    // Retrieve expiration time of the document
+    {
+        lcb_CMDSUBDOC cmd = {};
+        lcb_SDSPEC specs[1] = {};
+        char *key = "test";
+
+        {
+            char *path = "$document.exptime";
+            specs[0].sdcmd = LCB_SDCMD_GET;
+            specs[0].options = LCB_SDSPEC_F_XATTRPATH;
+            LCB_SDSPEC_SET_PATH(&specs[0], path, strlen(path));
+        }
+        LCB_CMD_SET_KEY(&cmd, key, strlen(key));
+        cmd.specs = specs;
+        cmd.nspecs = 1;
+
+        lcb_install_callback3(instance, LCB_CALLBACK_SDLOOKUP, (lcb_RESPCALLBACK)get_xattr_expiration);
+        rc = lcb_subdoc3(instance, NULL, &cmd);
+        assert(rc == LCB_SUCCESS);
+    }
+    lcb_wait(instance);
+----
+
+
