@@ -183,7 +183,7 @@ durability_interval=0.0001
 ----
 
 
-| `ipv6=` (Boolean)
+| `ipv6=` (enum)
 | [.opt]`lcb_ipv6_t` 
 | Controls whether hostname lookups should prefer IPv4 or IPv6. 
 Can be set to _allow_, _disable_, or _only_. 
