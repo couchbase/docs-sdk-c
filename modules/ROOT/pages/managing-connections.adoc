@@ -163,8 +163,8 @@ If no such record exists, it will treat `example.com` as an ordinary bootstrap n
 Note that if you pass more than one bootstrap host, DNS SRV lookup will not be attempted, and the hosts will be interepreted as normal Couchbase nodes.
 
 == IPv6
-IPv6-only clusters have been allowed since Couchbase Data Platform 5.5, and for most networks the client will operate automatically with IPv4 or IPv6 networks without issue.
-IPv6 can be specified as preferred through the connection string, or directly with the C SDK, since version xref:./relnotes-c-sdk.adoc#2-8-3-november-22-2017[2.8.3] of LCB, see the xref:client-settings.adoc#settings-list[Client Settings] page.
+IPv6 has been supported since Couchbase Data Platform 5.5 (Enterprise Edition), and for most networks the Couchbase client will operate automatically with IPv4 or IPv6 networks without issue.
+IPv6 can be specified as preferred through the connection string, or directly with the C SDK, since version xref:./relnotes-c-sdk.adoc#2-8-3-november-22-2017[2.8.3] of LCB -- see the xref:client-settings.adoc#settings-list[Client Settings] page.
 
 
 [#configcache]
