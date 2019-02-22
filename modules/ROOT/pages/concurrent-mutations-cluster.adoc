@@ -76,7 +76,7 @@ a|
 ....
 |===
 
-Retrieving the document again (and showing in Python for brevity) yields:
+Retrieving the document again yields:
 
 [source,python]
 ----
