@@ -6,6 +6,13 @@ include::partial$attributes.adoc[]
 You can use the CAS value to control how concurrent document modifications are handled.
 It helps avoid and control potential race conditions in which some mutations may be inadvertently lost or overridden by other mutations.
 
+[IMPORTANT]
+.Code samples
+====
+The examples used in this explanation are mostly C pseudo code, with a little Python, to keep things clear and brief.
+After you have worked your way through this page, take a look at a complete, multithreaded example at xref:https://github.com/couchbaselabs/devguide-examples/blob/master/c/cas.cc[^]
+====
+
 The [.term]_CAS_ is a value representing the current state of an item.
 Each time the item is modified, its CAS changes.
 
@@ -19,7 +26,7 @@ When applications provide the CAS, server will check the application-provided ve
 * If the two CAS values match (they compare successfully), then the mutation operation succeeds.
 * If the two CAS values differ, then the mutation operation fails.
 
-CAS, on the server-side might be implemented along these lines
+CAS, on the server-side might be implemented along these lines (pseudocode):
 
 [source,c]
 ----
@@ -69,7 +76,7 @@ a|
 ....
 |===
 
-Retrieving the document again yields:
+Retrieving the document again (and showing in Python for brevity) yields:
 
 [source,python]
 ----
