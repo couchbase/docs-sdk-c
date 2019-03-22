@@ -150,7 +150,6 @@ int storeAndRetrieveKey()
     options.v.v3.username = "mark";
     options.v.v3.passwd = "s3cr3t";
     lcb_error_t rc = lcb_create(&instance, &options);
-    lcb_create(&instance, &options);
     lcb_connect(instance);
     lcb_wait(instance);
 
