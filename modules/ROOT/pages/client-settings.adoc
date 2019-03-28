@@ -187,7 +187,7 @@ durability_interval=0.0001
 | [.opt]`lcb_ipv6_t` 
 | Controls whether hostname lookups should prefer IPv4 or IPv6. 
 Can be set to _allow_, _disable_ (the default), or _only_. 
-See xref:http://docs.couchbase.com/sdk-api/couchbase-c-client-2.10.3/group__lcb-cntl-settings.html#gaa63aaa3ed8ca23f4af41fa09df09d05d[Enumeration Type Documentation] for more info.
+See http://docs.couchbase.com/sdk-api/couchbase-c-client-2.10.3/group__lcb-cntl-settings.html#gaa63aaa3ed8ca23f4af41fa09df09d05d[Enumeration Type Documentation] for more info.
 
 
 | `randomize_nodes` (Boolean)
