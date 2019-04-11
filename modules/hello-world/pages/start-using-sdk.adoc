@@ -14,6 +14,30 @@ The DP1 code _should not_ be used in production.
 // A necessarily longer section than that of most of the other clients.
 
 
+////
+
+Time to incorporate this?
+(in updated form?)
+
+Assuming git and Visual Studio 2010 are installed, from a CMD shell, do:
+
+C:\> git clone git://github.com/couchbase/libcouchbase.git
+C:\> mkdir lcb-build
+C:\> cd lcb-build
+C:\> cmake -G "Visual Studio 10" ..\libcouchbase
+C:\> cmake --build .
+This will generate and build a Visual Studio .sln file.
+
+Windows builds are known to work on Visual Studio versions 2008, 2010 and 2012.
+
+If you wish to link against OpenSSL, you should set the value of OPENSSL_ROOT_DIR to the location of the installation path, as described here
+https://github.com/Kitware/CMake/blob/master/Modules/FindOpenSSL.cmake
+
+////
+
+
+
+
 == Hello Couchbase
 
 // Needs localising to C
