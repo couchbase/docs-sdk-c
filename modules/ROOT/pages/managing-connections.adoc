@@ -109,6 +109,8 @@ The handle should not be destroyed within a callback as it will likely cause it 
 Additionally, memory leaks may occur if there are pending uncompleted operations (e.g.
 [.api]`lcb_get3`, [.api]`lcb_store3`).
 
+include::6.0@sdk:pages:partial$max-connections.adoc[tag=limits]
+
 == Configuring the handle
 
 Once the handle is created, it may be xref:client-settings.adoc[configured] by the [.api]`lcb_cntl` and [.api]`lcb_cntl_string` functions.
