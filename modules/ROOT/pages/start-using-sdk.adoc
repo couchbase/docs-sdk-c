@@ -38,13 +38,13 @@ The following examples download and install _couchbase-release_ repository, a C 
 ----
 # Only needed during first-time setup:
 wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-4-amd64.deb
-sudo dpkg -i couchbase-release-1.0-4-amd64.deb
+sudo dpkg -i couchbase-release-1.0-6-amd64.deb
 # Will install or upgrade packages
 sudo apt-get update
 sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
 ----
 
-Note that as of Couchbase Data Platform 6.0, _couchbase-release_ (1.0.4) supports Debian 7 and 8, and Ubuntu 12.04, 14.04, and 16.04. If you wish to install a Couchbase SDK on a more recent Ubuntu or Debian, follow these steps (but note that beyond Ubuntu 18.04, other platforms are not necessarily supported):
+Note that as of Couchbase Data Platform 6.0, _couchbase-release_ (1.0.6) supports Debian 7, 8, and 9, and Ubuntu 12.04, 14.04, 16.04, and 18.04. If you wish to install a Couchbase SDK on another Ubuntu or Debian variation, follow these steps (but note that while newer releases may work, other platforms are not necessarily supported):
 
 // tag::new_ubuntu[]
 .Adding repo manually
@@ -52,8 +52,8 @@ Note that as of Couchbase Data Platform 6.0, _couchbase-release_ (1.0.4) support
 ----
 # Install Couchbase's GPG key
 sudo wget -O - http://packages.couchbase.com/ubuntu/couchbase.key | sudo apt-key add -
-# Adding Ubuntu 18.04 LTS repo to apt/sources.list
-echo "deb http://packages.couchbase.com/ubuntu bionic bionic/main" | sudo tee /etc/apt/sources.list.d/couchbase.list
+# Adding Ubuntu 18.10 repo to apt/sources.list
+echo "deb http://packages.couchbase.com/ubuntu cosmic cosmic/main" | sudo tee /etc/apt/sources.list.d/couchbase.list
 # To install or upgrade packages
 sudo apt-get update
 sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
@@ -64,8 +64,8 @@ sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
 [source,bash]
 ----
 # Only needed during first-time setup:
-wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-4-x86_64.rpm
-sudo rpm -iv couchbase-release-1.0-4-x86_64.rpm
+wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-6-x86_64.rpm
+sudo rpm -iv couchbase-release-1.0-6-x86_64.rpm
 # Will install or upgrade existing packages
 sudo yum install libcouchbase-devel libcouchbase2-bin gcc gcc-c++
 ----
