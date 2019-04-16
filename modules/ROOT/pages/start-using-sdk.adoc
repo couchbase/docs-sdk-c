@@ -37,7 +37,7 @@ The following examples download and install _couchbase-release_ repository, a C 
 [source,bash]
 ----
 # Only needed during first-time setup:
-wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-4-amd64.deb
+wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-6-amd64.deb
 sudo dpkg -i couchbase-release-1.0-6-amd64.deb
 # Will install or upgrade packages
 sudo apt-get update
