@@ -1,4 +1,5 @@
-= Couchbase C Release Notes and Download Archives
+= Couchbase C SDK Release Notes and Download Archives
+:page-aliases: relnotes-c-sdk
 
 == Installation
 
