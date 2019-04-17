@@ -1,5 +1,5 @@
 = Couchbase C SDK Release Notes and Download Archives
-:page-aliases: relnotes-c-sdk
+:page-aliases: relnotes-c-sdk,sdk-release-notes
 
 == Installation
 
