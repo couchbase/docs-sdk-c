@@ -1,6 +1,8 @@
 = Couchbase C SDK Release Notes and Download Archives
+:page-partial:
 :page-aliases: relnotes-c-sdk
 
+// tag::latest[]
 == Installation
 
 You can install the C SDK from a repository for your platform, download prebuilt binaries, or compile from source.
@@ -2057,3 +2059,4 @@ details.
 |  Visual Studio 2012  | x86           | http://packages.couchbase.com/clients/c/libcouchbase-2.6.0_x86_vc11.zip[libcouchbase-2.6.0_x86_vc11.zip]
 |  Visual Studio 2012  | x64           | http://packages.couchbase.com/clients/c/libcouchbase-2.6.0_amd64_vc11.zip[libcouchbase-2.6.0_amd64_vc11.zip]
 |===
+// end::latest[]
