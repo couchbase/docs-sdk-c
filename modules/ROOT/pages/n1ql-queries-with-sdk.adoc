@@ -30,24 +30,42 @@ static void rowCallback(lcb_t instance, int cbtype, const lcb_RESPN1QL *resp) {
 To issue the actual query, populate an `lcb_CMDN1QL` structure with appropriate parameters.
 Some of the internals of this structure may be populated using the `lcb_N1QLPARAMS` object.
 The `lcb_N1QLPARAMS` object is provided as a higher-level means by which to construct N1QL queries and supports N1QL features such as query placeholders and prepared statements.
+
+Here's the simplest query example:
+
+.Issuing a N1QL query
+[source,c]
+----
+lcb_N1QLPARAMS *builder = lcb_n1p_new();
+lcb_CMDN1QL cmd = { 0 };
+
+rc = lcb_n1p_setstmtz(builder, "SELECT count(*) FROM `travel-sample`");
+rc = lcb_n1p_mkcmd(builder, &cmd);
+cmd.callback = query_callback;
+rc = lcb_n1ql_query(instance, cookie, &cmd);
+lcb_n1p_free(builder);
+lcb_wait(instance);
+----
+
+
 A named or positional parameter is a placeholder for a value in the WHERE, LIMIT or OFFSET clause of a query.
 For example, to issue a query with a placeholder:
 
-. Create the `params` object ([.api]`lcb_n1p_new()`).
-. Set the query string (`lcb_n1p_setstmtz(params, "statement_string")`).
-. Set the placeholders (`lcb_n1p_namedparamz(params, "$param1", "value1"); lcb_n1p_namedparamz(params, "$param2", "value2")`).
-. Populate the [.api]`lcb_CMDN1QL` structure with the encoded query (`lcb_n1p_mkcmd(params, &cmd)`).
+. Create the `builder` object ([.api]`lcb_n1p_new()`).
+. Set the query string (`lcb_n1p_setstmtz(builder, "statement_string")`).
+. Set the placeholders (`lcb_n1p_namedparamz(builder, "$param1", "value1"); lcb_n1p_namedparamz(builder, "$param2", "value2")`).
+. Populate the [.api]`lcb_CMDN1QL` structure with the encoded query (`lcb_n1p_mkcmd(builder, &cmd)`).
 . Issue the query ([.api]`lcb_n1ql_query`).
 . (Optional): You can dump the encoded form of the query using the return value from [.api]`lcb_n1p_encode()`.
 This returns a null-terminated string.
-. Free or clear the `params` object ([.api]`lcb_n1p_free` or [.api]`lcb_n1p_reset`).
+. Free or clear the `builder` object ([.api]`lcb_n1p_free` or [.api]`lcb_n1p_reset`).
 
 Here's a code example that uses placeholders
 
 .Issuing a N1QL query with a placeholder
 [source,c]
 ----
-lcb_N1QLPARAMS *params = lcb_n1p_new();
+lcb_N1QLPARAMS *builder = lcb_n1p_new();
 lcb_CMDN1QL cmd = { 0 };
 
 // Need to make this properly formatted JSON
@@ -56,16 +74,16 @@ city_str += '"';
 city_str += city;
 city_str += '"';
 
-rc = lcb_n1p_setstmtz(params,
+rc = lcb_n1p_setstmtz(builder,
     "SELECT airportname FROM `travel-sample` "
     "WHERE city=$1 AND type=\"airport\"");
-rc = lcb_n1p_posparam(params, city_str.c_str(), city_str.size());
+rc = lcb_n1p_posparam(builder, city_str.c_str(), city_str.size());
 
 cmd.callback = query_callback;
 
-rc = lcb_n1p_mkcmd(params, &cmd);
+rc = lcb_n1p_mkcmd(builder, &cmd);
 rc = lcb_n1ql_query(instance, cookie, &cmd);
-lcb_n1p_free(params);
+lcb_n1p_free(builder);
 lcb_wait(instance);
 ----
 
