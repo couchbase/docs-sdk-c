@@ -1,6 +1,7 @@
 = Install and Start Using the C (libcouchbase) SDK with Couchbase Server
 :page-partial:
 :navtitle: Start Using the SDK
+:page-aliases: c-intro
 include::partial$attributes.adoc[]
 
 [abstract]
