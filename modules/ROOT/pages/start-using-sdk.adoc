@@ -92,7 +92,8 @@ brew install libcouchbase
 [#install-windows]
 == Installation on Microsoft Windows
 
-See xref:sdk-release-notes.adoc#_windows_installation[Installation and Release Notes] section for details.
+See xref:sdk-release-notes.adoc#windows-installation[Installation and Release Notes] section for details.
+Windows binary packages can be found as downloads for each version listed on the xref:sdk-release-notes.adoc#2-10-3-december-20-2018[Release Notes and Archives page], linked from the table in each Release Note, and categorized by _Visual Studio_ version.
 
 == Installing from Source Code
 
