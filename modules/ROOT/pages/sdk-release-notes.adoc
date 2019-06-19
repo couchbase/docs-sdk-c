@@ -23,7 +23,7 @@ The various Linux distributions contain the following packages:
 * ``**libcouchbase2-libevent**``: Optional but recommended component for I/O performance. Can also be used to integrate with libevent (see xref:async-programming.adoc[Asynchronous Programming]).
 * ``**libcouchbase2-libev**``: Optional, for use with applications that make use of event loop integration with libev (see xref:async-programming.adoc[Asynchronous Programming]).
 
-=== Configuring yum repositories (CentOS, Redhat)
+=== Configuring yum repositories (CentOS, Red Hat)
 
 This section assumes you know how to add an external http://yum.baseurl.org/[yum] repository and Linux quick start explains the steps it will perform on your distribution.
 To configure the repository:
