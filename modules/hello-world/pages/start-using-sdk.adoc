@@ -5,9 +5,7 @@
 The Couchbase C SDK (libcouchbase - LCB) enables you to interact with a Couchbase Server cluster from the C language.
 It is also used by the Node.js, PHP, and Python SDKs to communicate with the Couchbase Server.
 
-WARNING: These pages cover the first _Developer Preview_ of the Couchbase .NET SDK 3.0 (DP1).
-As such they are likely to change without notice.
-The DP1 code _should not_ be used in production.
+include::partial$alpha-warning.adoc[]
 
 == Installing the SDK
 
@@ -110,9 +108,10 @@ Now that you know the basics, you may wish to go straight to that page -- or fir
 
 == Additional Resources
 
-The API reference is generated for each release and can be found xref:http://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.0dp1/[here].
+The API reference is generated for each release and the latest can be found xref:http://docs.couchbase.com/sdk-api/couchbase-c-client/[here].
+Older API references are linked from their respective sections in the xref:project-docs:sdk-release-notes.adoc[Release Notes].
 
-xref:migrating-sdk-code-to-3.n.adoc[The Migrating from SDK2 to 3 page] highlights the main differences to be aware of when migrating your code.
+// xref:migrating-sdk-code-to-3.n.adoc[The Migrating from SDK2 to 3 page] highlights the main differences to be aware of when migrating your code.
 
 Couchbase welcomes community contributions to the C SDK.
 The C SDK source code is available on xref:https://github.com/couchbase/couchbase-c-client-3.0.0[GitHub].
