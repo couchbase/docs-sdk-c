@@ -33,7 +33,7 @@ To configure the repository:
 
 . Find the appropriate repository location for your distribution in the following table.
 CentOS and RHEL allow 32-bit packages to be installed on a 64-bit system.
-This is usually not what you want, soensure that you use the 64-bit repository for your 64-bit system (unless you specifically want the 32-bit SDK).
+This is usually not what you want, so ensure that you use the 64-bit repository for your 64-bit system (unless you specifically want the 32-bit SDK).
 
 [cols="1,1,3"]
 |===
