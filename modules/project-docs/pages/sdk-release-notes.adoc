@@ -10,9 +10,9 @@ Release notes, installation instructions, and download archive for the Couchbase
 
 You can install the C SDK from a repository for your platform, download prebuilt binaries, or compile from source.
 
-include::start-using-sdk.adoc[tag=macos]
+// include::start-using-sdk.adoc[tag=macos]
 
-include::start-using-sdk.adoc[tag=linux]
+// include::start-using-sdk.adoc[tag=linux]
 
 === Installing Manually - Linux
 
