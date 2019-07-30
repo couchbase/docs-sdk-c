@@ -4,5 +4,6 @@ The Couchbase C Client is distributed as source under the https://www.apache.org
 Any dependencies may have their https://www.couchbase.com/legal/agreements[own, separate licenses].
 
 Binary distributions are made under Couchbase's own license agreements. 
+
 * https://www.couchbase.com/LA03262019[Enterprise License Agreement]
 * https://www.couchbase.com/binaries/content/assets/website/legal/ce-license-agreement.pdf[Community License Agreement (PDF)]
