@@ -1,6 +1,6 @@
 = C Sample App Backend Tutorial
 :navtitle: Sample App Backend
-:page-aliases: tutorial4,hello-world:sample-application.adoc
+:page-aliases: tutorial4
 
 This page will walk you through how some of the queries may be constructed using the C SDK.
 The sample app uses the C API with a C++ JSON library (https://github.com/open-source-parsers/jsoncpp[json-cpp^]), though you are free to use your own.
