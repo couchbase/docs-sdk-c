@@ -1,5 +1,6 @@
 = Collecting Information and Logging in the C (libcouchbase) SDK with Couchbase Server
 :navtitle: Collecting Information
+:page-aliases: event-bus-metrics,logging,howtos:collecting-information-and-logging
 :page-partial:
 
 [abstract]

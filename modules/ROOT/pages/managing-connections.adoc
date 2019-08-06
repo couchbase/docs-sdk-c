@@ -2,6 +2,7 @@
 :navtitle: Managing Connections
 :page-partial:
 :page-topic-type: concept
+:page-aliases: howtos:managing-connections,howtos:multi-network,connecting,connection-advanced
 
 [abstract]
 This section describes how to connect the C SDK to a Couchbase cluster and bucket.

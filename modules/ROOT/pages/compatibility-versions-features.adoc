@@ -1,5 +1,6 @@
 = Compatibility
 :navtitle: Compatibility
+:page-aliases: overview,migrate,project-docs:compatibility,project-docs:integrations
 
 == API Styles and versions
 

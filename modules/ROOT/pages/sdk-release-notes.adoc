@@ -1,6 +1,6 @@
 = Couchbase C SDK Release Notes and Download Archives
 :page-partial:
-:page-aliases: relnotes-c-sdk
+:page-aliases: relnotes-c-sdk,release-notes,download-links,project-docs:migrating-sdk-code-to-3.n,project-docs:sdk-release-notes
 
 // tag::latest[]
 == Installation

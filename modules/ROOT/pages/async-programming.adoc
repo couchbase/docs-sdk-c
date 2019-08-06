@@ -1,6 +1,7 @@
 = Asynchronous Progamming Using the C (libcouchbase) SDK with Couchbase Server
 :navtitle: Asynchronous Programming
 :page-topic-type: concept
+:page-aliases: reactive-apps,observables,rxjava,howtos:concurrent-async-apis
 
 [abstract]
 You can integrate the C SDK with many non-blocking (asynchronous, reactive) I/O frameworks, or _event loops_.

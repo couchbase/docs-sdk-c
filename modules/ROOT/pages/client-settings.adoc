@@ -1,6 +1,7 @@
 = Client Settings for the C (libcouchbase) SDK with Couchbase Server
 :navtitle: Client Settings
 :page-partial:
+:page-aliases: env-config,ref:client-settings
 
 // tag::group[]
 

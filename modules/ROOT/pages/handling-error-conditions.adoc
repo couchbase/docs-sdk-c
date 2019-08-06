@@ -1,5 +1,6 @@
 = Handling Exceptions and other Errors with the C (libcouchbase) SDK in Couchbase
 :navtitle: Handling Errors
+:page-aliases: howtos:handling-errors,concept-docs:errors,ref:errors
 
 [abstract]
 An error is received if an operation could not be executed.

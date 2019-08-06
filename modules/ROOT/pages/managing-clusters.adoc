@@ -1,5 +1,6 @@
 = Managing Clusters Using the C (libcouchbase) SDK with Couchbase Server
 :navtitle: Managing Clusters
+:page-aliases: concept-docs:buckets-and-clusters,concept-docs:collections,howtos:provisioning-cluster-resources
 
 The primary means for managing clusters is through the Couchbase Web UI which provides an easy to use interface for adding, removing, monitoring and modfying buckets.
 In some instances you may wish to have a programmatic interface, for example if running as part of a setup script, or if setting up buckets for testing.
