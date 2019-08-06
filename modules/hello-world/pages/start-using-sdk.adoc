@@ -114,4 +114,4 @@ Older API references are linked from their respective sections in the xref:proje
 // xref:migrating-sdk-code-to-3.n.adoc[The Migrating from SDK2 to 3 page] highlights the main differences to be aware of when migrating your code.
 
 Couchbase welcomes community contributions to the C SDK.
-The C SDK source code is available on https://github.com/couchbase/couchbase-c-client-3.0.0[GitHub].
+The C SDK source code is available on https://github.com/couchbase/libcouchbase[GitHub].
