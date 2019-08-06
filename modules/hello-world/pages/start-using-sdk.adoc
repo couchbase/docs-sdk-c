@@ -9,6 +9,8 @@ include::partial$alpha-warning.adoc[]
 
 == Installing the SDK
 
+Please see the xref:project-docs:sdk-release-notes.adoc#installation[Installation section of the Release Notes page].
+
 // A necessarily longer section than that of most of the other clients.
 
 
