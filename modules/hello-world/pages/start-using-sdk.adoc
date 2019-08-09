@@ -11,102 +11,118 @@ include::partial$alpha-warning.adoc[]
 
 Please see the xref:project-docs:sdk-release-notes.adoc#installation[Installation section of the Release Notes page].
 
-// A necessarily longer section than that of most of the other clients.
-
-
-////
-
-Time to incorporate this?
-(in updated form?)
-
-Assuming git and Visual Studio 2010 are installed, from a CMD shell, do:
-
-C:\> git clone git://github.com/couchbase/libcouchbase.git
-C:\> mkdir lcb-build
-C:\> cd lcb-build
-C:\> cmake -G "Visual Studio 10" ..\libcouchbase
-C:\> cmake --build .
-This will generate and build a Visual Studio .sln file.
-
-Windows builds are known to work on Visual Studio versions 2008, 2010 and 2012.
-
-If you wish to link against OpenSSL, you should set the value of OPENSSL_ROOT_DIR to the location of the installation path, as described here
-https://github.com/Kitware/CMake/blob/master/Modules/FindOpenSSL.cmake
-
-////
-
-
-
 
 == Hello Couchbase
 
-// Needs localising to C
+Now you have the C client installed, you need to include the following in your firstprogram:
 
-Now you have the .NET client installed grab the code from link:href://devguideexamples or open a fresh project in VS Code and try out the following:
-
-[source,csharp]
+[source,c]
 ----
-var config = new Configuration
-{
-    Servers = new List<Uri> {new Uri("http://10.112.180.101:8091")},
-    UserName = "username",
-    Password = "password"
-};
+struct lcb_create_st create_options = {0};
+create_options.version = 3;
+create_options.v.v3.type = LCB_TYPE_CLUSTER;
+create_options.v.v3.connstr = argv[1];
+create_options.v.v3.username = argv[2];
+create_options.v.v3.passwd = argv[3];
 ----
 
-Couchbase uses xref:6.5@server:learn:security/roles.adoc[Role Based Access Control (RBAC) to control access to resources.
+Couchbase uses xref:6.5@server:learn:security/roles.adoc[Role Based Access Control (RBAC)] to control access to resources.
 Here we will use the _Full Admin_ role created during installation of the Couchbase Data Platform.
-For production client code, you will want to use xref:3.0dp1@net-sdk:howtos:managing-connections.adoc#rbac[more appropriate, restrictive settings], but here we want to get you up and running quickly.
+For production client code, you will want to use xref:howtos:managing-connections.adoc#rbac[more appropriate, restrictive settings], but here we want to get you up and running quickly.
 If you're developing client code on the same VM or machine as the Couchbase Server, your URI can be _localhost_.
 
 
 // initialize cluster
 
-[source,csharp]
+[source,c]
 ----
-var cluster = new Cluster();
-await cluster.Initialize(config)
-
-// possible alternative (doesn't currently work)
-//var cluster = await Cluster.Connect(config);
+lcb_STATUS rc; /* return code, that have to be checked */
+lcb_INSTANCE *instance;
+rc = lcb_create(&instance, &create_options);
+rc = lcb_connect(instance);
+rc = lcb_wait(instance);
+rc = lcb_get_bootstrap_status(instance);
 ----
 
-Connection to the cluster is initialized by
-// to be filled in when above is clarified.
+After initializing the cluster,  we open a bucket:
 
-// Mike: ideal is for socket / http client init during cluster connect, but we typically require a bucket, so may be delated until a bucket instance is requested, like it is in 2.x.
-
-[source,csharp]
+[source,c]
 ----
-// get a bucket reference
-var bucket = await cluster.Bucket("bucket-name");
+static void open_callback(lcb_INSTANCE *instance, lcb_STATUS rc)
+{
+    printf("open bucket: %s\n", lcb_strerror_short(rc));
+}
+
+// associate instance with a bucket
+lcb_set_open_callback(instance, open_callback);
+const char *name = "bucket-name";
+rc = lcb_open(instance, name, strlen(name)),
 ----
 
 If you installed the travel sample data bucket, substitute _travel-sample_ for _bucket-name_.
 
-[source,csharp]
-----
-// get a collection reference
-var collection = await bucket.DefaultCollection;
-var myCollection = bucket.Scope("my-collection");
-----
-
 The 3.0 SDK is ready for the introduction of xref:concept-docs:collections.adoc[Collections] in Cheshire Cat, the next release of the Couchbase Data Platform.
 The latest release, Mad Hatter, brings a limited _Developer Preview_ of Collections, allowing Documents to be grouped by purpose or theme, according to specified _Scope_.
-Here we will use the `DefaultCollection`, which covers the whole Bucket.
+Here we will use `NULL` for default collection, which covers the whole Bucket.
 
-[source,csharp]
+[source,c]
 ----
-// upsert document
-var upsertResult = await collection.Binary.Upsert("my-document", new {name = "mike"});
+static void store_callback(lcb_INSTANCE *instance, int cbtype, const lcb_RESPSTORE *resp)
+{
+    const char *key;
+    size_t nkey;
+    uint64_t cas;
+    lcb_respstore_key(resp, &key, &nkey);
+    lcb_respstore_cas(resp, &cas);
+    printf("status: %s, key: %.*s, CAS: 0x%" PRIx64 "\n",
+       lcb_strerror_short(lcb_respstore_status(resp)), (int)nkey, key, cas);
+}
 
-// get document
-var getResult = await collection.Binary.Get("my-document");
+lcb_install_callback3(instance, LCB_CALLBACK_STORE, (lcb_RESPCALLBACK)store_callback);
+
+lcb_STATUS rc;
+lcb_CMDSTORE *cmd;
+const char *collection = NULL, *scope = NULL;
+const char *key = "my-document";
+const char *value = "{\"name\": \"mike\"}";
+rc = lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT);
+rc = lcb_cmdstore_collection(cmd, collection, 0, scope, 0);
+rc = lcb_cmdstore_key(cmd, key, strlen(key));
+rc = lcb_cmdstore_value(cmd, value, strlen(value));
+rc = lcb_store(instance, NULL, cmd);
+rc = lcb_cmdstore_destroy(cmd);
+rc = lcb_wait(instance);
 ----
 
-// The `Binary` service is a wrapper for the core Key Value (KV) database service.
-KV Operations are described in detail on the xref:net-sdk:howtos:kv-operations.adoc[KV Operations page].
-// Now that you know the basics, you may wish to go straight to that page -- or first see a complete worked example of using the Couchbase .NET client, our xref:3.0dp1@sample-application.adoc[Travel Sample Application].
+
+[source,c]
+----
+static void get_callback(lcb_INSTANCE *instance, int cbtype, const lcb_RESPGET *resp)
+{
+    const char *key, *value;
+    size_t nkey, nvalue;
+    uint64_t cas;
+    lcb_respget_key(resp, &key, &nkey);
+    lcb_respget_value(resp, &value, &nvalue);
+    lcb_respget_cas(resp, &cas);
+    printf("status: %s, key: %.*s, CAS: 0x%" PRIx64 "\n",
+       lcb_strerror_short(lcb_respget_status(resp)), (int)nkey, key, cas);
+    printf("value:\n%s\n", (int)nvalue, value);
+}
+
+lcb_install_callback3(instance, LCB_CALLBACK_GET, (lcb_RESPCALLBACK)get_callback);
+
+lcb_STATUS rc;
+lcb_CMDGET *cmd;
+const char *collection = NULL, *scope = NULL;
+const char *key = "my-document";
+rc = lcb_cmdget_create(&cmd);
+rc = lcb_cmdget_collection(cmd, collection, 0, scope, 0);
+rc = lcb_cmdget_key(cmd, key, strlen(key));
+rc = lcb_get(instance, NULL, cmd);
+rc = lcb_cmdget_destroy(cmd);
+rc = lcb_wait(instance);
+----
 
 == Additional Resources
 
