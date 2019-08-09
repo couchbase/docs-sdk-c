@@ -150,6 +150,49 @@ The windows runtime linker will ensure that each binary is using the appropriate
 
 If for some reason you cannot use any of the prebuilt Windows binaries, follow the instructions in xref:#_installation_from_source[__installation from source__ (above)] to build on Windows.
 
+== 3.0.0-alpha.5 (August 09, 2019)
+
+Fifth alpha release
+
+* Do not fallback to static config automatically. Now when we have G3CP mechanism, we can make static config fallback optional. In case of older server, connection string option `allow_static_config=true` or `LCB_CNTL_ALLOW_STATIC_CONFIG` to use previous behaviour.
+
+* https://issues.couchbase.com/brows/CCBC-983[CCBC-983]: Even more asynchronous example for libuv
+
+* Don't log if the logger callback is not specified
+
+* 3GCP improvements and examples
+
+* Fix memory leak in collections wrapper
+
+* Implement setter for prettiness of N1QL response payload.
+
+* https://issues.couchbase.com/brows/CCBC-1059[CCBC-1059]: Fixed hostname truncation when using alt-network
+
+* Add bucket to the connection config cache. When `config_cache` or `LCB_CNTL_CONFIGCACHE` argument is a directory (ends with `/`), the library will use a bucket name as the file name, so that different buckets can use the same connection string options set.
+
+* Add missing timeouts for HTTP APIs.
+
+* https://issues.couchbase.com/brows/CCBC-1058[CCBC-1058]: Fix some casting warnings on Mac OS.
+
+[cols="12,^8,23"]
+|===
+| Platform              | Architecture | File
+| Checksums             | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_alpha.5.sha256sum[libcouchbase-3.0.0_alpha.5.sha256sum]
+| Source Archive        | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_alpha.5.tar.gz[libcouchbase-3.0.0_alpha.5.tar.gz]
+| Ubuntu 16.04 (xenial) | x86 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0-alpha.5_ubuntu1604_xenial_i386.tar[libcouchbase-3.0.0-alpha.5_ubuntu1604_xenial_i386.tar]
+| Ubuntu 16.04 (xenial) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0-alpha.5_ubuntu1604_xenial_amd64.tar[libcouchbase-3.0.0-alpha.5_ubuntu1604_xenial_amd64.tar]
+| Ubuntu 18.04 (bionic) | x86 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0-alpha.5_ubuntu1804_bionic_i386.tar[libcouchbase-3.0.0-alpha.5_ubuntu1804_bionic_i386.tar]
+| Ubuntu 18.04 (bionic) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0-alpha.5_ubuntu1804_bionic_amd64.tar[libcouchbase-3.0.0-alpha.5_ubuntu1804_bionic_amd64.tar]
+| Debian 9 (stretch)    | x86 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0-alpha.5_debian_stretch_i386.tar[libcouchbase-3.0.0-alpha.5_debian_stretch_i386.tar]
+| Debian 9 (stretch)    | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0-alpha.5_debian_stretch_amd64.tar[libcouchbase-3.0.0-alpha.5_debian_stretch_amd64.tar]
+| Enterprise Linux 6    | x86 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0-alpha.5_centos6_i686.tar[libcouchbase-3.0.0-alpha.5_centos6_i686.tar]
+| Enterprise Linux 6    | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0-alpha.5_centos6_x86_64.tar[libcouchbase-3.0.0-alpha.5_centos6_x86_64.tar]
+| Enterprise Linux 7    | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0-alpha.5_centos7_x86_64.tar[libcouchbase-3.0.0-alpha.5_centos7_x86_64.tar]
+| Visual Studio 2015    | x86 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_alpha.5_vc14_x86.zip[libcouchbase-3.0.0_alpha.5_vc14_x86.zip]
+| Visual Studio 2015    | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_alpha.5_vc14_amd64.zip[libcouchbase-3.0.0_alpha.5_vc14_amd64.zip]
+| Visual Studio 2017    | x86 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_alpha.5_vc15_x86.zip[libcouchbase-3.0.0_alpha.5_vc14_x86.zip]
+| Visual Studio 2017    | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_alpha.5_vc15_amd64.zip[libcouchbase-3.0.0_alpha.5_vc15_amd64.zip]
+|===
 
 == 3.0.0-alpha.4 (July 10, 2019)
 
