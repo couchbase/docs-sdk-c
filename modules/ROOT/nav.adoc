@@ -25,6 +25,7 @@
 //* xref:howtos:health-check.adoc[Health Check]
 
 .Concepts
+* xref:concept-docs:collections.adoc[Collections & Scope]
 //* xref:concept-docs:concepts.adoc[Concepts]
 // ** xref:concept-docs:documents.adoc[Documents & Doc Ops]
 // ** xref:concept-docs:collections.adoc[Collections]
