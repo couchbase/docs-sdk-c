@@ -14,7 +14,7 @@ Please see the xref:project-docs:sdk-release-notes.adoc#installation[Installatio
 
 == Hello Couchbase
 
-Now you have the C client installed, you need to include the following in your firstprogram:
+Now you have the C client installed, you need to include the following in your first program:
 
 [source,c]
 ----
