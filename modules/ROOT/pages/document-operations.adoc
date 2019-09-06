@@ -179,7 +179,7 @@ This option is also known as _upsert_.
 If an existing document exists with the same ID, it is overwritten with the contents (value) of the new operation.
 If no document exists with the same ID, it is created and set to the value of the new operation.
 * [.opt]`LCB_ADD`: Only store the item if no other document exists with the given ID.
-If an existing document is precent with the same document ID then the operation will fail with `LCB_KEY_EEXISTS`.
+If an existing document is present with the same document ID then the operation will fail with `LCB_KEY_EEXISTS`.
 * [.opt]`LCB_REPLACE`: Only store the item if an existing document already exists with the same ID.
 In this case the existing document's contents are replaced with the new contents.
 If no document already exists the operation will fail with `LCB_KEY_ENOENT`
