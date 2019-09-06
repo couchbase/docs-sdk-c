@@ -235,7 +235,7 @@ The `ulimit` command instructs the kernel to generate core dump files for all su
 . Ensure you are either using a binary installation of the client library (which was installed from an official Couchbase repository) or are using a source build with debug symbols enabled.
 . When the application crashes, a core file is created.
 The exact location and name of the file is dependent on the specific kernel configuration.
-For more information about where core files are located, see t http://stackoverflow.com/questions/2065912/core-dumped-but-core-file-is-not-in-current-directory[his Stack Overflow discussion on how core location may be configured^].
+For more information about where core files are located, see this http://stackoverflow.com/questions/2065912/core-dumped-but-core-file-is-not-in-current-directory[Stack Overflow discussion on how core location may be configured^].
 . Compress the core file using [.cmd]`gzip` or a similar utility before https://issues.couchbase.com[filing an issue^] or sending this to https://support.couchbase.com[Couchbase support^].
 Compressing the file makes the upload and download times quicker for analyzing the core file.
 . Disable core dumps once completed.
