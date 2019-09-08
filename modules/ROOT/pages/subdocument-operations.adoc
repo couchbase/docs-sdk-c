@@ -927,7 +927,7 @@ When multiple operations are submitted within the context of a single _lookup-in
 NOTE: Unlike _batched operations_ which is simply a way of sending multiple individual operations efficiently on the network, multiple subdoc operations are formed into a single command packet, which is then executed atomically on the server.
 You can submit up to 16 operations at a time.
 
-When submitting multiple _mutation_ operations within a single _mutate-in_ command, those operations are considered to be part of a single transaction: if any of the mutation operations fail, the server will logically roll-back any other mutation operations performed within the _mutate-in_, even if those commands would have been successful had another command not failed.
+When submitting multiple _mutation_ operations within a single _mutate-in_ command, those operations are considered to be part of a single transaction. if any of the mutation operations fail, the server will logically roll-back any other mutation operations performed within the _mutate-in_, even if those commands would have been successful had another command not failed.
 
 When submitting multiple _retrieval_ operations within a single _lookup-in_ command, the status of each command does not affect any other command.
 This means that it is possible for some retrieval operations to succeed and some others to fail.
