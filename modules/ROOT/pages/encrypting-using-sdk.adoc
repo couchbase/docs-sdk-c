@@ -8,7 +8,7 @@ Field Level Encryption is available in Couchbase Data Platform 5.5, from C SDK (
 [#intro]
 == Test Sample
 
-Here is a brief example of the code to encrypt a field using libcouchbase, the C SDK..
+Here is a brief example of the code to encrypt a field using libcouchbase, the C SDK.
 
 [#sample-code]
 == Sample Code
