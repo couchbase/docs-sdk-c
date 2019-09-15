@@ -395,7 +395,7 @@ You can schedule many operations at once with the C SDK.
 When the SDK will enter the I/O-wait phase ([.api]`lcb_wait` or implicit event loop return) all the scheduled operations will be efficiently submitted to the server with as little latency and fragmentation as possible.
 
 Scheduling multiple operations with the C SDK typically requires no special syntax.
-Simply perform multiple scheduling calls
+Simply perform multiple scheduling calls:
 
 [source,c]
 ----
@@ -417,5 +417,5 @@ You can schedule different _types_ of operations as well, for example an [.api]`
 
 Some scheduling commands return an [.api]`lcb_MULTICMD_CTX`.
 This is a special context used to batch multiple logical operations into a single protocol-level packet.
-For these operations the packet format allows for multiple operations, and thus placing multiple operations in a single protocol packet is more efficient bandwidth-wise than sending one packet per operation.
+For these operations, the packet format allows for multiple operations, and thus placing multiple operations in a single protocol packet is more efficient bandwidth-wise than sending one packet per operation.
 Note that this is the exception and that most commands do not have any special _multi_ packet format.
