@@ -171,7 +171,7 @@ The error code is not ambiguous since the CAS option is only accepted (and only 
 
 How to handle this error depends on the application logic.
 If the application wishes to simply insert a new property within the document (which is not dependent on other properties within the document), then it may simply retry the read-update cycle by retrieving the item (and thus getting the new CAS), performing the local modification and then uploading the change to the server.
-For example, if a document represents a user, and the application is simply updating a user’s information (like an email field), the method to update this information may look like this:
+For example, if a document represents an user, and the application is simply updating an user’s information (like an email field), the method to update this information may look like this:
 
 [source,python]
 ----
