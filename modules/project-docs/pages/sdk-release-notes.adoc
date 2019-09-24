@@ -23,8 +23,8 @@ The various Linux distributions contain the following packages:
 * ``**libcouchbase3**``: The core library package.
 * ``**libcouchbase-dev**`` (or ``**libcouchbase-devel**``): The development package, required if building SDKs which depend on the C SDK.
 * ``**libcouchbase3-tools**``: The command line utilities (`*cbc*` and others).
-* ``**libcouchbase3-libevent**``: Optional but recommended component for I/O performance. Can also be used to integrate with libevent (see xref:async-programming.adoc[Asynchronous Programming]).
-* ``**libcouchbase3-libev**``: Optional, for use with applications that make use of event loop integration with libev (see xref:async-programming.adoc[Asynchronous Programming]).
+* ``**libcouchbase3-libevent**``: Optional but recommended component for I/O performance. Can also be used to integrate with libevent (see xref:howtos:concurrent-async-apis.adoc[Asynchronous Programming]).
+* ``**libcouchbase3-libev**``: Optional, for use with applications that make use of event loop integration with libev (see xref:howtos:concurrent-async-apis.adoc[Asynchronous Programming]).
 
 === Configuring yum repositories (CentOS, Redhat)
 
