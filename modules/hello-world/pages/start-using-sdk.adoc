@@ -5,7 +5,7 @@
 The Couchbase C SDK (libcouchbase - LCB) enables you to interact with a Couchbase Server cluster from the C language.
 It is also used by the Node.js, PHP, and Python SDKs to communicate with the Couchbase Server.
 
-include::partial$alpha-warning.adoc[]
+include::partial$beta-warning.adoc[]
 
 == Installing the SDK
 
@@ -18,12 +18,11 @@ Now you have the C client installed, you need to include the following in your f
 
 [source,c]
 ----
-struct lcb_create_st create_options = {0};
-create_options.version = 3;
-create_options.v.v3.type = LCB_TYPE_CLUSTER;
-create_options.v.v3.connstr = argv[1];
-create_options.v.v3.username = argv[2];
-create_options.v.v3.passwd = argv[3];
+lcb_CREATEOPTS *create_options = NULL;
+lcb_createopts_create(&create_options, LCB_TYPE_CLUSTER);
+lcb_createopts_connstr(create_options, argv[1], strlen(argv[1]));
+// username, password
+lcb_createopts_credentials(create_options, argv[2], strlen(argv[2]), argv[3], strlen(argv[3]));
 ----
 
 Couchbase uses xref:6.5@server:learn:security/roles.adoc[Role Based Access Control (RBAC)] to control access to resources.
@@ -39,6 +38,7 @@ If you're developing client code on the same VM or machine as the Couchbase Serv
 lcb_STATUS rc; /* return code, that have to be checked */
 lcb_INSTANCE *instance;
 rc = lcb_create(&instance, &create_options);
+lcb_createopts_destroy(create_options);
 rc = lcb_connect(instance);
 rc = lcb_wait(instance);
 rc = lcb_get_bootstrap_status(instance);
@@ -61,8 +61,8 @@ rc = lcb_open(instance, name, strlen(name)),
 
 If you installed the travel sample data bucket, substitute _travel-sample_ for _bucket-name_.
 
-The 3.0 SDK is ready for the introduction of xref:concept-docs:collections.adoc[Collections] in Cheshire Cat, the next release of the Couchbase Data Platform.
-The latest release, Mad Hatter, brings a limited _Developer Preview_ of Collections, allowing Documents to be grouped by purpose or theme, according to specified _Scope_.
+The 3.0 SDK is ready for the planned introduction of xref:concept-docs:collections.adoc[Collections] in a future release of the Couchbase Data Platform.
+The latest release, 6.5 _Beta_, brings a limited _Developer Preview_ of Collections, allowing Documents to be grouped by purpose or theme, according to specified _Scope_.
 Here we will use `NULL` for default collection, which covers the whole Bucket.
 
 [source,c]
