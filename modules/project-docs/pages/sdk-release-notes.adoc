@@ -149,7 +149,7 @@ Since the Couchbase C SDK does not expose a C++ API, and since it does not direc
 The windows runtime linker will ensure that each binary is using the appropriate version of the Visual C Runtime (``MSVCRT.DLL``).
 ====
 
-If for some reason you cannot use any of the prebuilt Windows binaries, follow the instructions in xref:#_installation_from_source[__installation from source__ (above)] to build on Windows.
+If for some reason you cannot use any of the prebuilt Windows binaries, follow the instructions in xref:#installation-from-source[__installation from source__ (above)] to build on Windows.
 
 == 3.0.0-beta.1 (September 01, 2019)
 
