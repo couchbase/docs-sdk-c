@@ -77,7 +77,7 @@ You may try to use an LTS repository for a non-LTS version, but success is not g
 
 === Installing binary packages without a repository
 
-You can install standalone packages by downloading a containing the necessary binary packages for your platform.
+You can install standalone packages by downloading a tarball containing the necessary binary packages for your platform.
 
 *Installing RPMs manually*
 
@@ -159,57 +159,57 @@ First beta release
 
 * Updated full document commands implicit in subdocument API. Instead of exposing fulldoc GET,REMOVE,UPSERT,INSERT,REPLACE sniff the path argument to GET,REMOVE and REPLACE (with store semantics) and fall back to fulldocument operations if the path is empty.
 
-* Implemented accessors to control subdocument store symantics: `lcb_cmdsubdoc_store_semantics`
+* Implemented accessors to control subdocument store symantics: `lcb_cmdsubdoc_store_semantics`.
 
-* Add accessor to access deleted for subdoc: `lcb_cmdsubdoc_access_deleted`
+* Add accessor to access deleted for subdoc: `lcb_cmdsubdoc_access_deleted`.
 
 * Updated build scripts to require compiler to support at least C++11.
 
 * Renamed KV command accessors from `*_expiration()` to `*_expiry()`.
 
-* https://issues.couchbase.com/browse/CCBC-939[CCBC-939]: Performance improvement in tracing subsystem by avoiding copies for network addresses and system tags
+* https://issues.couchbase.com/browse/CCBC-939[CCBC-939]: Performance improvement in tracing subsystem by avoiding copies for network addresses and system tags.
 
 * Report reasons of `lcb_open` failures in the logs.
 
 * Do not fallback to "default" bucket in the cluster mode.
 
-* Implemented function to test for end of stream of replica responses: `lcb_respreplica_is_final`
+* Implemented function to test for end of stream of replica responses: `lcb_respreplica_is_final`.
 
 * Fixed key size calculation for `lcb_getreplica`.
 
 * Made ciphers and minimum TLS version tunable. New environment variables could be defined to control openssl initialization:
 
-  - `LCB_SSL_CIPHER_LIST` to pass to `SSL_CTX_set_cipher_list`
+  - `LCB_SSL_CIPHER_LIST` to pass to `SSL_CTX_set_cipher_list`;
 
-  - `LCB_SSL_CIPHERSUITES` to pass to `SSL_CTX_set_ciphersuites`
+  - `LCB_SSL_CIPHERSUITES` to pass to `SSL_CTX_set_ciphersuites`;
 
-  - `LCB_SSL_MINIMUM_TLS` with supported values (`"tlsv1.1"`, `"tlsv1.2"` and `"tlsv1.3"`) to configure flags for `SSL_CTX_set_options`
+  - `LCB_SSL_MINIMUM_TLS` with supported values (`"tlsv1.1"`, `"tlsv1.2"` and `"tlsv1.3"`) to configure flags for `SSL_CTX_set_options`.
 
 * Removed multi-ctx from public API. The feature will re-appear in future releases in the shape, that is more consistent with other APIs.
 
-* https://issues.couchbase.com/browse/CCBC-1090[CCBC-1090]: Handle `GET_COUNT` as lookup subdoc operation
+* https://issues.couchbase.com/browse/CCBC-1090[CCBC-1090]: Handle `GET_COUNT` as lookup subdoc operation.
 
-* https://issues.couchbase.com/browse/CCBC-1088[CCBC-1088]: Renamed `lcb_cmdsubdoc_operations` to `lcb_cmdsubdoc_specs` (also renamed `lcb_SUBDOCOPS` to `lcb_SUBDOCSPECS`)
+* https://issues.couchbase.com/browse/CCBC-1088[CCBC-1088]: Renamed `lcb_cmdsubdoc_operations` to `lcb_cmdsubdoc_specs` (also renamed `lcb_SUBDOCOPS` to `lcb_SUBDOCSPECS`).
 
-* https://issues.couchbase.com/browse/CCBC-1092[CCBC-1092]: add count/interval options for cbc-ping
+* https://issues.couchbase.com/browse/CCBC-1092[CCBC-1092]: add count/interval options for cbc-ping.
 
 * Remove CAS durability polling. New server-side durability means must be used instead, or polling using mutation-token.
 
 * Encapsulate create options into `lcb_CREATEOPTS *`. See `lcb_createopts_create` function.
 
-* Refactored logger. See `example/minimal/logger.c` example
+* Refactored logger. See `example/minimal/logger.c` example.
 
-* https://issues.couchbase.com/browse/CCBC-1086[CCBC-1086]: Renamed `LCB_STORE_ADD` and remove `LCB_STORE_SET`
+* https://issues.couchbase.com/browse/CCBC-1086[CCBC-1086]: Renamed `LCB_STORE_ADD` and remove `LCB_STORE_SET`.
 
 * https://issues.couchbase.com/browse/CCBC-1079[CCBC-1079]: Renamed instance option from `fetch_mutation_tokens` to `enable_mutation_tokens`. Enable mutation tokens by default.
 
-* https://issues.couchbase.com/browse/CCBC-1091[CCBC-1091]: Set `HAVE__FTIME64_S` when not running tests
+* https://issues.couchbase.com/browse/CCBC-1091[CCBC-1091]: Set `HAVE__FTIME64_S` when not running tests.
 
-* https://issues.couchbase.com/browse/CCBC-1069[CCBC-1069]: Don't hardcode path prefix for analytics
+* https://issues.couchbase.com/browse/CCBC-1069[CCBC-1069]: Don't hardcode path prefix for analytics.
 
 * Renamed `cbc-bench` to `cbc-gen`, and implemented workload type selector and batch support (see `tools/bench-script.txt`).
 
-* Various API fixes and cleanup
+* Various API fixes and cleanup.
 
 [cols="12,^8,23"]
 |===
