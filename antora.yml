@@ -1,6 +1,6 @@
 name: c-sdk
 version: '3.0'
-prerelease: ALPHA
+prerelease: BETA
 title: C SDK
 start_page: hello-world:start-using-sdk.adoc
 nav:
