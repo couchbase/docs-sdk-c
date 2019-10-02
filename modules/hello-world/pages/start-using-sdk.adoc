@@ -5,7 +5,7 @@
 The Couchbase C SDK (libcouchbase - LCB) enables you to interact with a Couchbase Server cluster from the C language.
 It is also used by the Node.js, PHP, and Python SDKs to communicate with the Couchbase Server.
 
-include::partial$alpha-warning.adoc[]
+include::partial$beta-warning.adoc[]
 
 == Installing the SDK
 
@@ -61,8 +61,8 @@ rc = lcb_open(instance, name, strlen(name)),
 
 If you installed the travel sample data bucket, substitute _travel-sample_ for _bucket-name_.
 
-The 3.0 SDK is ready for the introduction of xref:concept-docs:collections.adoc[Collections] in Cheshire Cat, the next release of the Couchbase Data Platform.
-The latest release, Mad Hatter, brings a limited _Developer Preview_ of Collections, allowing Documents to be grouped by purpose or theme, according to specified _Scope_.
+The 3.0 SDK is ready for the planned introduction of xref:concept-docs:collections.adoc[Collections] in a future release of the Couchbase Data Platform.
+The latest release, 6.5 _Beta_, brings a limited _Developer Preview_ of Collections, allowing Documents to be grouped by purpose or theme, according to specified _Scope_.
 Here we will use `NULL` for default collection, which covers the whole Bucket.
 
 [source,c]
