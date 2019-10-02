@@ -18,12 +18,11 @@ Now you have the C client installed, you need to include the following in your f
 
 [source,c]
 ----
-struct lcb_create_st create_options = {0};
-create_options.version = 3;
-create_options.v.v3.type = LCB_TYPE_CLUSTER;
-create_options.v.v3.connstr = argv[1];
-create_options.v.v3.username = argv[2];
-create_options.v.v3.passwd = argv[3];
+lcb_CREATEOPTS *create_options = NULL;
+lcb_createopts_create(&create_options, LCB_TYPE_CLUSTER);
+lcb_createopts_connstr(create_options, argv[1], strlen(argv[1]));
+// username, password
+lcb_createopts_credentials(create_options, argv[2], strlen(argv[2]), argv[3], strlen(argv[3]));
 ----
 
 Couchbase uses xref:6.5@server:learn:security/roles.adoc[Role Based Access Control (RBAC)] to control access to resources.
@@ -39,6 +38,7 @@ If you're developing client code on the same VM or machine as the Couchbase Serv
 lcb_STATUS rc; /* return code, that have to be checked */
 lcb_INSTANCE *instance;
 rc = lcb_create(&instance, &create_options);
+lcb_createopts_destroy(create_options);
 rc = lcb_connect(instance);
 rc = lcb_wait(instance);
 rc = lcb_get_bootstrap_status(instance);
