@@ -92,13 +92,22 @@ brew install libcouchbase
 [#install-windows]
 == Installation on Microsoft Windows
 
-See xref:sdk-release-notes.adoc#windows-installation[Installation and Release Notes] section for details.
-Windows binary packages can be found as downloads for each version listed on the xref:sdk-release-notes.adoc#2-10-3-december-20-2018[Release Notes and Archives page], linked from the table in each Release Note, and categorized by _Visual Studio_ version.
+
+Windows binary packages can be found as downloads for each version listed on the xref:sdk-release-notes.adoc#latest-version[Release Notes and Archives page], 
+linked from the table in each Release Note, and categorized by _Visual Studio_ version.
+include::sdk-release-notes.adoc[tag=windows-installation]
+
+If for some reason you cannot use any of the prebuilt Windows binaries, you may install from source -- see the next section:
+
 
 == Installing from Source Code
 
-You may install the library from source code, either via a repository checkout or using a release tarball (download links may be found at xref:sdk-release-notes.adoc[Installation and Release Notes]).
-Follow the instructions in the [.path]_README.markdown_ file at the top of the source tree.
+You may install the library from source either by downloading a source archive, 
+or by checking out the https://github.com/couchbase/libcouchbase[git repository^].
+Follow the instructions in the archive's https://github.com/couchbase/libcouchbase/blob/master/README.markdown[README^] for further instructions.
+
+Source archives can be found as a download for each version of the C SDK listed on the xref:sdk-release-notes.adoc#latest-version[Release Notes and Archives page], linked from the table in each Release Note.
+
 
 == Documentation and Examples
 
