@@ -134,6 +134,7 @@ Follow the instructions in the archive's https://github.com/couchbase/libcouchba
 == Windows Installation
 
 Windows binary packages can be found as downloads for each version listed below.
+// tag::windows-installation[]
 Included are the header files, release and debug variants of the DLLs and import libraries, and release and debug variants of the command line tools.
 Note that the C SDK does not have any preferred installation path, and it is up to you to determine where to place ``libcouchbase.dll``.
 
@@ -146,8 +147,11 @@ Most of the issues related to mixing Visual Studio binary versions involve chang
 Since the Couchbase C SDK does not expose a C++ API, and since it does not directly expose any CRT functionality, it should be safe for use so long as your application can link to the library at compile-time.
 The windows runtime linker will ensure that each binary is using the appropriate version of the Visual C Runtime (``MSVCRT.DLL``).
 ====
+// end::windows-installation[]
 
 If for some reason you cannot use any of the prebuilt Windows binaries, follow the instructions in xref:#_installation_from_source[__installation from source__ (above)] to build on Windows.
+
+[#latest-release]
 
 == 2.10.4 (June 19 2019)
 
