@@ -151,6 +151,7 @@ The windows runtime linker will ensure that each binary is using the appropriate
 
 If for some reason you cannot use any of the prebuilt Windows binaries, follow the instructions in xref:#installation-from-source[__installation from source__ (above)] to build on Windows.
 
+[#latest-release]
 == 3.0.0-beta.1 (September 01, 2019)
 
 First beta release
