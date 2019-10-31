@@ -30,6 +30,8 @@
 // ** xref:concept-docs:documents.adoc[Documents & Doc Ops]
 // ** xref:concept-docs:collections.adoc[Collections]
 * xref:concept-docs:durability-replication-failure-considerations.adoc[Durability]
+* xref:concept-docs:data-services.adoc[Service Selection]
+
 
 .Project Docs
 * xref:project-docs:sdk-release-notes.adoc[Release Notes]
