@@ -158,32 +158,41 @@ If for some reason you cannot use any of the prebuilt Windows binaries, follow t
 
 http://docs.couchbase.com/sdk-api/couchbase-c-client-2.10.5[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-1106[CCBC-1106]: Move log messages from IO manager to DEBUG level to reduce noise.
+* https://issues.couchbase.com/browse/CCBC-1106[CCBC-1106]: 
+Moved log messages from IO manager to DEBUG level to reduce noise at INFO level.
 
-* https://issues.couchbase.com/browse/CCBC-1100[CCBC-1100]: Allow to ping operation to use direct URL
+* https://issues.couchbase.com/browse/CCBC-1100[CCBC-1100]: 
+`lcb_ping` operation can now use direct URL to send requests to HTTP services.
 
-* https://issues.couchbase.com/browse/CCBC-939[CCBC-939]: Improve performance with tracing enabled by caching expensive calculations
+* https://issues.couchbase.com/browse/CCBC-939[CCBC-939]: 
+Improved performance with tracing enabled, by caching expensive calculations.
 
 * Made ciphers and minimum TLS version tunable. New environment variables could be defined to control openssl initialization:
-  - `LCB_SSL_CIPHER_LIST` to pass to `SSL_CTX_set_cipher_list`
-  - `LCB_SSL_CIPHERSUITES` to pass to `SSL_CTX_set_ciphersuites`
-  - `LCB_SSL_MINIMUM_TLS` with supported values (`"tlsv1.1"`, `"tlsv1.2"` and `"tlsv1.3"`) to configure flags for `SSL_CTX_set_options`
+  - `LCB_SSL_CIPHER_LIST` to pass to `SSL_CTX_set_cipher_list`;
+  - `LCB_SSL_CIPHERSUITES` to pass to `SSL_CTX_set_ciphersuites`;
+  - `LCB_SSL_MINIMUM_TLS` with supported values (`"tlsv1.1"`, `"tlsv1.2"` and `"tlsv1.3"`) to configure flags for `SSL_CTX_set_options`.
 
-* Do not log when logging callback is not defined
+* Do not log when logging callback is not defined.
 
-* Retry query on authentication error
+* Retry query on authentication error.
 
-* Add bucket to the config cache file path. Prevents crashing if want to open multiple buckets
+* Added bucket to the config cache file path. 
+This prevents crashing with multiple buckets open.
 
-* https://issues.couchbase.com/browse/CCBC-1059[CCBC-1059]: Fixed hostname truncation when using alternative network addresses.
+* https://issues.couchbase.com/browse/CCBC-1059[CCBC-1059]: 
+Fixed hostname truncation when using alternative network addresses.
 
-* Fixes SSL sockets with openssl 1.1.1c+. `BIO_get_mem_ptr` does not give direct access to internal buffer, so we have to invalidate our copy before using buffer values.
+* Fixed SSL sockets with openssl 1.1.1c+. 
+`BIO_get_mem_ptr` does not give direct access to internal buffer, so we have to invalidate our copy before using buffer values.
 
-* Fix resolution of test shared object.
+* Fixed resolution of test shared object.
 
-* https://issues.couchbase.com/browse/CCBC-1109[CCBC-1109]: Fix retrying N1QL query on auth error. The library was trying to dereference NULL pointer when using dynamic authenticator with N1QL queries.
+* https://issues.couchbase.com/browse/CCBC-1109[CCBC-1109]: 
+Fixed retrying N1QL query on auth error. 
+The library was trying to dereference NULL pointer when using dynamic authenticator with N1QL queries.
 
-* https://issues.couchbase.com/browse/CCBC-1063[CCBC-1063]: Cache credentials provided by dynamic auth callback.
+* https://issues.couchbase.com/browse/CCBC-1063[CCBC-1063]: 
+Cache credentials provided by dynamic auth callback.
 
 [cols="12,^8,23"]
 |===
