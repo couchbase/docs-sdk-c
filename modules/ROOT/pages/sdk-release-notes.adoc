@@ -151,9 +151,10 @@ The windows runtime linker will ensure that each binary is using the appropriate
 ====
 // end::windows-installation[]
 
+[#latest-release]
 If for some reason you cannot use any of the prebuilt Windows binaries, follow the instructions in xref:#_installation_from_source[__installation from source__ (above)] to build on Windows.
 
-[#latest-release]
+
 == 2.10.5 (November 1 2019)
 
 http://docs.couchbase.com/sdk-api/couchbase-c-client-2.10.5[API Reference]
