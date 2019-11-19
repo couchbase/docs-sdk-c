@@ -14,6 +14,8 @@ The following sections lead you through the primary functions of the sample appl
 
 This shows you how to use the various features and services of Couchbase including: *connecting* to a cluster and bucket, *key/value* iteraction, document *query through N1QL* and *full text searches*.
 
+You may want to look at our xref:2.10@c-sdk::start-using-sdk.adoc#hello-couchbase[Getting started code example] first, to see a more complete code sample, with `#include`s.
+
 == Configure and Bootstrap the SDK
 
 *Relevant Documentation Topics*: xref:managing-connections.adoc[Managing Connections Using the C (libcouchbase) SDK with Couchbase Server]
