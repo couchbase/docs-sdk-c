@@ -24,11 +24,11 @@
 .Errors & Diagnostics
 //* xref:howtos:health-check.adoc[Health Check]
 
-.Concepts
+.Learn
+* xref:concept-docs:concepts.adoc[Overview]
 * xref:concept-docs:collections.adoc[Collections & Scope]
-//* xref:concept-docs:concepts.adoc[Concepts]
-// ** xref:concept-docs:documents.adoc[Documents & Doc Ops]
-// ** xref:concept-docs:collections.adoc[Collections]
+// * xref:concept-docs:errors.adoc[Errors and Diagnostics]
+** xref:concept-docs:health-check.adoc[Health Check]
 * xref:concept-docs:durability-replication-failure-considerations.adoc[Durability]
 * xref:concept-docs:data-services.adoc[Service Selection]
 
