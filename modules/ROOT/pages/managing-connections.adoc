@@ -40,6 +40,8 @@ if (rc != LCB_SUCCESS) {
 }
 ----
 
+IMPORTANT: Any Cluster nodes addresses passed in to establish (bootstrap) the connection should be for data (KV) nodes.
+
 include::6.0@sdk:shared:partial$lcb-pars-shared.adoc[tag=connstr-intro]
 
 [NOTE]
