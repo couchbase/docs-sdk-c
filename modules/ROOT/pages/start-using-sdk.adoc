@@ -206,6 +206,8 @@ An [.api]`lcb_t` is created using the [.api]`lcb_create()` function.
 Once created the handle must be connected: [.api]`lcb_connect()` schedules the connection and [.api]`lcb_wait` waits for the connection to complete.
 Once [.api]`lcb_wait` returns, [.api]`lcb_get_bootstrap_status` may be used to determine if the connection completed successfully.
 
+IMPORTANT: Any Cluster nodes addresses passed in to establish (bootstrap) the connection should be for data (KV) nodes.
+
 Note: If you have an environment with port mapping, such as Couchbase Server and the SDK in separate containers under Kubernetes, see the multi-network configuration _note_ under xref:managing-connections.adoc#connecting-to-a-bucket[Managing Connections]
 
 Once the handle has been successfully connected it may then be used for data access.
