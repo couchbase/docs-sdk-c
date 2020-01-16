@@ -94,9 +94,7 @@ var result = await collection.Upsert("document-key", document,
 
 Here, we have add _Durability_ options, namely `PersistTo` and `ReplicateTo`.
 In Couchbase Server releases before 6.5, Durability was set with these two options -- see the xref:https://docs.couchbase.com/dotnet-sdk/2.7/durability.html[6.0 Durability documentation] -- covering  how many replicas the operation must be propagated to and how many persisted copies of the modified record must exist. 
-Couchbase Data Platform 6.5 refines these two options, with xref:6.5@server:learn:data/durability.adoc[Synchronous Replication] -- although they remain essentially the same in use.
-
-//-- as well as adding the option of xref:transactions.adoc[atomic document transactions].
+Couchbase Data Platform 6.5 refines these two options, with xref:6.5@server:learn:data/durability.adoc[Synchronous Replication] -- although they remain essentially the same in use -- see xref:#durability[Durability, below].
 
 
 [TIP]
