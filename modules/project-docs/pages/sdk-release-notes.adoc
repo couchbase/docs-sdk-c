@@ -181,31 +181,44 @@ cbc:
 [#latest-release]
 == 3.0.0 (January 17, 2020)
 
-* https://issues.couchbase.com/browse/CCBC-1152[CCBC-1152]: Enable `SCRAM-SHA*` SASL by default.
+* https://issues.couchbase.com/browse/CCBC-1152[CCBC-1152]: 
+Enabled `SCRAM-SHA*` SASL by default.
 
-* https://issues.couchbase.com/browse/CCBC-1153[CCBC-1153]: Renamed `lcb_wait3` to `lcb_wait`.
+* https://issues.couchbase.com/browse/CCBC-1153[CCBC-1153]: 
+Renamed `lcb_wait3` to `lcb_wait`.
 
-* https://issues.couchbase.com/browse/CCBC-1147[CCBC-1147]: Return `LCB_SUCCESS` for `lcb_exists` when the document is missing. `lcb_respexists_is_found` should be used on its response object to check the presense of the document.
+* https://issues.couchbase.com/browse/CCBC-1147[CCBC-1147]: 
+Return `LCB_SUCCESS` for `lcb_exists` when the document is missing. 
+`lcb_respexists_is_found` should be used on its response object to check the presense of the document.
 
-* https://issues.couchbase.com/browse/CCBC-1152[CCBC-1152]: Do not allow to use SASL PLAIN on non-TLS connections. Compiling libcouchbase with OpenSSL is strongly recommended.
+* https://issues.couchbase.com/browse/CCBC-1152[CCBC-1152]: 
+Do not allow to use SASL PLAIN on non-TLS connections. 
+Compiling libcouchbase with OpenSSL is strongly recommended.
 
-* https://issues.couchbase.com/browse/CCBC-1032[CCBC-1032]: Use operation node to resolve collection and return timeout when collection cannot be resolved
+* https://issues.couchbase.com/browse/CCBC-1032[CCBC-1032]: 
+Use operation node to resolve collection and return timeout when collection cannot be resolved
 
 * Added shortcut for query options to request metrics
 
 * Do not fallback to single subdocument API when only one specification passed to `lcb_subdoc`.
 
-* https://issues.couchbase.com/browse/CCBC-1137[CCBC-1137]: Allow to retrieve error context for HTTP response (`lcb_http` API)
+* https://issues.couchbase.com/browse/CCBC-1137[CCBC-1137]: 
+Allow to retrieve error context for HTTP response (`lcb_http` API).
 
-* https://issues.couchbase.com/browse/CCBC-1145[CCBC-1145]: Expose endpoints in error context.
+* https://issues.couchbase.com/browse/CCBC-1145[CCBC-1145]: 
+Expose endpoints in error context.
 
-* https://issues.couchbase.com/browse/CCBC-1146[CCBC-1146]: Expose user-cookie in retry handler.
+* https://issues.couchbase.com/browse/CCBC-1146[CCBC-1146]: 
+Expose user-cookie in retry handler.
 
-* https://issues.couchbase.com/browse/CCBC-1148[CCBC-1148]: Added NULL checks for enhanced error info.
+* https://issues.couchbase.com/browse/CCBC-1148[CCBC-1148]: 
+Added NULL checks for enhanced error info.
 
-* https://issues.couchbase.com/browse/CCBC-1075[CCBC-1075]: Renamed "FTS" to "SEARCH" in the APIs.
+* https://issues.couchbase.com/browse/CCBC-1075[CCBC-1075]: 
+Renamed "FTS" to "SEARCH" in the APIs.
 
-* https://issues.couchbase.com/browse/CCBC-1073[CCBC-1073]: Renamed "N1QL" to "QUERY" in the APIs.
+* https://issues.couchbase.com/browse/CCBC-1073[CCBC-1073]: 
+Renamed "N1QL" to "QUERY" in the APIs.
 
 * Fixed bucketless bootstrap for Server 6.0.
 
