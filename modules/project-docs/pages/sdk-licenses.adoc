@@ -26,7 +26,12 @@ Any dependencies may have their https://www.couchbase.com/legal/agreements[own, 
 |===
 | Component | License
 
-|`libtext-template-perl` 1.46 | GNU General Public License v1.0 or later / Artistic License 1.0
-|`Text::Template` 1.46 | GNU General Public License v2.0 or later / Artistic License 1.0
-|`libuv` 1.24.1 | Expat License
+| couchnode	v3.0.0	| Apache License 2.0
+| libev	4.24	| BSD 3-clause "New" or "Revised" License / GNU General Public License v2.0 or later
+| libevent	2.1.8	| BSD 3-clause "New" or "Revised" License
+| libtext-template-perl	1.46	| GNU General Public License v1.0 or later / Artistic License 1.0
+| libuv	1.24.1	| MIT Expat License
+| mediasoup	3.4.4	| ISC License
+| OpenSSL	1.1.1d	| Apache License 2.0
+| Text::Template	1.46	| GNU General Public License v2.0 or later / Artistic License 1.0
 |===
