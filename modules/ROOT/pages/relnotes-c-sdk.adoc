@@ -1,1 +1,1 @@
-include::2.8@c-sdk::page$sdk-release-notes.adoc[tag=latest]
+include::2.8@c-sdk::page$relnotes-c-sdk.adoc[tag=latest]
