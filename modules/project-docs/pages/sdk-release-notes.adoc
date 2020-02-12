@@ -6,6 +6,9 @@
 [abstract]
 Release notes, installation instructions, and download archive for the Couchbase C Client, libcouchbase.
 
+These pages cover the 3.0 versions of the Couchbase C SDK. 
+For release notes, download links, and installation methods for 2.10 and earlier releases of the Couchbase C Client, please see the xref:2.10@c-sdk::sdk-release-notes.adoc[2.x C Release Notes & Download Archive].
+
 == Installation
 
 You can install the C SDK from a repository for your platform, download prebuilt binaries, or compile from source.
@@ -241,3 +244,9 @@ Renamed "N1QL" to "QUERY" in the APIs.
 | Visual Studio 2019 (VC16)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_vc16_amd64.zip[libcouchbase-3.0.0_vc16_amd64.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_vc15_amd64_openssl.zip[libcouchbase-3.0.0_vc15_amd64_openssl.zip]
 |===
+
+
+
+== Pre-releases
+
+Numerous _Alpha_ and _Beta_ releases were made in the run-up to the 3.0 release, and although unsupported, the release notes and download links are retained for archive purposes xref:3.0-pre-release-notes.adoc[here].
