@@ -36,10 +36,10 @@ This is usually not what you want, soensure that you use the 64-bit repository f
 |===
 |  Version | Architecture | Repository
 
-| 6 | 32-bit | http://packages.couchbase.com/rpm/6.2/i686
-| 6 | 64-bit | http://packages.couchbase.com/rpm/6.2/x86_64
-| 7 | 64-bit | http://packages.couchbase.com/rpm/7/x86_64
-| 8 | 64-bit | http://packages.couchbase.com/rpm/8/x86_64
+| 6 | 32-bit | \http://packages.couchbase.com/rpm/6.2/i686
+| 6 | 64-bit | \http://packages.couchbase.com/rpm/6.2/x86_64
+| 7 | 64-bit | \http://packages.couchbase.com/rpm/7/x86_64
+| 8 | 64-bit | \http://packages.couchbase.com/rpm/8/x86_64
 |===
 
 . Create a `couchbase.repo` file in your `/etc/yum.repos.d` directory.
@@ -71,12 +71,12 @@ Repositories are available for the following distributions:
 |===
 | Distribution | Repository Entry
 
-| Ubuntu 14.04 ("trusty") | ``deb http://packages.couchbase.com/ubuntu trusty trusty/main``
-| Ubuntu 16.04 ("xenial") | ``deb http://packages.couchbase.com/ubuntu xenial xenial/main``
-| Ubuntu 18.04 ("bionic") | ``deb http://packages.couchbase.com/ubuntu bionic bionic/main``
-| Debian 8 ("jessie") | ``deb http://packages.couchbase.com/ubuntu jessie jessie/main``
-| Debian 9 ("stretch") | ``deb http://packages.couchbase.com/ubuntu stretch stretch/main``
-| Debian 10 ("buster") | ``deb http://packages.couchbase.com/ubuntu buster buster/main``
+| Ubuntu 14.04 ("trusty") | ``deb \http://packages.couchbase.com/ubuntu trusty trusty/main``
+| Ubuntu 16.04 ("xenial") | ``deb \http://packages.couchbase.com/ubuntu xenial xenial/main``
+| Ubuntu 18.04 ("bionic") | ``deb \http://packages.couchbase.com/ubuntu bionic bionic/main``
+| Debian 8 ("jessie") | ``deb \http://packages.couchbase.com/ubuntu jessie jessie/main``
+| Debian 9 ("stretch") | ``deb \http://packages.couchbase.com/ubuntu stretch stretch/main``
+| Debian 10 ("buster") | ``deb \http://packages.couchbase.com/ubuntu buster buster/main``
 |===
 
 Note that only Ubuntu LTS (long term support) releases are supported.
