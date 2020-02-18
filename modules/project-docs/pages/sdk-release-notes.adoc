@@ -39,9 +39,9 @@ To configure the repository:
 [cols="1,1,3"]
 |===
 | Version | Architecture | Repository
-| Amazon Linux 2     | 64-bit | https://packages.couchbase.com/clients/c/repos/rpm/amzn2/x86_64
-| Enterprise Linux 8 | 64-bit | https://packages.couchbase.com/clients/c/repos/rpm/el8/x86_64
-| Enterprise Linux 7 | 64-bit | https://packages.couchbase.com/clients/c/repos/rpm/el7/x86_64
+| Amazon Linux 2     | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/amzn2/x86_64
+| Enterprise Linux 8 | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/el8/x86_64
+| Enterprise Linux 7 | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/el7/x86_64
 |===
 
 . Create a `couchbase.repo` file in your `/etc/yum.repos.d` directory.  It should look similar to the following:
@@ -51,9 +51,9 @@ To configure the repository:
 [couchbase]
 enabled = 1
 name = libcouchbase package for centos8 x86_64
-baseurl = https://packages.couchbase.com/clients/c/repos/rpm/el8/x86_64
+baseurl = \https://packages.couchbase.com/clients/c/repos/rpm/el8/x86_64
 gpgcheck = 1
-gpgkey = https://packages.couchbase.com/clients/c/repos/rpm/couchbase.key
+gpgkey = \https://packages.couchbase.com/clients/c/repos/rpm/couchbase.key
 ----
 
 === Configuring APT repositories (Debian, Ubuntu)
@@ -71,10 +71,10 @@ Repositories are available for the following distributions:
 [cols=".<2,.^9"]
 |===
 | Distribution            | Repository Entry
-| Ubuntu 16.04 ("xenial") | ``deb https://packages.couchbase.com/clients/c/repos/deb/ubuntu1604 xenial xenial/main``
-| Ubuntu 18.04 ("bionic") | ``deb https://packages.couchbase.com/clients/c/repos/deb/ubuntu1804 bionic bionic/main``
-| Debian 9 ("stretch")    | ``deb https://packages.couchbase.com/clients/c/repos/deb/debian9 stretch stretch/main``
-| Debian 10 ("buster")    | ``deb https://packages.couchbase.com/clients/c/repos/deb/debian10 buster buster/main``
+| Ubuntu 16.04 ("xenial") | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu1604 xenial xenial/main``
+| Ubuntu 18.04 ("bionic") | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu1804 bionic bionic/main``
+| Debian 9 ("stretch")    | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian9 stretch stretch/main``
+| Debian 10 ("buster")    | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian10 buster buster/main``
 |===
 
 Note that only Ubuntu LTS (long term support) releases are supported.
