@@ -184,6 +184,10 @@ cbc:
 [#latest-release]
 == 3.0.0 (January 17, 2020)
 
+This is the first GA release of the third generation C SDK.
+
+// https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.0[API Reference]
+
 * https://issues.couchbase.com/browse/CCBC-1152[CCBC-1152]: 
 Enabled `SCRAM-SHA*` SASL by default.
 
