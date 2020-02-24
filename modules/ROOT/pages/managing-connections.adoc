@@ -187,7 +187,7 @@ If the file does not contain a configuration the client will then retrieve the c
 NOTE: The `config_cache` feature is intended only for short-lived connections.
 During a cluster-side topology change the client _will_ need to retrieve the configuration from the network as the file-based configuration will become invalid.
 
-Note, `config_cache` -- implemeented with `LCB_CNTL_CONFIGCACHE` or `lcb_cntl_string()` -- uses `connstr` internally in either case, which is set _per bucket_.
+Note, `config_cache` -- implemented with `LCB_CNTL_CONFIGCACHE` or `lcb_cntl_string()` -- uses `connstr` internally in either case, which is set _per bucket_.
 // end::configcache[]
 
 == Additional Options
