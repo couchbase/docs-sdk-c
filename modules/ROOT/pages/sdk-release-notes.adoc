@@ -176,6 +176,8 @@ http://docs.couchbase.com/sdk-api/couchbase-c-client-2.10.6[API Reference]
 
 * Fix rand range selection in SCRAM-SHA routines
 
+[cols="12,^8,23"]
+|===
 | Platform                 | Architecture    | File
 
 | Checksums                | Any | http://packages.couchbase.com/clients/c/libcouchbase-2.10.6.sha256sum[libcouchbase-2.10.6.sha256sum]
@@ -192,6 +194,8 @@ http://docs.couchbase.com/sdk-api/couchbase-c-client-2.10.6[API Reference]
 | Visual Studio 2017       | x86 | http://packages.couchbase.com/clients/c/libcouchbase-2.10.6_vc15_x86.zip[libcouchbase-2.10.6_vc15_x86.zip]
 | Visual Studio 2017       | x64 | http://packages.couchbase.com/clients/c/libcouchbase-2.10.6_vc15_amd64.zip[libcouchbase-2.10.6_vc15_amd64.zip]
 | Visual Studio 2017 (TLS) | x64 | http://packages.couchbase.com/clients/c/libcouchbase-2.10.6_vc15_amd64_openssl.zip[libcouchbase-2.10.6_vc15_amd64_openssl.zip]
+|===
+
 
 == 2.10.5 (November 1 2019)
 
