@@ -3,8 +3,8 @@
 :page-topic-type: howtos
 
 [abstract]
-The Java SDK supports common JSON document requirements out-of-the-box.
-Custom transcoders and serializers provide support for applications needing to perform advanced operations, including supporting non-JSON data.
+Libcouchbase operates on bare memory, and does not have a transcoders API
+Custom transcoders and serializers provide support for applications needing to perform advanced operations, including supporting non-JSON data, and are available in the other SDKs, including those that sit on top of LCB.
 
 The Java SDK uses the concepts of transcoders and serializers, which are used whenever data is sent to or retrieved from Couchbase Server.
 
