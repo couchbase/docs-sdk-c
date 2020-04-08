@@ -184,27 +184,38 @@ cbc:
 [#latest-release]
 == 3.0.1 (April 8, 2020)
 
-* https://issues.couchbase.com/browse/CCBC-1188[CCBC-1188]: cbc-pillowfight: fixed `--collection` switch.
+* https://issues.couchbase.com/browse/CCBC-1188[CCBC-1188]: 
+cbc-pillowfight: fixed `--collection` switch.
 
-* https://issues.couchbase.com/browse/CCBC-1173[CCBC-1173]: Fix exporting `lcb_cmdquery_consistency_token_for_keyspace`
+* https://issues.couchbase.com/browse/CCBC-1173[CCBC-1173]: 
+Fixed exporting `lcb_cmdquery_consistency_token_for_keyspace`.
 
-* https://issues.couchbase.com/browse/CCBC-1168[CCBC-1168]: expose `max_parallelism` for query
+* https://issues.couchbase.com/browse/CCBC-1168[CCBC-1168]: 
+Exposed `max_parallelism` for query.
 
-* https://issues.couchbase.com/browse/CCBC-1171[CCBC-1171]: expose `profile` option for query
+* https://issues.couchbase.com/browse/CCBC-1171[CCBC-1171]: 
+Exposed `profile` option for query.
 
-* https://issues.couchbase.com/browse/CCBC-1170[CCBC-1170]: expose `scan_wait` option for query
+* https://issues.couchbase.com/browse/CCBC-1170[CCBC-1170]: 
+Exposed `scan_wait` option for query.
 
-* https://issues.couchbase.com/browse/CCBC-1159[CCBC-1159]: Fix error codes for Management API
+* https://issues.couchbase.com/browse/CCBC-1159[CCBC-1159]: 
+Fixed error codes for Management API.
 
-* https://issues.couchbase.com/browse/MB-37768[MB-37768]: Don't override `CMAKE_INSTALL_RPATH`.
+* https://issues.couchbase.com/browse/MB-37768[MB-37768]: 
+Fixed issue where `CMAKE_INSTALL_RPATH`was overriden, affecting cbc tools.
 
-* https://issues.couchbase.com/browse/CCBC-1208[CCBC-1208]: Add a fail-fast retry strategy.
+* https://issues.couchbase.com/browse/CCBC-1208[CCBC-1208]: 
+Added a fail-fast retry strategy.
 
-* https://issues.couchbase.com/browse/CCBC-1209[CCBC-1209]: Rename functions of embedded `http_parser` to avoid name clash.
+* https://issues.couchbase.com/browse/CCBC-1209[CCBC-1209]: 
+Renamed functions of embedded `http_parser` to avoid name clash.
 
-* Remove use of deprecated function `std::random_shuffle`. `std::random_shuffle` is deprecated in C++14, removed in C++17. Replace with `std::shuffle`.
+* Remove use of deprecated function `std::random_shuffle`. 
+`std::random_shuffle` is deprecated in C++14, removed in C++17. 
+Replaced with `std::shuffle`.
 
-* Fixed several issues reported by coverity
+* Fixed several issues reported by coverity.
 
 [cols="12,^8,23"]
 |===
