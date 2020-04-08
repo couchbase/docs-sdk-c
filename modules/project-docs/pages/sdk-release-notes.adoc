@@ -211,7 +211,7 @@ Added a fail-fast retry strategy.
 * https://issues.couchbase.com/browse/CCBC-1209[CCBC-1209]: 
 Renamed functions of embedded `http_parser` to avoid name clash.
 
-* Remove use of deprecated function `std::random_shuffle`. 
+* Removed use of deprecated function `std::random_shuffle`. 
 `std::random_shuffle` is deprecated in C++14, removed in C++17. 
 Replaced with `std::shuffle`.
 
