@@ -182,7 +182,7 @@ cbc:
 
 
 [#latest-release]
-== 3.0.1 (April 8, 2020)
+== Version 3.0.1 (8 April 2020)
 
 * https://issues.couchbase.com/browse/CCBC-1188[CCBC-1188]: 
 cbc-pillowfight: fixed `--collection` switch.
@@ -234,7 +234,7 @@ Replaced with `std::shuffle`.
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_vc15_amd64_openssl.zip[libcouchbase-3.0.1_vc15_amd64_openssl.zip]
 |===
 
-== 3.0.0 (January 17, 2020)
+== Version 3.0.0 (17 January 2020)
 
 This is the first GA release of the third generation C SDK.
 
