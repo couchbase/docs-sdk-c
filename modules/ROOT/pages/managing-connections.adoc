@@ -171,6 +171,12 @@ Note that if you pass more than one bootstrap host, DNS SRV lookup will not be a
 IPv6 has been supported since Couchbase Data Platform 5.5 (Enterprise Edition), although LCB will use IPv4 by default. 
 IPv6 can be specified as allowed or preferred through the connection string `ipv6=allow`, or directly with the C SDK, since version xref:sdk-release-notes.adoc#2-8-3-november-22-2017[2.8.3] of LCB -- see the xref:client-settings.adoc#settings-list[Client Settings] page.
 
+The option can also be passed in the Connection String:
+
+[source,c]
+----
+couchbases://host1.example.com?ipv6=allow
+----
 
 [#configcache]
 // tag::configcache[]
