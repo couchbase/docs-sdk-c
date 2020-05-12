@@ -6,8 +6,6 @@
 The Couchbase C SDK (libcouchbase - LCB) enables you to interact with a Couchbase Server cluster from the C language.
 It is also used by the Node.js, PHP, and Python SDKs to communicate with the Couchbase Server.
 
-include::partial$beta-warning.adoc[]
-
 == Installing the SDK
 
 Please see the xref:project-docs:sdk-release-notes.adoc#installation[Installation section of the Release Notes page].
