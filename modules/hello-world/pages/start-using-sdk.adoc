@@ -6,12 +6,19 @@
 The Couchbase C SDK (libcouchbase - LCB) enables you to interact with a Couchbase Server cluster from the C language.
 It is also used by the Node.js, PHP, and Python SDKs to communicate with the Couchbase Server.
 
-include::partial$beta-warning.adoc[]
 
-== Installing the SDK
+include::partial$installation.adoc[]
 
-Please see the xref:project-docs:sdk-release-notes.adoc#installation[Installation section of the Release Notes page].
+== Documentation and Examples
 
+// * A reference guide (this manual) is suitable for a general overview and learning how to use the library.
+// * The http://docs.couchbase.com/sdk-api/couchbase-c-client[API documentation^] is generated from comments in the header and covers all the APIs of the library.
+* Small standalone examples can be found in the https://github.com/couchbase/libcouchbase/tree/master/example[github repository^].
+* Other Couchbase SDKs are written on top of the C SDK and show more complex usage of the library's features:
+ ** https://github.com/couchbase/couchbase-python-client[Python SDK^]
+ ** https://github.com/couchbase/couchnode[Node.js SDK^]
+* The library's own `cbc` (https://github.com/couchbase/libcouchbase/blob/master/tools/cbc.cc[^]) and `cbc-pillowfight` (https://github.com/couchbase/libcouchbase/blob/master/tools/cbc-pillowfight.cc[^]) utilities.
+Note that these tools may use internal APIs not intended for public use.
 
 == Hello Couchbase
 
