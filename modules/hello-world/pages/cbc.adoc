@@ -1,6 +1,6 @@
 = Browser and CLI Access
 :page-topic-type: landing-page
-:page-aliases: ROOT:webui-cli-access,server:developer-guide:retrieving,server:developer-guide:cli-overview
+:page-aliases: ROOT:webui-cli-access,server:developer-guide:retrieving,server:developer-guide:cli-overview,webui-cli-access
 
 [abstract]
 Web and command line interfaces to Couchbase Server are available. 
