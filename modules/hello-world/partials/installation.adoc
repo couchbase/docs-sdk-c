@@ -74,7 +74,7 @@ Now that you have the repository configured, refresh the cache then check to see
 ----
 $ sudo apt-get update
 $ sudo apt-cache search libcouchbase
----
+----
 
 You should see something like:
 
