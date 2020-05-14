@@ -1,25 +1,9 @@
-= Couchbase C Release Notes and Archives
-:navtitle: Release Notes
-:page-topic-type: project-doc
-:page-aliases: ROOT:sdk-release-notes,ROOT:relnotes-c-sdk,ROOT:release-notes
+// tag::installation[]
+== Platform support and installation
 
-[abstract]
-Release notes, installation instructions, and download archive for the Couchbase C Client, libcouchbase.
+The Couchbase C SDK can be installed via apt or yum repositories on GNU/Linux; homebrew on Mac OS X; and <<install-windows,binary archives for Microsoft Windows>>.
+It may also be https://github.com/couchbase/libcouchbase[built from source^] on any of the platforms mentioned above, and more.
 
-These pages cover the 3.0 versions of the Couchbase C SDK.
-For release notes, download links, and installation methods for 2.10 and earlier releases of the Couchbase C Client, please see the xref:2.10@c-sdk::sdk-release-notes.adoc[2.x C Release Notes & Download Archive].
-
-
-include::hello-world:partial$installation.adoc[]
-
-////
-== Installation
-
-You can install the C SDK from a repository for your platform, download prebuilt binaries, or compile from source.
-
-// include::start-using-sdk.adoc[tag=macos]
-
-// include::start-using-sdk.adoc[tag=linux]
 
 === Installing Manually - Linux
 
@@ -84,6 +68,44 @@ Repositories are available for the following distributions:
 Note that only Ubuntu LTS (long term support) releases are supported.
 You may try to use an LTS repository for a non-LTS version, but success is not guaranteed.
 
+Now that you have the repository configured, refresh the cache then check to see that you have been successful:
+
+[source,console]
+----
+$ sudo apt-get update
+$ sudo apt-cache search libcouchbase
+----
+
+You should see something like:
+
+[source,console]
+----
+libcouchbase-dbg - library for the Couchbase protocol, debug symbols
+libcouchbase-dev - library for the Couchbase protocol, development files
+libcouchbase3 - library for the Couchbase protocol, core files
+libcouchbase3-libev - library for the Couchbase protocol (libev backend)
+libcouchbase3-libevent - library for the Couchbase protocol (libevent backend)
+libcouchbase3-tools - library for the Couchbase protocol
+----
+
+Now, install `libcouchbase3`, and any other packages that you need for development:
+
+[source,console]
+----
+sudo apt-get install libcouchbase3 libcouchbase3-dev libcouchbase3-tools libcouchbase-dbg libcouchbase3-libev libcouchbase3-libevent
+----
+
+For CentOS and Red Hat, the equivalent commands are:
+
+[source,console]
+----
+sudo yum check-update
+sudo yum search libcouchbase
+sudo yum install libcouchbase3 libcouchbase3-dev libcouchbase3-tools
+----
+
+
+
 === Installing binary packages without a repository
 
 You can install standalone packages by downloading a tarball containing the necessary binary packages for your platform.
@@ -144,6 +166,19 @@ sudo dpkg -i libcouchbase3{-tools,-libevent,}_3.0.0*.deb libcouchbase-dev*.deb
 You may install the library from source either by downloading a source archive, or by checking out the https://github.com/couchbase/libcouchbase[git repository].
 Follow the instructions in the archive's https://github.com/couchbase/libcouchbase/blob/master/README.markdown[README] for further instructions.
 
+== Installation on Mac OS X
+
+To install the library on Mac OS X, first install the de-facto package manager for OS X: http://brew.sh/[homebrew^].
+Once _homebrew_ is configured:
+
+[source,bash]
+----
+brew update # get list of latest packages
+brew install libcouchbase
+----
+
+
+[#install-windows]
 == Windows Installation
 
 Windows binary packages can be found as downloads for each version listed below.
@@ -161,6 +196,7 @@ The windows runtime linker will ensure that each binary is using the appropriate
 ====
 
 If for some reason you cannot use any of the prebuilt Windows binaries, follow the instructions in xref:#installation-from-source[__installation from source__ (above)] to build on Windows.
+
 
 == Verifying Installed Package
 
@@ -183,131 +219,4 @@ cbc:
   CC: GNU 8.3.1; -O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection -fno-strict-aliasing -ggdb3 -pthread
   CXX: GNU 8.3.1; -O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection -fno-strict-aliasing -ggdb3 -pthread
 ----
-////
-
-
-[#latest-release]
-== Version 3.0.1 (8 April 2020)
-
-* https://issues.couchbase.com/browse/CCBC-1188[CCBC-1188]: 
-cbc-pillowfight: fixed `--collection` switch.
-
-* https://issues.couchbase.com/browse/CCBC-1173[CCBC-1173]: 
-Fixed exporting `lcb_cmdquery_consistency_token_for_keyspace`.
-
-* https://issues.couchbase.com/browse/CCBC-1168[CCBC-1168]: 
-Exposed `max_parallelism` for query.
-
-* https://issues.couchbase.com/browse/CCBC-1171[CCBC-1171]: 
-Exposed `profile` option for query.
-
-* https://issues.couchbase.com/browse/CCBC-1170[CCBC-1170]: 
-Exposed `scan_wait` option for query.
-
-* https://issues.couchbase.com/browse/CCBC-1159[CCBC-1159]: 
-Fixed error codes for Management API.
-
-* https://issues.couchbase.com/browse/MB-37768[MB-37768]: 
-Fixed issue where `CMAKE_INSTALL_RPATH`was overriden, affecting cbc tools.
-
-* https://issues.couchbase.com/browse/CCBC-1208[CCBC-1208]: 
-Added a fail-fast retry strategy.
-
-* https://issues.couchbase.com/browse/CCBC-1209[CCBC-1209]: 
-Renamed functions of embedded `http_parser` to avoid name clash.
-
-* Removed use of deprecated function `std::random_shuffle`. 
-`std::random_shuffle` is deprecated in C++14, removed in C++17. 
-Replaced with `std::shuffle`.
-
-* Fixed several issues reported by coverity.
-
-[cols="12,^8,23"]
-|===
-| Platform                      | Architecture | File
-| Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1.sha256sum[libcouchbase-3.0.1.sha256sum]
-| Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1.tar.gz[libcouchbase-3.0.1.tar.gz]
-| Amazon Linux 2                | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_amzn2_x86_64.tar[libcouchbase-3.0.1_amzn2_x86_64.tar]
-| Enterprise Linux 7            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_centos7_x86_64.tar[libcouchbase-3.0.1_centos7_x86_64.tar]
-| Enterprise Linux 8            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_centos8_x86_64.tar[libcouchbase-3.0.1_centos8_x86_64.tar]
-| Ubuntu 16.04 (xenial)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_ubuntu1604_xenial_amd64.tar[libcouchbase-3.0.1_ubuntu1604_xenial_amd64.tar]
-| Ubuntu 18.04 (bionic)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_ubuntu1804_bionic_amd64.tar[libcouchbase-3.0.1_ubuntu1804_bionic_amd64.tar]
-| Debian 9 (stretch)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_debian9_stretch_amd64.tar[libcouchbase-3.0.1_debian9_stretch_amd64.tar]
-| Debian 10 (buster)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_debian10_buster_amd64.tar[libcouchbase-3.0.1_debian10_buster_amd64.tar]
-| Visual Studio 2015 (VC14)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_vc14_amd64.zip[libcouchbase-3.0.1_vc14_amd64.zip]
-| Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_vc15_amd64.zip[libcouchbase-3.0.1_vc15_amd64.zip]
-| Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_vc15_amd64_openssl.zip[libcouchbase-3.0.1_vc15_amd64_openssl.zip]
-|===
-
-== Version 3.0.0 (17 January 2020)
-
-This is the first GA release of the third generation C SDK.
-
-// https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.0[API Reference]
-
-* https://issues.couchbase.com/browse/CCBC-1152[CCBC-1152]:
-Enabled `SCRAM-SHA*` SASL by default.
-
-* https://issues.couchbase.com/browse/CCBC-1153[CCBC-1153]:
-Renamed `lcb_wait3` to `lcb_wait`.
-
-* https://issues.couchbase.com/browse/CCBC-1147[CCBC-1147]:
-Return `LCB_SUCCESS` for `lcb_exists` when the document is missing.
-`lcb_respexists_is_found` should be used on its response object to check the presense of the document.
-
-* https://issues.couchbase.com/browse/CCBC-1152[CCBC-1152]:
-Do not allow to use SASL PLAIN on non-TLS connections.
-Compiling libcouchbase with OpenSSL is strongly recommended.
-
-* https://issues.couchbase.com/browse/CCBC-1032[CCBC-1032]:
-Use operation node to resolve collection and return timeout when collection cannot be resolved
-
-* Added shortcut for query options to request metrics
-
-* Do not fallback to single subdocument API when only one specification passed to `lcb_subdoc`.
-
-* https://issues.couchbase.com/browse/CCBC-1137[CCBC-1137]:
-Allow to retrieve error context for HTTP response (`lcb_http` API).
-
-* https://issues.couchbase.com/browse/CCBC-1145[CCBC-1145]:
-Expose endpoints in error context.
-
-* https://issues.couchbase.com/browse/CCBC-1146[CCBC-1146]:
-Expose user-cookie in retry handler.
-
-* https://issues.couchbase.com/browse/CCBC-1148[CCBC-1148]:
-Added NULL checks for enhanced error info.
-
-* https://issues.couchbase.com/browse/CCBC-1075[CCBC-1075]:
-Renamed "FTS" to "SEARCH" in the APIs.
-
-* https://issues.couchbase.com/browse/CCBC-1073[CCBC-1073]:
-Renamed "N1QL" to "QUERY" in the APIs.
-
-* Fixed bucketless bootstrap for Server 6.0.
-
-* Fixed various memory leaks. Improved build, testing and packaging systems.
-
-[cols="12,^8,23"]
-|===
-| Platform                      | Architecture | File
-| Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0.sha256sum[libcouchbase-3.0.0.sha256sum]
-| Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0.tar.gz[libcouchbase-3.0.0.tar.gz]
-| Amazon Linux 2                | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_amzn2_x86_64.tar[libcouchbase-3.0.0_amzn2_x86_64.tar]
-| Enterprise Linux 7            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_centos7_x86_64.tar[libcouchbase-3.0.0_centos7_x86_64.tar]
-| Enterprise Linux 8            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_centos8_x86_64.tar[libcouchbase-3.0.0_centos8_x86_64.tar]
-| Ubuntu 16.04 (xenial)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_ubuntu1604_xenial_amd64.tar[libcouchbase-3.0.0_ubuntu1604_xenial_amd64.tar]
-| Ubuntu 18.04 (bionic)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_ubuntu1804_bionic_amd64.tar[libcouchbase-3.0.0_ubuntu1804_bionic_amd64.tar]
-| Debian 9 (stretch)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_debian9_stretch_amd64.tar[libcouchbase-3.0.0_debian9_stretch_amd64.tar]
-| Debian 10 (buster)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_debian10_buster_amd64.tar[libcouchbase-3.0.0_debian10_buster_amd64.tar]
-| Visual Studio 2015 (VC14)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_vc14_amd64.zip[libcouchbase-3.0.0_vc14_amd64.zip]
-| Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_vc15_amd64.zip[libcouchbase-3.0.0_vc15_amd64.zip]
-| Visual Studio 2019 (VC16)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_vc16_amd64.zip[libcouchbase-3.0.0_vc16_amd64.zip]
-| Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_vc15_amd64_openssl.zip[libcouchbase-3.0.0_vc15_amd64_openssl.zip]
-|===
-
-
-
-== Pre-releases
-
-Numerous _Alpha_ and _Beta_ releases were made in the run-up to the 3.0 release, and although unsupported, the release notes and download links are retained for archive purposes xref:3.0-pre-release-notes.adoc[here].
+// end::installation[]
