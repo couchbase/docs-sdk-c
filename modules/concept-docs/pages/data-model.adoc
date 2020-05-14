@@ -5,10 +5,184 @@
 
 [abstract]
 Couchbase's use of JSON as a storage format allows powerful search and query over documents.
-Several data structures are supported by the SDK, including map, list, queue, and set.
+Several data structures are supported by the other SDKs, including map, list, queue, and set.
 
-include::6.5@sdk:shared:partial$data-model.adoc[tag=intro]
+The power to search, query, and easily work with data in Couchbase, comes from the choice of JSON as a storage format.
+Non-JSON storage is supported -- see the xref:nonjson.adoc[Binary Storage Documentation] -- 
+including UTF-8 strings, raw sequences of bytes, and language specific serializations,
+however, only JSON is supported by xref:n1ql-query.adoc[Query].
 
-include::6.5@sdk:shared:partial$data-model.adoc[tag=structures]
+In Couchbase, JSON’s key-value structure allows the storage of collection data structures such as lists, maps, sets and queues.
+JSON’s tree-like structure allows operations against xref:subdocument-operations.adoc[specific paths in the Document],
+and efficient support for these data structures.
+The data structure API is not available in the C SDK, but the sub-document API (which the data structure feature uses) can be used to attain the same results with the same performance profile.
+The best way to inter-operate with data structures as provided by other Couchbase SDKs is to use either full-document operations or sub-document operations.
+// The section on xref:document-operations.adoc[Sub-Document Operations] shows how C applications can manipulate these data structures.
 
-// == Creating a Data Structure
+////
+
+== Data Structure to Sub-document Operations
+
+The following table may be used to help you perform data structure operations by using sub-document operations.
+Note that some data structure operations may consist of one or more sub-document operations.
+
+`LCB_SDCMD_xxx` constants are assumed to be used in a context similar to the following (refer to the xref:document-operations.adoc[Sub-Document Operations] page for more details).
+
+[source,c]
+----
+lcb_SDSPEC spec = { 0 };
+lcb_CMDSUBDOC cmd = { 0 };
+cmd.specs = &spec;
+cmd.nspecs = 1;
+
+LCB_CMD_SET_KEY(&cmd, docid, strlen(docid));
+LCB_SDSPEC_SET_PATH(&spec, path, strlen(path)); // Can be an empty string where applicable
+LCB_SDSPEC_SET_VALUE(&spec, value, strlen(value));
+spec.sdcmd = LCB_SDCMD_DICT_UPSERT;
+----
+
+.Data Structure to Sub-document Mapping
+|===
+| Data Structure Operation | Sub-document Equivalent
+
+| `MapGet(docid, mapkey)`
+a|
+[source,c]
+----
+spec.sdcmd = LCB_SDCMD_GET;
+LCB_SDSPEC_SET_PATH(&spec, mapkey, mapkey_len);
+----
+
+| `MapRemove(docid, mapkey)`
+a|
+[source,c]
+----
+spec.sdcmd = LCB_SDCMD_DICT_UPSERT;
+LCB_SDSPEC_SET_PATH(&spec, mapkey, mapkey_len);
+----
+
+| `MapSize(docid)`
+| Your application should fetch the entire document, parse it with a JSON parser, and derive the size.
+// There will be an atomic operation to perform this on the server in
+// the future.
+
+| `MapAdd(docid, mapkey, value)`
+a|
+[source,c]
+----
+spec.sdcmd = LCB_SDCMD_DICT_ADD;
+LCB_SDSPEC_SET_PATH(&spec, mapkey, mapkey_len);
+LCB_SDSPEC_SET_VALUE(&spec, value, value_len);
+----
+
+| `ListGet(docid, index)`
+a|
+[source,c]
+----
+spec.sdcmd = LCB_SDCMD_GET;
+std::string path = "[" + std::to_string(index) + "]";
+LCB_SDSPEC_SET_PATH(&spec, path.c_str(), path.size());
+----
+
+| `ListAppend(docid, value)`
+a|
+[source,c]
+----
+spec.sdcmd = LCB_SDCMD_ARRAY_ADD_LAST;
+LCB_SDCMD_SET_PATH(&spec, "", 0);
+LCB_SDCMD_SET_VALUE(&spec, value, value_len);
+----
+
+| `ListPrepend(docid, value)`
+a|
+[source,c]
+----
+spec.sdcmd = LCB_SDCMD_ARRAY_ADD_FIRST;
+LCB_SDCMD_SET_PATH(&spec, "", 0);
+LCB_SDCMD_SET_VALUE(&spec, value, value_len);
+----
+
+| `ListSize(docid)`
+| See notes on `MapSize`.
+
+| `SetContains(docid, value)`
+| Not available as a native operation.
+Your application should fetch the document and parse it (as a JSON array) and then determine if the item exists.
+
+| `SetAdd(docid, value)`
+a|
+NOTE: This requires that the set contains only JSON primitives (i.e.
+numeric, string, boolean, and null values).
+
+[source,c]
+----
+spec.sdcmd = LCB_SDCMD_ARRAY_ADD_UNIQUE;
+LCB_SDCMD_SET_PATH(&spec, "", 0);
+LCB_SDCMD_SET_VALUE(&spec, value, value_len);
+----
+
+| `SetSize(docid)`
+| See notes on `MapSize`
+
+| `SetRemove(docid, value)`
+a|
+Not available as a native operation.
+Your application should perform the following:
+
+. Fetch the document (make note of the CAS value).
+. Parse the value as JSON.
+. Get the index of the item.
+. Perform another sub-document operation using the [.api]`LCB_SDCMD_REMOVE` command with the index (i.e.
+`"[" + std::to_string(index) + "]"`) as the path.
+*Ensure to pass the CAS to the remove operation*, i.e.
++
+----
+sdcmd.cas = cas_from_step_1;
+----
+
+. If the removal results in an [.api]`LCB_KEY_EEXISTS` then it means another client has modified the set since step #1, and you must go back to step #1.
+Otherwise, the removal is complete.
+
+| `QueuePush(docid, value)`
+| This is an alias to `ListPrepend`
+
+| `QueuePop(docid)`
+a|
+Not available as a native operation because the returned value may be lost in transit.
+To perform this operation in your application:
+
+. Fetch the _last_ item of the list:
++
+[source,c]
+----
+spec.sdcmd = LCB_SDCMD_GET;
+LCB_SDSPEC_SET_PATH(&spec, "[-1]", 4);
+----
++
+Take note of the CAS when the operation completes.
+
+. If the operation results in an [.api]`LCB_SUBDOC_PATH_ENOENT` error then the queue is empty.
+. Remove the item from the queue:
++
+[source,c]
+----
+spec.sdcmd = LCB_SDCMD_GET;
+LCB_SDSPEC_SET_PATH(&spec, "[-1]", 4);
+----
++
+Ensure to pass the CAS as well:
++
+----
+sdcmd.cas = cas_from_step_1;
+----
+
+. If the operation fails with [.api]`LCB_SUBDOC_PATH_EEXISTS` then someone else has modified the queue (possibly by trying to process the last item) as well.
+Go back to step 1.
+
+NOTE: If you are using the queue as a job queue, ensure that you do not process the item until it is fully removed from the queue, as it is possible another client/application thread will retrieve the same queue item and try to process it as well.
+
+| `QueueSize(docid)`
+| See notes on `MapSize`
+|===
+
+////
