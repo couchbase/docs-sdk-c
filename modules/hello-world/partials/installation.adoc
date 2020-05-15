@@ -5,6 +5,43 @@ The Couchbase C SDK can be installed via apt or yum repositories on GNU/Linux; h
 It may also be https://github.com/couchbase/libcouchbase[built from source^] on any of the platforms mentioned above, and more.
 
 
+== Installing on Linux
+
+For installation on GNU/Linux, install the _couchbase-release_ repository, and then install the _libcouchbase_ packages.
+The following examples download and install _couchbase-release_ repository, a C and C++ compiler, and the C SDK core (_libcouchbase3_), command line tools (_libcouchbase2-tools_), and the development tools (_libcouchbase-devel_ [RPM] or _libcouchbase-dev_ [DEB]).
+
+////
+
+// the server repo only carries LCB 2.n - 
+// put this section back in when it changes in a future release
+
+.Debian and Ubuntu
+[source,bash]
+----
+# Only needed during first-time setup:
+wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-7-amd64.deb
+sudo dpkg -i couchbase-release-1.0-7-amd64.deb
+# Will install or upgrade packages
+sudo apt-get update
+sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
+----
+
+Note that as of Couchbase Data Platform 6.5, _couchbase-release_ (1.0.7) supports Debian 7, 8, 9, and 10, and Ubuntu 14.04, 16.04, and 18.04. If you wish to install a Couchbase SDK on another Ubuntu or Debian variation, follow the steps below for manual repository configuration, or for installing directly from binary or source (but note that while newer releases may work, other platforms are not necessarily supported).
+
+.RHEL and CentOS
+[source,bash]
+----
+# Only needed during first-time setup:
+wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-7-x86_64.rpm
+sudo rpm -iv couchbase-release-1.0-7-x86_64.rpm
+# Will install or upgrade existing packages
+sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools gcc gcc-c++
+----
+
+NOTE: You should install the `libcouchbase2-libevent` or `libcouchbase2-libev` plugin in case your application will use more than 1024 file descriptors.
+The default `select()` based event loop only supports 1024 file descriptors.
+////
+
 === Installing Manually - Linux
 
 If you want to install the C SDK manually, either from a static binary package or by manually configuring the repositories, you can use the following procedures.
@@ -101,7 +138,7 @@ For CentOS and Red Hat, the equivalent commands are:
 ----
 sudo yum check-update
 sudo yum search libcouchbase
-sudo yum install libcouchbase3 libcouchbase3-dev libcouchbase3-tools
+sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
 ----
 
 
