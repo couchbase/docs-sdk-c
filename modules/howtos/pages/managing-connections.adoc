@@ -2,6 +2,7 @@
 
 include::partial$alpha-warning.adoc[]
 
-TBD.
+
+A work in progress.
 
 For now, please refer to the xref:6.5@server:learn:security/authorization-overview.adoc[Server docs].
