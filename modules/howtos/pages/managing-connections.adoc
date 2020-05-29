@@ -3,6 +3,6 @@
 include::partial$alpha-warning.adoc[]
 
 
-A work in progress.
+Under construction.
 
 For now, please refer to the xref:6.5@server:learn:security/authorization-overview.adoc[Server docs].
