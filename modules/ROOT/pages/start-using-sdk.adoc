@@ -87,6 +87,23 @@ Once _homebrew_ is configured:
 brew update # get list of latest packages
 brew install libcouchbase@2
 ----
+
+[NOTE]
+.LCB 2.10 & Homebrew
+====
+This will install libcouchbase 2 in _keg-only_ mode -- 
+meaning it is installed to _Cellar_, but not symlinked in */usr/local*. 
+If you have LCB 3.0 also installed on your development machine, you can change the linked version to 2.10.6 with `brew link`:
+
+[source,console]
+----
+brew unlink libcouchbase
+brew link --force --overwrite libcouchbase@2
+----
+
+And reverse this when you need to develop on LCB 3.0.
+See the https://docs.brew.sh/Tips-N'-Tricks[Homebrew docs] for more on `brew link`.
+====
 // end::macos[]
 
 [#install-windows]
