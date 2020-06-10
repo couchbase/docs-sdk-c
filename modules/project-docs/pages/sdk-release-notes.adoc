@@ -18,7 +18,7 @@ include::hello-world:partial$installation.adoc[]
 
 Version 3.0.2 is the third release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
-https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.2[API Reference]
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.2/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1200[CCBC-1200]:
 LCB will now retry bootstrap on missing bucket error until timeout. 
