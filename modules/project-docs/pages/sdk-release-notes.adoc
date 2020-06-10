@@ -187,37 +187,106 @@ cbc:
 
 
 [#latest-release]
+== Version 3.0.2 (10 June 2020)
+
+* https://issues.couchbase.com/browse/CCBC-1200[CCBC-1200]:
+LCB will now retry bootstrap on missing bucket error until timeout. 
+Bootstrap timeout is controlled by "config_total_timeout" in connection string or `LCB_CNTL_CONFIGURATION_TIMEOUT`.
+
+* https://issues.couchbase.com/browse/CCBC-1190[CCBC-1190]:
+When performing an operation immediately after bucket creation, the server returns `TMPFAIL` and libcouchbase bubbled this up rather than restarting.
+Now fixed so LCB automatic retries for temporary failures from the server.
+
+* https://issues.couchbase.com/browse/CCBC-1158[CCBC-1158]:
+Reduced retrying on unknown collection to a sensible level.
+
+* https://issues.couchbase.com/browse/CCBC-1254[CCBC-1254]:
+It's now possible to use a separate option for default timeout of Analytics queries (connection string "analytics_timeout").
+
+* https://issues.couchbase.com/browse/CCBC-1178[CCBC-1178]:
+It is now no longer possible to (illigally) set CAS for upsert and insert operations.
+
+* https://issues.couchbase.com/browse/CCBC-1156[CCBC-1156]:
+Fixed enum value for analytics type of HTTP request.
+
+* https://issues.couchbase.com/browse/CCBC-1251[CCBC-1251]:
+No longer log error when using GCCCP on pre-6.5 Couchbase Server.
+
+* https://issues.couchbase.com/browse/CCBC-1234[CCBC-1234]:
+Fixed SRV resolution to work with large record sizes.
+
+* https://issues.couchbase.com/browse/CCBC-1222[CCBC-1222]:
+Tracing thresholds for query and search fixed in connection strings: `tracing_threshold_search` and `tracing_threshold_query`.
+
+* https://issues.couchbase.com/browse/CCBC-1187[CCBC-1187]:
+`lcb_respexists_is_found` can no longer return true for deleted documents.
+
+* https://issues.couchbase.com/browse/CCBC-1233[CCBC-1233]:
+Updated RTO to independently specify operation_name.
+
+* https://issues.couchbase.com/browse/CCBC-1205[CCBC-1205]:
+Do not include trailing zero for endpoint length for KV context.
+
+* https://issues.couchbase.com/browse/CCBC-1215[CCBC-1215]:
+Fixed segfault in exists calls.
+
+* https://issues.couchbase.com/browse/CCBC-1218[CCBC-1218]:
+Fixed intermittent segfault in client durable store.
+
+* Documentation issues addressed (https://issues.couchbase.com/browse/CCBC-1240[CCBC-1240], 
+https://issues.couchbase.com/browse/CCBC-1241[CCBC-1241], 
+https://issues.couchbase.com/browse/CCBC-1243[CCBC-1243], 
+https://issues.couchbase.com/browse/CCBC-1245[CCBC-1245])
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2.sha256sum[libcouchbase-3.0.2.sha256sum]
+| Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2.tar.gz[libcouchbase-3.0.2.tar.gz]
+| Amazon Linux 2                | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_amzn2_x86_64.tar[libcouchbase-3.0.2_amzn2_x86_64.tar]
+| Enterprise Linux 7            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_centos7_x86_64.tar[libcouchbase-3.0.2_centos7_x86_64.tar]
+| Enterprise Linux 8            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_centos8_x86_64.tar[libcouchbase-3.0.2_centos8_x86_64.tar]
+| Ubuntu 16.04 (xenial)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_ubuntu1604_xenial_amd64.tar[libcouchbase-3.0.2_ubuntu1604_xenial_amd64.tar]
+| Ubuntu 18.04 (bionic)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_ubuntu1804_bionic_amd64.tar[libcouchbase-3.0.2_ubuntu1804_bionic_amd64.tar]
+| Debian 9 (stretch)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_debian9_stretch_amd64.tar[libcouchbase-3.0.2_debian9_stretch_amd64.tar]
+| Debian 10 (buster)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_debian10_buster_amd64.tar[libcouchbase-3.0.2_debian10_buster_amd64.tar]
+| Visual Studio 2015 (VC14)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_vc14_amd64.zip[libcouchbase-3.0.2_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_vc15_amd64.zip[libcouchbase-3.0.2_vc15_amd64.zip]
+| Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_vc15_amd64_openssl.zip[libcouchbase-3.0.2_vc15_amd64_openssl.zip]
+|===
+
+
 == Version 3.0.1 (8 April 2020)
 
-* https://issues.couchbase.com/browse/CCBC-1188[CCBC-1188]: 
+* https://issues.couchbase.com/browse/CCBC-1188[CCBC-1188]:
 cbc-pillowfight: fixed `--collection` switch.
 
-* https://issues.couchbase.com/browse/CCBC-1173[CCBC-1173]: 
+* https://issues.couchbase.com/browse/CCBC-1173[CCBC-1173]:
 Fixed exporting `lcb_cmdquery_consistency_token_for_keyspace`.
 
-* https://issues.couchbase.com/browse/CCBC-1168[CCBC-1168]: 
+* https://issues.couchbase.com/browse/CCBC-1168[CCBC-1168]:
 Exposed `max_parallelism` for query.
 
-* https://issues.couchbase.com/browse/CCBC-1171[CCBC-1171]: 
+* https://issues.couchbase.com/browse/CCBC-1171[CCBC-1171]:
 Exposed `profile` option for query.
 
-* https://issues.couchbase.com/browse/CCBC-1170[CCBC-1170]: 
+* https://issues.couchbase.com/browse/CCBC-1170[CCBC-1170]:
 Exposed `scan_wait` option for query.
 
-* https://issues.couchbase.com/browse/CCBC-1159[CCBC-1159]: 
+* https://issues.couchbase.com/browse/CCBC-1159[CCBC-1159]:
 Fixed error codes for Management API.
 
-* https://issues.couchbase.com/browse/MB-37768[MB-37768]: 
+* https://issues.couchbase.com/browse/MB-37768[MB-37768]:
 Fixed issue where `CMAKE_INSTALL_RPATH`was overriden, affecting cbc tools.
 
-* https://issues.couchbase.com/browse/CCBC-1208[CCBC-1208]: 
+* https://issues.couchbase.com/browse/CCBC-1208[CCBC-1208]:
 Added a fail-fast retry strategy.
 
-* https://issues.couchbase.com/browse/CCBC-1209[CCBC-1209]: 
+* https://issues.couchbase.com/browse/CCBC-1209[CCBC-1209]:
 Renamed functions of embedded `http_parser` to avoid name clash.
 
-* Removed use of deprecated function `std::random_shuffle`. 
-`std::random_shuffle` is deprecated in C++14, removed in C++17. 
+* Removed use of deprecated function `std::random_shuffle`.
+`std::random_shuffle` is deprecated in C++14, removed in C++17.
 Replaced with `std::shuffle`.
 
 * Fixed several issues reported by coverity.
