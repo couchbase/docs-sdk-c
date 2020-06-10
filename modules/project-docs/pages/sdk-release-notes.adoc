@@ -16,6 +16,10 @@ include::hello-world:partial$installation.adoc[]
 [#latest-release]
 == Version 3.0.2 (10 June 2020)
 
+Version 3.0.2 is the third release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.2[API Reference]
+
 * https://issues.couchbase.com/browse/CCBC-1200[CCBC-1200]:
 LCB will now retry bootstrap on missing bucket error until timeout. 
 Bootstrap timeout is controlled by "config_total_timeout" in connection string or `LCB_CNTL_CONFIGURATION_TIMEOUT`.
@@ -85,7 +89,9 @@ https://issues.couchbase.com/browse/CCBC-1245[CCBC-1245])
 
 == Version 3.0.1 (8 April 2020)
 
-* https://issues.couchbase.com/browse/CCBC-1188[CCBC-1188]:
+* https://issues.couchbase.com/Version 3.0.1 is the second release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
+
+browse/CCBC-1188[CCBC-1188]:
 cbc-pillowfight: fixed `--collection` switch.
 
 * https://issues.couchbase.com/browse/CCBC-1173[CCBC-1173]:
