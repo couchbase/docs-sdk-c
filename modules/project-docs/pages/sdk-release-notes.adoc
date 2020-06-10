@@ -69,6 +69,8 @@ https://issues.couchbase.com/browse/CCBC-1241[CCBC-1241],
 https://issues.couchbase.com/browse/CCBC-1243[CCBC-1243], 
 https://issues.couchbase.com/browse/CCBC-1245[CCBC-1245])
 
+=== Downloads
+
 [cols="12,^8,23"]
 |===
 | Platform                      | Architecture | File
@@ -89,9 +91,11 @@ https://issues.couchbase.com/browse/CCBC-1245[CCBC-1245])
 
 == Version 3.0.1 (8 April 2020)
 
-* https://issues.couchbase.com/Version 3.0.1 is the second release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
+Version 3.0.1 is the second release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
-browse/CCBC-1188[CCBC-1188]:
+=== Fixed Issues
+
+* https://issues.couchbase.com/browse/CCBC-1188[CCBC-1188]:
 cbc-pillowfight: fixed `--collection` switch.
 
 * https://issues.couchbase.com/browse/CCBC-1173[CCBC-1173]:
@@ -124,6 +128,12 @@ Replaced with `std::shuffle`.
 
 * Fixed several issues reported by coverity.
 
+=== Known Issues
+
+* Attempting to install libcouchbase via homebrew on OS X prior to June 8th, 2020 would result in libcouchbase 2.10 being installed instead of 3.0.
+
+=== Downloads
+
 [cols="12,^8,23"]
 |===
 | Platform                      | Architecture | File
@@ -144,6 +154,8 @@ Replaced with `std::shuffle`.
 == Version 3.0.0 (17 January 2020)
 
 This is the first GA release of the third generation C SDK.
+
+=== Fixed Issues
 
 // https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.0[API Reference]
 
@@ -189,6 +201,12 @@ Renamed "N1QL" to "QUERY" in the APIs.
 * Fixed bucketless bootstrap for Server 6.0.
 
 * Fixed various memory leaks. Improved build, testing and packaging systems.
+
+=== Known Issues
+
+* Attempting to install libcouchbase via homebrew on OS X prior to June 8th, 2020 would result in libcouchbase 2.10 being installed instead of 3.0.
+
+=== Downloads
 
 [cols="12,^8,23"]
 |===
