@@ -190,48 +190,53 @@ cbc:
 == Version 3.0.2 (10 June 2020)
 
 * https://issues.couchbase.com/browse/CCBC-1200[CCBC-1200]:
-Retry bootstrap on missing bucket until timeout. Bootstrap timeout controlled by "config_total_timeout" in connection string or LCB_CNTL_CONFIGURATION_TIMEOUT
+LCB will now retry bootstrap on missing bucket error until timeout. 
+Bootstrap timeout is controlled by "config_total_timeout" in connection string or `LCB_CNTL_CONFIGURATION_TIMEOUT`.
 
 * https://issues.couchbase.com/browse/CCBC-1190[CCBC-1190]:
-Fix automatic retries for temporary failures from the server.
+When performing an operation immediately after bucket creation, the server returns `TMPFAIL` and libcouchbase bubbled this up rather than restarting.
+Now fixed so LCB automatic retries for temporary failures from the server.
 
 * https://issues.couchbase.com/browse/CCBC-1158[CCBC-1158]:
-Fix retrying on unknown collection.
+Reduced retrying on unknown collection to a sensible level.
 
 * https://issues.couchbase.com/browse/CCBC-1254[CCBC-1254]:
-Use separate option for default timeout of analytics queries (connection string "analytics_timeout").
+It's now possible to use a separate option for default timeout of Analytics queries (connection string "analytics_timeout").
 
 * https://issues.couchbase.com/browse/CCBC-1178[CCBC-1178]:
-Do not allow to set CAS for upsert and insert operations
+It is now no longer possible to (illigally) set CAS for upsert and insert operations.
 
 * https://issues.couchbase.com/browse/CCBC-1156[CCBC-1156]:
-Fix enum value for analytics type of HTTP request
+Fixed enum value for analytics type of HTTP request.
 
 * https://issues.couchbase.com/browse/CCBC-1251[CCBC-1251]:
-No longer log error when using GCCCP on pre-6.5
+No longer log error when using GCCCP on pre-6.5 Couchbase Server.
 
 * https://issues.couchbase.com/browse/CCBC-1234[CCBC-1234]:
 Fixed SRV resolution to work with large record sizes.
 
 * https://issues.couchbase.com/browse/CCBC-1222[CCBC-1222]:
-Tracing thresholds for query and search in connection strings. Now they are correctly spelled as tracing_threshold_search and tracing_threshold_query.
+Tracing thresholds for query and search fixed in connection strings: `tracing_threshold_search` and `tracing_threshold_query`.
 
 * https://issues.couchbase.com/browse/CCBC-1187[CCBC-1187]:
-Ensure lcb_respexists_is_found does not true for deleted documents.
+`lcb_respexists_is_found` can no longer return true for deleted documents.
 
 * https://issues.couchbase.com/browse/CCBC-1233[CCBC-1233]:
 Updated RTO to independently specify operation_name.
 
 * https://issues.couchbase.com/browse/CCBC-1205[CCBC-1205]:
-Do not include trailing zero for endpoint length for KV context
+Do not include trailing zero for endpoint length for KV context.
 
 * https://issues.couchbase.com/browse/CCBC-1215[CCBC-1215]:
 Fixed segfault in exists calls.
 
 * https://issues.couchbase.com/browse/CCBC-1218[CCBC-1218]:
-Fixed intermittent segfault in client durable store
+Fixed intermittent segfault in client durable store.
 
-* Documentation issues addressed (CCBC-1240, CCBC-1243, CCBC-1241, CCBC-1245)
+* Documentation issues addressed (https://issues.couchbase.com/browse/CCBC-1240[CCBC-1240], 
+https://issues.couchbase.com/browse/CCBC-1241[CCBC-1241], 
+https://issues.couchbase.com/browse/CCBC-1243[CCBC-1243], 
+https://issues.couchbase.com/browse/CCBC-1245[CCBC-1245])
 
 [cols="12,^8,23"]
 |===
@@ -249,6 +254,7 @@ Fixed intermittent segfault in client durable store
 | Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_vc15_amd64.zip[libcouchbase-3.0.2_vc15_amd64.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_vc15_amd64_openssl.zip[libcouchbase-3.0.2_vc15_amd64_openssl.zip]
 |===
+
 
 == Version 3.0.1 (8 April 2020)
 
