@@ -1,21 +1,22 @@
 = Managing Connections
 
-This section describes how to connect the C SDK (libcouchbase) to a Couchbase cluster. It contains best practices as well as information on TLS/SSL and other advanced connection options.
+This section describes how to connect the C SDK (libcouchbase) to a Couchbase cluster. 
+It contains best practices as well as information on TLS/SSL and other advanced connection options.
 
 
 == Connecting to a Cluster
 
-A connection to a Couchbase Server cluster is represented by a `lcb_INSTANCE` object. Set of the allowed operations
-depends on the type of this object, and whether the bucket is associated with it. In `LCB_TYPE_CLUSTER` mode, the
-application can use management command and most of the queries (except View queries). In `LCB_TYPE_BUCKET` all data
-operations become available.
+A connection to a Couchbase Server cluster is represented by a `lcb_INSTANCE` object. 
+The set of allowed operations depends on the type of this object, and whether the bucket is associated with it. 
+In `LCB_TYPE_CLUSTER` mode, the application can use management commands and most of the queries (except View queries). 
+In `LCB_TYPE_BUCKET` mode, all data operations become available.
 
 The simplest way to create a cluster object is to call `lcb_create` and pass `LCB_TYPE_CLUSTER` with a connection string, username, and password:
 
 [source,c++]
 ----
 const char *connection_string = "couchbase://localhost";
-const char *username = "Administrator";
+const char *username = "username";
 const char *password = "password";
 
 lcb_CREATEOPTS *options = NULL;
@@ -52,7 +53,7 @@ if (rc != LCB_SUCCESS) {
 }
 ----
 
-Each connection with `LCB_TYPE_CLUSTER` could be associated to the bucket by calling `lcb_open` call:
+Each connection with `LCB_TYPE_CLUSTER` can be associated with the bucket by calling `lcb_open` call:
 
 [source,c++]
 ----
@@ -85,9 +86,9 @@ static void open_callback(lcb_INSTANCE *instance, lcb_STATUS rc)
 }
 ----
 
-NOTE: If you are connecting to a version of Couchbase Server older than 6.5, it will be more efficient if the addresses
-are those of data (KV) nodes. You will in any case, with 6.0 and earlier, need to open a `LCB_TYPE_BUCKET` instance
-before connecting to any other HTTP services (such as _Query_ or _Search_).
+NOTE: If you are connecting to a version of Couchbase Server earlier than 6.5, it will be more efficient if the addresses
+are those of data (KV) nodes. 
+You will in any case, with 6.0 and earlier, need to open an `LCB_TYPE_BUCKET` instance before connecting to any other HTTP services (such as _Query_ or _Search_).
 
 [source,c++]
 ----
@@ -100,8 +101,8 @@ lcb_createopts_connstr(options, connection_string, strlen(connection_string));
 lcb_createopts_bucket(options, bucket_name, strlen(bucket_name));
 ----
 
-In a production environment, your connection string should include the addresses of multiple server nodes in case some
-are currently unavailable. Multiple addresses may be specified in a connection string by delimiting them with commas:
+In a production environment, your connection string should include the addresses of multiple server nodes in case some are currently unavailable. 
+Multiple addresses may be specified in a connection string by delimiting them with commas:
 
 [source,c++]
 ----
@@ -135,44 +136,45 @@ couchbase://127.0.0.1
 couchbase://nodeA.example.com,nodeB.example.com
 ----
 
-.Connection string with two parameters
+.Connection string with two parameter
 ----
 couchbase://127.0.0.1?network=external&operation_timeout=10.0
 ----
 
-The full list of recognized parameters is documented in the client settings reference.
+The full list of recognized parameters is documented in the xref:ref:client-settings.adoc[Client Settings] reference.
 
 A connection string may optionally be prefixed by either `"couchbase://"` or `"couchbases://"`. If you wish to use TLS,
 the connection string must be configured as described in <<ssl>>.
 
 == Connection Lifecycle
 
-We recommend creating a single Cluster instance of type `LCB_TYPE_BUCKET` per bucket, or just one `LCB_TYPE_CLUSTER` if
-the application only going to use queries or management APIs. Neither `lcb_INSTANCE` nor IO primitives and plugins
-contain internal locks for performance reasons. Therefore connection instance and the operation callbacks should be
-used from single thread.
+We recommend creating a single Cluster instance of type `LCB_TYPE_BUCKET` per bucket, or just one `LCB_TYPE_CLUSTER` if the application is only going to use queries or management APIs. 
+Neither `lcb_INSTANCE` nor IO primitives and plugins contain internal locks for performance reasons -- 
+therefore the connection instance and the operation callbacks should be used from a single thread.
 
-Before your application stops, gracefully shut down the client by calling the `lcb_destroy` function of each object you
+Before your application stops, gracefully shut down the client by calling the `lcb_destroy` function for each object you
 created.
+
 
 == Connecting to Multiple Clusters
 
-If a single application needs to connect to multiple Couchbase Server clusters, the process does not change. The
-connection objects must be initialized using respective connections strings.
+If a single application needs to connect to multiple Couchbase Server clusters, the process does not change. 
+The connection objects must be initialized using their respective connections strings.
+
 
 == Alternate Addresses and Custom Ports
 
-If your Couchbase Server cluster is running in a containerized, port mapped, or otherwise NAT'd environment like Docker
-or Kubernetes, a client running outside that environment may need additional information in order to connect the
-cluster. Both the client and server require special configuration in this case.
+If your Couchbase Server cluster is running in a containerized, port mapped, or otherwise NAT'd environment like Docker or Kubernetes, 
+a client running outside that environment may need additional information in order to connect to the cluster. 
+Both the client and server require special configuration in this case.
 
-On the server side, each server node must be configured to advertise its external address as well as any custom port
-mapping. This is done with the `setting-alternate-address` CLI command introduced in Couchbase Server 6.5. A node
-configured in this way will advertise two addresses: one for connecting from the same network, and another for
-connecting from an external network.
+On the server side, each server node must be configured to advertize its external address as well as any custom port mapping. 
+This is done with the `setting-alternate-address` CLI command introduced in Couchbase Server 6.5. 
+A node configured in this way will advertise two addresses: 
+one for connecting from the same network, and another for connecting from an external network.
 
-On the client side, the externally visible ports must be used when connecting. If the external ports are not the
-default, you can specify custom ports by explicitly specifying them in the connection string:
+On the client side, the externally visible ports must be used when connecting. 
+If the external ports are not the default, you can specify custom ports by explicitly specifying them in the connection string:
 
 [source,c++]
 ----
@@ -183,7 +185,7 @@ lcb_createopts_create(&options, LCB_TYPE_CLUSTER);
 lcb_createopts_connstr(options, connection_string, strlen(connection_string));
 ----
 
-To verify how the connection string is being deconstructed by the library, [.cmd]`cbc connstr` too might be used:
+To verify how the connection string is being deconstructed by the library, [.cmd]`cbc connstr` may also be used:
 
 ----
 $ cbc connstr 'couchbase://localhost:1234,localhost:2345=http?network=external&timeout=10.0'
@@ -210,9 +212,9 @@ NOTE: Any TLS certificates must be set up at the point where the connections are
 [#ssl]
 == Secure Connections
 
-Couchbase Server Enterprise Edition supports full encryption of client-side traffic using Transport Layer Security
-(TLS). That includes key-value type operations, queries, and configuration communication.  Make sure you have the
-Enterprise Edition of Couchbase Server before proceeding with configuring encryption on the client side.
+Couchbase Server Enterprise Edition supports full encryption of client-side traffic using Transport Layer Security (TLS). 
+This includes key-value type operations, queries, and configuration communication.  
+Make sure you have the Enterprise Edition of Couchbase Server before proceeding with configuring encryption on the client side.
 
 To configure encryption for the C SDK (libcouchbase):
 
@@ -220,11 +222,12 @@ To configure encryption for the C SDK (libcouchbase):
 . Enable encryption on the client side and point it to the file containing the certificate.
 
 It is important to make sure you are transferring the certificate in an encrypted manner from the server to the client
-side, so either copy it through SSH or through a similar secure mechanism.
+side, so either copy it through SSH, or through a similar secure mechanism.
 
 If you are running on `localhost` and just want to enable TLS for a development machine, just copying and pasting it
-suffices.  Navigate in the admin UI to menu:Settings[Cluster] and copy the input box of the TLS certificate into a file
-on your machine (which we will refer to as `cluster.cert`). It looks similar to this:
+suffices.  
+Navigate in the admin UI to menu:Settings[Cluster] and copy the input box of the TLS certificate into a file on your machine (which we will refer to as `cluster.cert`). 
+It looks similar to this:
 
 ----
 -----BEGIN CERTIFICATE-----
@@ -268,20 +271,21 @@ E.....@.@.............+....Z.'yZ..#........
 .%v.....4....m*...A.2I.1.&.*,6+..#..#.5
 ----
 
+
 == Using DNS SRV records
 
-include::6.0@sdk:shared:partial$dnssrv-pars.adoc[tag=dnssrv]
+include::6.5@sdk:shared:partial$dnssrv-pars.adoc[tag=dnssrv]
 
-C SDK always tries to use the SRV records, if the connection string contains single hostname and the feature is not
+The C SDK always tries to use the SRV records, if the connection string contains a single hostname and the feature is not
 disabled explicitly with connection string option `dnssrv=off`.
 
-In case of successful resolution the message like this will be written on `INFO` level:
+In case of successful resolution a message like this will be written at `INFO` level:
 
 ----
 44ms [I4ebdb48d23db23b6] {10474} [INFO] (instance - L:219) Found host node.example.com:11210 via DNS SRV
 ----
 
-If the DNS SRV records could not be loaded properly you'll get the exception logged and the given host name will be used as a A record lookup.
+If the DNS SRV records could not be loaded properly you'll get an exception logged and the given hostname will be used as an A record lookup.
 
 ----
 81ms [If1e0caf208c1ff41] {11763} [INFO] (instance - L:202) DNS SRV lookup failed: LCB_ERR_UNKNOWN_HOST (1049). Ignore this if not relying on DNS SRV records
