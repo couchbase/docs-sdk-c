@@ -1,5 +1,9 @@
-= Managing Connections
+= Managing Connections using the C SDK with Couchbase Server
+:navtitle: Managing Connections
+:page-topic-type: howto
+:page-aliases: ROOT:managing-connections,howtos:multi-network,ROOT:connecting,ROOT:connection-advanced
 
+[abstract]
 This section describes how to connect the C SDK (libcouchbase) to a Couchbase cluster. 
 It contains best practices as well as information on TLS/SSL and other advanced connection options.
 
