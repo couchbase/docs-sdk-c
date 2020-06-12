@@ -276,7 +276,7 @@ E.....@.@.............+....Z.'yZ..#........
 ----
 
 
-== Using DNS SRV records
+// == Using DNS SRV records
 
 include::6.5@sdk:shared:partial$dnssrv-pars.adoc[tag=dnssrv]
 
