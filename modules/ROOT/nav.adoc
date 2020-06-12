@@ -20,7 +20,7 @@
 //* xref:howtos:durability.adoc[Durability]
 
 .Managing Couchbase
-//* User Management
+* xref:howtos:managing-connections.adoc[Managing Connections]
 // ** xref:howtos:sdk-authentication-overview.adoc[Authentication]
 
 .Errors & Diagnostics
