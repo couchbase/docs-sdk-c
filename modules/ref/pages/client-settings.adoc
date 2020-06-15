@@ -6,11 +6,8 @@
 [abstract]
 Client settings
 
-include::partial$alpha-warning.adoc[]
-
 == Timeout Options
 
 // section on wide area network support
-[source,asciidoc]
-----
-include::6.0@sdk:shared:partial$client-settings-wide-network.adoc
+
+include::6.5@sdk:shared:partial$client-settings-wide-network.adoc
