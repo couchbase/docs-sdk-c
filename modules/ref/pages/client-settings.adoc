@@ -10,4 +10,4 @@ Client settings
 
 // section on wide area network support
 
-include::6.5@sdk:shared:partial$client-settings-wide-network.adoc
+include::6.5@sdk:shared:partial$client-settings-wide-network.adoc[]
