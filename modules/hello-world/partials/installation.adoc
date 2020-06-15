@@ -92,7 +92,7 @@ Now, install `libcouchbase3`, and any other packages that you need for developme
 
 [source,console]
 ----
-sudo apt-get install libcouchbase3 libcouchbase3-dev libcouchbase3-tools libcouchbase-dbg libcouchbase3-libev libcouchbase3-libevent
+sudo apt-get install libcouchbase3 libcouchbase-dev libcouchbase3-tools libcouchbase-dbg libcouchbase3-libev libcouchbase3-libevent
 ----
 
 For CentOS and Red Hat, the equivalent commands are:
@@ -101,7 +101,7 @@ For CentOS and Red Hat, the equivalent commands are:
 ----
 sudo yum check-update
 sudo yum search libcouchbase
-sudo yum install libcouchbase3 libcouchbase3-dev libcouchbase3-tools
+sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
 ----
 
 
