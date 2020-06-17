@@ -154,15 +154,21 @@ If for some reason you cannot use any of the prebuilt Windows binaries, follow t
 
 http://docs.couchbase.com/sdk-api/couchbase-c-client-2.10.7[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-1234[CCBC-1234]: Fixed SRV resolution to work with large record sizes. In some cases, the answer records exceed the default answer buffer size causing SRV lookups to fail on otherwise correctly configured clusters.  This specifically occured with Couchbase Cloud.
+* https://issues.couchbase.com/browse/CCBC-1234[CCBC-1234]: 
+Fixed SRV resolution to work with large record sizes. In some cases, the answer records exceed the default answer buffer size causing SRV lookups to fail on otherwise correctly configured clusters.  
+This specifically occured with Couchbase Cloud.
 
-* https://issues.couchbase.com/browse/CCBC-1233[CCBC-1233]: Updated RTO to independently specify `operation_name` (in accorance to RFC).
+* https://issues.couchbase.com/browse/CCBC-1233[CCBC-1233]: 
+Updated RTO to independently specify `operation_name` (in accorance to RFC).
 
-* https://issues.couchbase.com/browse/CCBC-1258[CCBC-1258]: Fix port order in vbucket diff info log message.
+* https://issues.couchbase.com/browse/CCBC-1258[CCBC-1258]: 
+Fix port order in vbucket diff info log message.
 
-* https://issues.couchbase.com/browse/MB-37768[MB-37768]: Don't override `CMAKE_INSTALL_RPATH`
+* https://issues.couchbase.com/browse/MB-37768[MB-37768]: 
+Don't override `CMAKE_INSTALL_RPATH`.
 
-* https://issues.couchbase.com/browse/CCBC-1232[CCBC-1232]: Fix build on CentOS 6
+* https://issues.couchbase.com/browse/CCBC-1232[CCBC-1232]:
+Fixed build on CentOS 6.
 
 [cols="12,^8,23"]
 |===
