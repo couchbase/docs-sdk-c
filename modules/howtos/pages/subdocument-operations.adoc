@@ -186,7 +186,7 @@ bucket.MutateIn("my_array", ops =>
 .Add single array as element to existing array
 [source,csharp]
 ----
-bucket.MutateIn(“my_array”, ops =>
+bucket.MutateIn("my_array", ops =>
     ops.ArrayAppend('', ['elem1', 'elem2', 'elem3']”)
 );
 # the document my_array is now ["some_element", ["elem1", "elem2", "elem3"]]
