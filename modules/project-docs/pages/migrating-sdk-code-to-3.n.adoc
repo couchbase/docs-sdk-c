@@ -11,7 +11,6 @@ Retry behaviour is more proactive, and lazy bootstrapping moves all error handli
 Individual behaviour changes across services are explained here.
 
 
-include::partial$beta-warning.adoc[]
 
 
 include::6.5@sdk:shared:partial$migration.adoc[tag=intro]
@@ -19,6 +18,7 @@ include::6.5@sdk:shared:partial$migration.adoc[tag=intro]
 
 include::6.5@sdk:shared:partial$migration.adoc[tag=terms]
 
+////
 As an example here is a KeyValue document fetch:
 
 // change to $Your_language
@@ -34,16 +34,35 @@ Compare this to a N1QL query:
 ----
 QueryResult queryResult = cluster.query("select 1=1", queryOptions().timeout(Duration.ofSeconds(3));
 ----
+////
 
 include::6.5@sdk:shared:partial$migration.adoc[tag=terms2]
 
 
 include::6.5@sdk:shared:partial$migration.adoc[tag=new]
 
+// temp link below until engg content available.
+== Next Steps
 
+Information on the new API is to be found in the https://docs.couchbase.com/sdk-api/couchbase-c-client/index.html[libcouchbase API pages].
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////
 include::6.5@sdk:shared:partial$migration.adoc[tag=lang]
 
-
+// CCBC-1103 & CCBC-1115
 
 // Outline below for individual SDKs -- please expand as appropriate, many topics can be covered lightly
 //
@@ -117,4 +136,4 @@ include::6.5@sdk:shared:partial$migration.adoc[tag=lang]
  - discusses how to migrate from each old management api to the new one
  - where it is found, what exceptions it throws, etc.
 
-
+////
