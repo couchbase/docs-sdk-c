@@ -32,12 +32,10 @@ When a query is not ad hoc, the SDK will fetch the plan (if it does not already 
 Do not turn off the `adhoc` flag for each query since only a finite number of query plans (currently 5000) can be stored in the SDK.
 For LCB, adhoc is set to false by setting `lcb_cmdquery_adhoc` to zero (false) 
 
-////
 [source,c]
 ----
 lcb_cmdquery_adhoc(cmd, 0)
 ----
-////
 
 NOTE: Parameterized queries are considered the same query for caching and planning purposes, even if the supplied parameters are different.
 
