@@ -2,6 +2,7 @@
 :navtitle: Sub-Doc Operations
 :page-topic-type: howto
 include::partial$attributes.adoc[]
+:page-aliases: ROOT:sdk-xattr-example.adoc
 
 [abstract]
 _Sub-document_ operations can be used to efficiently access _parts_ of documents.
