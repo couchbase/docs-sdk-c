@@ -23,37 +23,37 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.3/index.html[API Refer
 * Binary packages for Ubuntu 20.04 LTS (Focal Fossa)
 
 * https://issues.couchbase.com/browse/CCBC-1265[CCBC-1265]:
-Enable out of order execution by default
+Enabled out of order execution by default.
 
 * https://issues.couchbase.com/browse/CCBC-1189[CCBC-1189]:
-Validate collection and scope names early. The library will return error if the collection name is not valid without
-sending command to the server.
+The SDK now validate collection and scope names early. 
+The library will return an error if the collection name is not valid, without sending a command to the server.
 
 * https://issues.couchbase.com/browse/CCBC-1278[CCBC-1278]:
-Fix stripping payload over TLS connection. The library might propagate zero return code from `recv()` even when previous
-calls of `recv()` successfully transferred bytes to SSL context. In this case we might lose these trailing bytes and just
-close the socket.
+Fixed stripping payload over TLS connection. 
+The library might propagate zero return code from `recv()` even when previous calls of `recv()` successfully transferred bytes to SSL context. 
+In this case we might lose these trailing bytes and just close the socket.
 
 * https://issues.couchbase.com/browse/CCBC-1264[CCBC-1264]:
-Fix calculating key size when durability level specified
+Fixed calculating key size when durability level specified.
 
 * https://issues.couchbase.com/browse/CCBC-1258[CCBC-1258]:
-Fix port order in vbucket diff info message
+Fixed port order in vbucket diff info message.
 
 * https://issues.couchbase.com/browse/CCBC-1274[CCBC-1274]:
-Fix pointer casting in HTTP callback of cbc tool.
+Fixed pointer casting in HTTP callback of `cbc` tool.
 
 * https://issues.couchbase.com/browse/CCBC-1167[CCBC-1167]:
-Fix tests build on MacOS
+Fixed tests build on MacOS.
 
 * https://issues.couchbase.com/browse/CCBC-1248[CCBC-1248]:
-Always request error map feature and send HELLO message to speedup bootstrap
+The SDK will now always request error map feature and send HELLO message to speedup bootstrap.
 
-* Implement tick for IOCP plugin on Windows
+* Implemented tick for IOCP plugin on Windows.
 
-* Improved build on Windows (fixed static build, and PDB installation)
+* Improved build on Windows (fixed static build, and PDB installation).
 
-* Fix collections issues for future server release
+* Fixed collections issues for future server release.
 
 === Downloads
 
