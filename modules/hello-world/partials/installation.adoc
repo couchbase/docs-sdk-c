@@ -111,7 +111,7 @@ sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
 
 You can install standalone packages by downloading a tarball containing the necessary binary packages for your platform.
 
-*Installing RPMs manually*
+*Installing RPMs*
 
 The following commands show steps to execute on *CentOS 8* box, see table below for other RPM-based distributions.
 
@@ -131,7 +131,7 @@ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.0.0*.rpm libcouchbase-dev
 > Complete!
 ----
 
-*Installing DEBs manually*
+*Installing DEBs*
 
 The following commands show steps to execute on *Debian 10 (buster)* box, see table below for other DEB-based distributions.
 
