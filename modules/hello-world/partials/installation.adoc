@@ -34,7 +34,7 @@ To configure the repository:
 
 . Create a `couchbase.repo` file in your `/etc/yum.repos.d` directory.  It should look similar to the following:
 
-[source]
+[source,toml]
 ----
 [couchbase]
 enabled = 1
@@ -74,6 +74,10 @@ Now that you have the repository configured, refresh the cache then check to see
 [source,console]
 ----
 $ sudo apt-get update
+----
+
+[source,console]
+----
 $ sudo apt-cache search libcouchbase
 ----
 
@@ -93,7 +97,7 @@ Now, install `libcouchbase3`, and any other packages that you need for developme
 
 [source,console]
 ----
-sudo apt-get install libcouchbase3 libcouchbase-dev libcouchbase3-tools libcouchbase-dbg libcouchbase3-libev libcouchbase3-libevent
+$ sudo apt-get install libcouchbase3 libcouchbase-dev libcouchbase3-tools libcouchbase-dbg libcouchbase3-libev libcouchbase3-libevent
 ----
 
 For CentOS and Red Hat, the equivalent commands are:
@@ -101,7 +105,15 @@ For CentOS and Red Hat, the equivalent commands are:
 [source,console]
 ----
 sudo yum check-update
+----
+
+[source,console]
+----
 sudo yum search libcouchbase
+----
+
+[source,console]
+----
 sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
 ----
 
@@ -115,12 +127,28 @@ You can install standalone packages by downloading a tarball containing the nece
 
 The following commands show steps to execute on *CentOS 8* box, see table below for other RPM-based distributions.
 
-[source,bash]
+[source,console]
 ----
-curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_centos8_x86_64.tar
-tar xf libcouchbase-3.0.0_centos8_x86_64.tar
-cd libcouchbase-3.0.0_centos8_x86_64
-sudo yum install -y libcouchbase3{-tools,-libevent,}-3.0.0*.rpm libcouchbase-devel-*.rpm
+$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_centos8_x86_64.tar
+----
+
+[source,console]
+----
+$ tar xf libcouchbase-3.0.0_centos8_x86_64.tar
+----
+
+[source,console]
+----
+$ cd libcouchbase-3.0.0_centos8_x86_64
+----
+
+[source,console]
+----
+$ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.0.0*.rpm libcouchbase-devel-*.rpm
+----
+
+[source,console]
+----
 > ...
 > Installed:
 >   libcouchbase3-tools-3.0.0-1.el8.x86_64
@@ -135,13 +163,29 @@ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.0.0*.rpm libcouchbase-dev
 
 The following commands show steps to execute on *Debian 10 (buster)* box, see table below for other DEB-based distributions.
 
-[source,bash]
+[source,console]
 ----
-curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_debian10_buster_amd64.tar
-tar xf libcouchbase-3.0.0_debian10_buster_amd64.tar
-cd libcouchbase-3.0.0_debian10_buster_amd64
-sudo apt install libevent-core-2.1
-sudo dpkg -i libcouchbase3{-tools,-libevent,}_3.0.0*.deb libcouchbase-dev*.deb
+$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_debian10_buster_amd64.tar
+----
+
+[source,console]
+----
+$ tar xf libcouchbase-3.0.0_debian10_buster_amd64.tar
+----
+
+[source,console]
+----
+$ cd libcouchbase-3.0.0_debian10_buster_amd64
+----
+
+[source,console]
+----
+$ sudo apt install libevent-core-2.1
+----
+
+[source,console]
+----
+$ sudo dpkg -i libcouchbase3{-tools,-libevent,}_3.0.0*.deb libcouchbase-dev*.deb
 > Selecting previously unselected package libcouchbase3-tools.
 > (Reading database ... 7165 files and directories currently installed.)
 > Preparing to unpack libcouchbase3-tools_3.0.0-1_amd64.deb ...
@@ -172,10 +216,14 @@ Follow the instructions in the archive's https://github.com/couchbase/libcouchba
 To install the library on Mac OS X, first install the de-facto package manager for OS X: http://brew.sh/[homebrew^].
 Once _homebrew_ is configured:
 
-[source,bash]
+[source,console]
 ----
-brew update # get list of latest packages
-brew install libcouchbase
+$ brew update # get list of latest packages
+----
+
+[source,console]
+----
+$ brew install libcouchbase
 ----
 
 
@@ -204,6 +252,7 @@ If for some reason you cannot use any of the prebuilt Windows binaries, follow t
 The easiest way to verify installed package is to check its version using cbc tools. It requires package *libcouchbase3-tools* installed on Linux systems, for Windows *cbc.exe* included in the zip archive.
 To verify the client run *cbc version* (*cbc.exe version* on Windows). Below is the output from version 3.0.0 on CentOS 8. It shows version along with git commit numbers. Then it prints default directory where IO plugins installed and enumerates the currently installed and available plugins. After that it reports whether OpenSSL linked to this particular version of libcouchbase, and displays the version number if it is accessible.
 
+[source,console]
 ----
 $ cbc version
 cbc:
