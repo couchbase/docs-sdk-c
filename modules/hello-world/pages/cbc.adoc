@@ -23,6 +23,7 @@ This is in addition to the xref:server:cli:cli-intro.adoc[command line tools] in
 A version of LCB ships with some releases of Couchbase Server, but here we are assuming you want to install the command line tools on a client machine, or to acquire the latest version.
 To install the cbc command line tools, install _libcouchbase_:
 
+If you already have LCB installed, then xref:#cbc-tools[skip ahead to our summary of tools included on cbc].
 
 // installation instructions
 include::partial$installation.adoc[]
