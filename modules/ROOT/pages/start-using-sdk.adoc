@@ -35,7 +35,7 @@ For installation on Linux, install the _couchbase-release_ repository, and then 
 The following examples download and install _couchbase-release_ repository, a C and C++ compiler, and the C SDK core (_libcouchbase2-core_), command line tools (_libcouchbase2-bin_), and the development tools (_libcouchbase-devel_ [RPM] or _libcouchbase-dev_ [DEB]).
 
 .Debian and Ubuntu
-[source,bash]
+[source,console]
 ----
 # Only needed during first-time setup:
 wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-6-amd64.deb
@@ -49,7 +49,7 @@ Note that as of Couchbase Data Platform 6.0, _couchbase-release_ (1.0.6) support
 
 // tag::new_ubuntu[]
 .Adding repo manually
-[source,bash]
+[source,console]
 ----
 # Install Couchbase's GPG key
 sudo wget -O - http://packages.couchbase.com/ubuntu/couchbase.key | sudo apt-key add -
@@ -62,11 +62,11 @@ sudo apt-get install libcouchbase-dev libcouchbase2-bin build-essential
 // end::new_ubuntu[]
 
 .RHEL and CentOS
-[source,bash]
+[source,console]
 ----
 # Only needed during first-time setup:
-wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-6-x86_64.rpm
-sudo rpm -iv couchbase-release-1.0-6-x86_64.rpm
+wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-8-x86_64.rpm
+sudo rpm -iv couchbase-release-1.0-8-x86_64.rpm
 # Will install or upgrade existing packages
 sudo yum install libcouchbase-devel libcouchbase2-bin gcc gcc-c++
 ----
@@ -75,6 +75,9 @@ NOTE: You should install the `libcouchbase2-libevent` or `libcouchbase2-libev` p
 The default `select()` based event loop only supports 1024 file descriptors.
 // end::linux[]
 
+The xref:sdk-release-notes.adoc#installing-manually-linux[Release Notes] page covers installation in more detail,
+including how to xref:sdk-release-notes.adoc#configuring-yum-repositories-centos-red-hat[add the appropriate version] of the repo yourself.
+
 // tag::macos[]
 [#install-osx]
 == Installation on Mac OS X
@@ -82,7 +85,7 @@ The default `select()` based event loop only supports 1024 file descriptors.
 To install the library on Mac OS X, first install the de-facto package manager for OS X: http://brew.sh/[homebrew^].
 Once _homebrew_ is configured:
 
-[source,bash]
+[source,console]
 ----
 brew update # get list of latest packages
 brew install libcouchbase@2
