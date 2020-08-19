@@ -225,6 +225,8 @@ $ brew update # get list of latest packages
 $ brew install libcouchbase
 ----
 
+To install development files and command line tools on Mac OS, follow the instructions for https://github.com/couchbase/libcouchbase/blob/master/README.markdown#building-on-unix-like-systems[installing from source].
+
 
 [#install-windows]
 == Windows Installation
