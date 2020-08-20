@@ -569,7 +569,10 @@ if (err != LCB_SUCCESS) {
 }
 ----
 
+You will find several ways of working with counters https://docs.couchbase.com/sdk-api/couchbase-c-client-2.10.6/group__lcb-counter.html[in the API docs].
+
 You can also use xref:subdocument-operations.adoc#ul_fp2_2yw_mv[sub-document counter operations] to increment numeric values _within_ a document containing other content.
+
 
 [#devguide_kvcore_append_prepend_generic]
 == Raw Byte Concatenation
