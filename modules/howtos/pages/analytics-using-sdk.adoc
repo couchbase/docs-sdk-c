@@ -108,7 +108,7 @@ If you only expect a single result or only want to use the first result in a res
 include::devguide:example$go/analytics-query-one.go[tag=one]
 ----
 
-////
+
 Moving these to error reference doc
 ----
 21002: Request timed out and will be cancelled
@@ -116,7 +116,7 @@ Moving these to error reference doc
 23003: Operation cannot be performed during rebalance
 23007: Job queue is full with [string] jobs
 ----
-////
+
 
 === MetaData
 
@@ -131,7 +131,7 @@ include::devguide:example$go/analytics-simple-query.go[tag=metadata]
 
 
 For a listing of available `Metrics` in `MetaData`, see the xref:concept-docs:analytics-for-sdk-users.adoc[Understanding Analytics] SDK doc.
-
+////
 
 
 == Additional Resources 
