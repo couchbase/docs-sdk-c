@@ -70,6 +70,7 @@ You may try to use an LTS repository for a non-LTS version, but success is not g
 
 Now that you have the repository configured, refresh the cache then check to see that you have been successful:
 
+====
 [source,console]
 ----
 $ sudo apt-get update
@@ -79,6 +80,7 @@ $ sudo apt-get update
 ----
 $ sudo apt-cache search libcouchbase
 ----
+====
 
 You should see something like:
 
