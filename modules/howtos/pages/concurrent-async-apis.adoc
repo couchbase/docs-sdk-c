@@ -3,7 +3,7 @@
 :page-topic-type: howto
 :page-aliases: ROOT:async-programming,ROOT:batching-operations
 
-include::partial$alpha-warning.adoc[]
-
 [abstract]
-All async
+Async & batching
+
+
