@@ -66,3 +66,9 @@ The handler will unlock the item either via an explicit unlock operation ([.api]
 
 If the item has already been locked, the server will respond with CasMismatch which means that the operation could not be executed temporarily, but may succeed later on.
 
+
+== APIs and Additional Information
+
+API information for working with CAS can be found https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-kv-api.html[in our API docs].
+
+
