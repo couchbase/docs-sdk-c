@@ -10,7 +10,7 @@ You can use MapReduce views to create queryable indexes in Couchbase Data Platfo
 include::6.5@sdk:shared:partial$views.adoc[tag=views-intro]
 
 
-You can find further infoaration https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-view-api.html[in the API docs].
+You can find further information https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-view-api.html[in the API docs].
 
 ////
 include::6.5@sdk:shared:partial$views.adoc[tag=example-beer]
