@@ -103,6 +103,7 @@ $ sudo apt-get install libcouchbase3 libcouchbase-dev libcouchbase3-tools libcou
 
 For CentOS and Red Hat, the equivalent commands are:
 
+====
 [source,console]
 ----
 sudo yum check-update
@@ -117,7 +118,7 @@ sudo yum search libcouchbase
 ----
 sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
 ----
-
+====
 
 
 === Installing binary packages without a repository
@@ -128,6 +129,7 @@ You can install standalone packages by downloading a tarball containing the nece
 
 The following commands show steps to execute on *CentOS 8* box, see table below for other RPM-based distributions.
 
+====
 [source,console]
 ----
 $ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_centos8_x86_64.tar
@@ -159,11 +161,13 @@ $ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.0.0*.rpm libcouchbase-d
 >
 > Complete!
 ----
+====
 
 *Installing DEBs*
 
 The following commands show steps to execute on *Debian 10 (buster)* box, see table below for other DEB-based distributions.
 
+====
 [source,console]
 ----
 $ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_debian10_buster_amd64.tar
@@ -206,6 +210,8 @@ $ sudo dpkg -i libcouchbase3{-tools,-libevent,}_3.0.0*.deb libcouchbase-dev*.deb
 > Setting up libcouchbase3-tools (3.0.0-1) ...
 > Processing triggers for libc-bin (2.28-10) ...
 ----
+====
+
 
 == Installation from source
 
@@ -217,6 +223,7 @@ Follow the instructions in the archive's https://github.com/couchbase/libcouchba
 To install the library on Mac OS X, first install the de-facto package manager for OS X: http://brew.sh/[homebrew^].
 Once _homebrew_ is configured:
 
+====
 [source,console]
 ----
 $ brew update # get list of latest packages
@@ -226,6 +233,7 @@ $ brew update # get list of latest packages
 ----
 $ brew install libcouchbase
 ----
+====
 
 To install development files and command line tools on Mac OS, follow the instructions for https://github.com/couchbase/libcouchbase/blob/master/README.markdown#building-on-unix-like-systems[installing from source].
 
