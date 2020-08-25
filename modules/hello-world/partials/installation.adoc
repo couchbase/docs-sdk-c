@@ -106,17 +106,17 @@ For CentOS and Red Hat, the equivalent commands are:
 ====
 [source,console]
 ----
-sudo yum check-update
+$ sudo yum check-update
 ----
 
 [source,console]
 ----
-sudo yum search libcouchbase
+$ sudo yum search libcouchbase
 ----
 
 [source,console]
 ----
-sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
+$ sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
 ----
 ====
 
