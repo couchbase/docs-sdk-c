@@ -15,15 +15,15 @@ include::hello-world:partial$installation.adoc[]
 
 [#latest-release]
 == Version 3.0.4 (26 August 2020)
-Version 3.0.3 is the fifth release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
+Version 3.0.4 is the fifth release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.4/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1281[CCBC-1281]:
-Implement scope qualifier for queries
+Implemented scope qualifier for queries.
 
 * https://issues.couchbase.com/browse/CCBC-1301[CCBC-1301]:
-Expose cmake option to help dissecting TLS traffic
+Expose cmake option to help dissect TLS traffic.
 
 * Detect configuration change when replica indexes changed.
 
