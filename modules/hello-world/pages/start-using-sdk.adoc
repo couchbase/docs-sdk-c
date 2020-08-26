@@ -34,6 +34,8 @@ lcb_createopts_connstr(create_options, argv[1], strlen(argv[1]));
 lcb_createopts_credentials(create_options, argv[2], strlen(argv[2]), argv[3], strlen(argv[3]));
 ----
 
+If you are connecting to Couchbase Cloud rather than a local Couchbase Server, see the <<cloud-connections, Cloud section>>, below.
+
 Couchbase uses xref:6.5@server:learn:security/roles.adoc[Role Based Access Control (RBAC)] to control access to resources.
 Here we will use the _Full Admin_ role created during installation of the Couchbase Data Platform.
 For production client code, you will want to use xref:howtos:managing-connections.adoc#rbac[more appropriate, restrictive settings], but here we want to get you up and running quickly.
@@ -134,6 +136,17 @@ rc = lcb_get(instance, NULL, cmd);
 rc = lcb_cmdget_destroy(cmd);
 rc = lcb_wait(instance);
 ----
+
+
+
+== Cloud Connections
+
+For developing on Couchbase Cloud, if you are not working from the same _Availability Zone_, refer to the follorwing:
+
+* Notes on xref:ref:client-settings.adoc#constrained-network-environments[Constrained Network Environments], 
+* xref:project-docs:compatibility.adoc#network-requirements[Network Requirements], 
+* If you have a consumer-grade router which has problems with DNS-SRV records review our xref:howtos:troubleshooting-cloud-connections.adoc#troubleshooting-host-not-found[Troubleshooting Guide].
+
 
 == Additional Resources
 
