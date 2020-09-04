@@ -2256,4 +2256,9 @@ details.
 |  Visual Studio 2012  | x86           | http://packages.couchbase.com/clients/c/libcouchbase-2.6.0_x86_vc11.zip[libcouchbase-2.6.0_x86_vc11.zip]
 |  Visual Studio 2012  | x64           | http://packages.couchbase.com/clients/c/libcouchbase-2.6.0_amd64_vc11.zip[libcouchbase-2.6.0_amd64_vc11.zip]
 |===
+
+
+== Older Releases
+
+Although https://www.couchbase.com/support-policy/enterprise-software[no longer supported], documentation for older releases continues to be available in our https://docs-archive.couchbase.com/home/index.html[docs archive].
 // end::latest[]
