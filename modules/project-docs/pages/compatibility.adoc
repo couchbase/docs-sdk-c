@@ -54,7 +54,7 @@ See the notes there for Support details.
 
 Libcouchbase (the C SDK) is tested and supported on the following platforms:
 
-====
+****
 === GNU/Linux
 
 * Amazon Linux 2.
@@ -70,7 +70,7 @@ Any MS-supported version compatible with Visual Studio 2015 (VC14) or 2017 (VC15
 
 The current and previous two releases of OS X. 
 At time of writing (September 2020): 10.13 (_High Sierra_), 10.14 (_Mojave_), and 10.15 (_Catalina_).
-====
+****
 
 Although installable or compilable on many other platforms, we cannot provide support for untested combinations.
 
