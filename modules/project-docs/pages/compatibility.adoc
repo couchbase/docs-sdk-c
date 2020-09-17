@@ -59,7 +59,9 @@ Libcouchbase (the C SDK) is tested and supported on the following platforms:
 === GNU/Linux
 
 * Amazon Linux 2.
-* Red Hat Enterprise Linux 7 & 8.
+* Red Hat Enterprise Linux 7 & 8;
++
+& CentOS 7 & 8.
 * Ubuntu (LTS) 16.04 (_Xenial_), 18.04 (_Bionic_), & 20.04 (_Focal_).
 * Debian 9 (_Stretch_) & 10 (_Buster_).
 
