@@ -15,23 +15,24 @@ include::hello-world:partial$installation.adoc[]
 
 [#latest-release]
 == Version 3.0.5 (21 September 2020)
+
 Version 3.0.5 is the sixth release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.5/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1307[CCBC-1307]:
-  allow to select any mechanisms for SASL regardless network protocol being used. But by default, try to avoid
-  downgrading to PLAIN on non-TLS connections. Also the change allows to specify list of preferred mechanisms instead of
-  only one (use comma in the value of `sasl_mech_force` connection string option).
+  The SDK now allows the selection of any mechanisms for SASL regardless of the network protocol being usedm
+  although by default the SDK will try to avoid downgrading to PLAIN on non-TLS connections. 
+  Also the change allows users to specify a list of preferred mechanisms instead of only one (through the use of a comma in the value of the `sasl_mech_force` connection string option).
 
 * https://issues.couchbase.com/browse/CCBC-1276[CCBC-1276]:
-  allow to hint flex index usage in query options
+  Addded flex (FTS) index usage to query options.
 
 * https://issues.couchbase.com/browse/CCBC-1312[CCBC-1312]:
-  fix return values for `lcb_cmdquery_scope_*`
+  Fixed return values for `lcb_cmdquery_scope_*`.
 
 * https://issues.couchbase.com/browse/CCBC-1313[CCBC-1313]:
-  replace `std::random_shuffle` with `std::shuffle` (fixes build of `cbc-n1qlback` tool)
+  Replaced `std::random_shuffle` with `std::shuffle`. fixing build of `cbc-n1qlback` tool.
 
 === Downloads
 
