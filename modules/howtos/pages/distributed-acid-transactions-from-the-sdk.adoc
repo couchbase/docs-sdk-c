@@ -104,19 +104,10 @@ so many methods including flatMap will not work as expected.
 == Examples
 
 A code example is worth a thousand words, so here is a quick summary of the main transaction operations.
-They are described in more detail below. 
 
-.With the synchronous API
 [source,c++]
 ----
 include::example$transactions-example.cxx[tag=examples,indent=0]
-----
-
-
-.With the asynchronous API
-[source,c++]
-----
-include::example$transactions-example.cxx[tag=examplesReactive,indent=0]
 ----
 
 
@@ -131,29 +122,15 @@ Replacing a document requires a `ctx.get()` call first.
 This is necessary to ensure that the document is not involved in another transaction.
 (If it is, then the transaction will handle this, generally by rolling back what has been done so far, and retrying the lambda.)
 
-.With the synchronous API:
 [source,c++]
 ----
 include::example$transactions-example.cxx[tag=replace,indent=0]
-----
-
-.Asynchronous API:
-[source,c++]
-----
-include::example$transactions-example.cxx[tag=replaceReactive,indent=0]
 ----
 
 === Removing
 
 As with replaces, removing a document requires a `ctx.get()` call first.
 
-.With the asynchronous API:
-[source,c++]
-----
-include::example$transactions-example.cxx[tag=removeReactive,indent=0]
-----
-
-.Synchronous API:
 [source,c++]
 ----
 include::example$transactions-example.cxx[tag=remove,indent=0]
@@ -161,16 +138,11 @@ include::example$transactions-example.cxx[tag=remove,indent=0]
 
 === Inserting
 
-.With the asynchronous API:
 [source,c++]
 ----
 include::example$transactions-example.cxx[tag=insert,indent=0]
 ----
 
-.With the synchronous API:
-----
-include::example$transactions-example.cxx[tag=insertReactive,indent=0]
-----
 
 == Getting Documents
 
