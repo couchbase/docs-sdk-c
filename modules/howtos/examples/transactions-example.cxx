@@ -89,7 +89,7 @@ player_hits_monster(couchbase::transactions::transactions& transactions,
                     const std::string& player_id,
                     const std::string& monster_id)
 {
-    // #tag:full[]
+    // tag::full[]
     try {
         transactions.run([&](couchbase::transactions::attempt_context& ctx) {
             auto monster = ctx.get(collection, monster_id);
@@ -130,7 +130,7 @@ player_hits_monster(couchbase::transactions::transactions& transactions,
         // failure to be able to commit the transaction, for example on
         // prolonged node failure.
     }
-    // #end:full[]
+    // end::full[]
 }
 
 int
@@ -228,7 +228,7 @@ main(int argc, const char* argv[])
     }
 
     {
-        // #tag:insert[]
+        // tag::insert[]
         transactions.run([&](couchbase::transactions::attempt_context& ctx) {
             std::string id = "doc_id";
             nlohmann::json value{
@@ -236,7 +236,7 @@ main(int argc, const char* argv[])
             };
             ctx.insert(collection, id, value);
         });
-        // #end:insert[]
+        // end::insert[]
     }
 
     {
@@ -266,7 +266,7 @@ main(int argc, const char* argv[])
     }
 
     {
-        // #tag:replace[]
+        // tag::replace[]
         transactions.run([&](couchbase::transactions::attempt_context& ctx) {
             std::string id = "doc-a";
             couchbase::transactions::transaction_document doc = ctx.get(collection, id);
@@ -274,7 +274,7 @@ main(int argc, const char* argv[])
             content["transactions"] = "are awesome";
             ctx.replace(collection, doc, content);
         });
-        // #end:replace[]
+        // end::replace[]
     }
 
     {
