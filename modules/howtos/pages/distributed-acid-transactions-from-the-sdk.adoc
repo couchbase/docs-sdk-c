@@ -15,13 +15,13 @@ Below we show you how to create Transactions, step-by-step.
 You may also want to start with our https://github.com/couchbaselabs/couchbase-transactions-java-examples[transactions examples repository],
 which features useful downloadable examples of using Distributed Transactions.
 
-Javadocs are available https://docs.couchbase.com/sdk-api/couchbase-transactions-java-1.1.0/index.html?overview-summary.html[online].
+API docs are available https://docs.couchbase.com/sdk-api/couchbase-transactions-cxx-1.0.0/index.html[online].
 
 
 == Requirements
 
 * Couchbase Server 6.6 or above.
-* Couchbase Java client 3.0.7 or above.  It is recommended to follow the transitive dependency for the transactions library from maven.
+* Couchbase C client 3.0.6 or above.  It is recommended to follow the transitive dependency for the transactions library from maven.
 include::6.5@sdk:shared:partial$acid-transactions.adoc[tag=requirements]
 
 
@@ -29,20 +29,7 @@ include::6.5@sdk:shared:partial$acid-transactions.adoc[tag=requirements]
 
 Couchbase transactions require no additional components or services to be configured. 
 Simply add the transactions library into your project.
-The latest version, as of August 2020, is 1.1.0.
-
-With Gradle this can be accomplished by modifying these sections of your build.gradle file like so:
-
-[source,gradle]
-----
-dependencies {
-    compile group: 'com.couchbase.client', name: 'couchbase-transactions', version: '1.1.0'
-}
-----
-
-Use the same group, artifact, and version in your Maven-compatible tool of choice.
-
-A complete simple gradle project is available on our https://github.com/couchbaselabs/couchbase-transactions-java-examples[transactions examples repository].
+The latest version, as of October 2020, is 1.0.0-β.
 
 
 == Initializing Transactions
