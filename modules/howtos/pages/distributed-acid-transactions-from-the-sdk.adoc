@@ -8,8 +8,8 @@
 The C++ Transactions built upon the C SDK.
 
 
-Transactions are not available directly via the C SDK. Although our &cpp; Distributed ACID Transactions are built upon the C SDK it doesn't expose any C symbols explicitly. 
-Applications built using C SDK and &cpp; Transactions can run in parallel without interfering with each other -- 
+Transactions are not available directly via the C SDK. Although our {cpp} Distributed ACID Transactions are built upon the C SDK it doesn't expose any C symbols explicitly. 
+Applications built using C SDK and {cpp} Transactions can run in parallel without interfering with each other -- 
 more details on our xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc[C++ Distributed Transactions] pages.
 
 
