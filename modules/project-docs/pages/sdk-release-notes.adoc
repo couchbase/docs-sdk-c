@@ -15,36 +15,37 @@ include::hello-world:partial$installation.adoc[]
 
 [#latest-release]
 == Version 3.0.6 (21 October 2020)
+
 Version 3.0.6 is the seventh release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.6/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1311[CCBC-1311]:
-  Implement `create_as_deleted` subdoc feature.
+Implemented `create_as_deleted` subdoc feature.
 
 * https://issues.couchbase.com/browse/CCBC-1263[CCBC-1263]:
-  Update ping to report analytics as analytics service instead of query
+Updated ping to report Analytics as Analytics Service instead of Query.
 
 * https://issues.couchbase.com/browse/CCBC-1175[CCBC-1175]:
-  Allow to specify timeout for `lcb_ping`
+Allow to specify timeout for `lcb_ping`.
 
 * https://issues.couchbase.com/browse/CCBC-1262[CCBC-1262]:
-  Add accessor for `report_id` in ping report
+Added accessor for `report_id` in ping report.
 
 * https://issues.couchbase.com/browse/CCBC-1176[CCBC-1176]:
-  Rename "scope" to "namespace" in ping report (also deprecate `lcb_respping_result_scope` in favour to `lcb_respping_result_namespace`)
+Renamed "scope" to "namespace" in ping report (also deprecated `lcb_respping_result_scope` in favour to `lcb_respping_result_namespace`).
 
 * https://issues.couchbase.com/browse/CCBC-1261[CCBC-1261]:
-  Set namespace length of service in ping report to zero if not applicable
+Set namespace length of service in ping report to zero if not applicable.
 
 * https://issues.couchbase.com/browse/CCBC-1194[CCBC-1194]:
-  Add extra checks for socket state in `lcb_diag` to avoid invalid access issues
+Added extra checks for socket state in `lcb_diag` to avoid invalid access issues.
 
 * https://issues.couchbase.com/browse/CCBC-1314[CCBC-1314]:
-  Extra checks for socket state in `lcb_ping` to avoid invalid access issues
+Extra checks for socket state in `lcb_ping` to avoid invalid access issues.
 
 * https://issues.couchbase.com/browse/CCBC-1316[CCBC-1316]:
-  Fix two-step bootstrap (`lcb_connect` + `lcb_open`) for memcached bucket.
+Fixed two-step bootstrap (`lcb_connect` + `lcb_open`) for memcached bucket.
 
 === Downloads
 
