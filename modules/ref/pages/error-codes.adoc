@@ -3,7 +3,7 @@
 :page-topic-type: ref
 
 [abstract]
-The standardized error codes returned by the Couchbase Java SDK, from cloud connection to sub-document.
+The standardized error codes returned by the Couchbase C SDK, from cloud connection to sub-document.
 
 include::6.5@sdk:shared:partial$error-ref.adoc[tag=intro]
 
