@@ -237,4 +237,4 @@ When the library handle is no longer needed, it can be destroyed via [.api]`lcb_
 == API Reference
 
 The API reference is generated for each version.
-The API reference for version `{lcb-current-version}` is at {lcb-api-link}[]
+The API reference for version 2.10.7 is at http://docs.couchbase.com/sdk-api/couchbase-c-client-2.10.7^
