@@ -1,108 +1,124 @@
-#include <libcouchbase/couchbase.h>
-#include <libcouchbase/n1ql.h>
 #include <vector>
 #include <string>
 #include <iostream>
 
+#include <libcouchbase/couchbase.h>
+
+static void
+check(lcb_STATUS err, const char* msg)
+{
+    if (err != LCB_SUCCESS) {
+        std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
+        exit(EXIT_FAILURE);
+    }
+}
+
 struct Rows {
-    std::vector< std::string > rows;
-    std::string metadata;
-    lcb_error_t rc;
-    short htcode;
-    Rows() : rc(LCB_ERROR), htcode(0) {}
+    std::vector<std::string> rows{};
+    std::string metadata{};
 };
 
-// Copy/pasted from query-criteria.cc
-static void query_callback(lcb_t, int, const lcb_RESPN1QL *resp)
+static void
+query_callback(lcb_INSTANCE*, int, const lcb_RESPQUERY* resp)
 {
-    Rows *rows = reinterpret_cast< Rows * >(resp->cookie);
+    lcb_STATUS status = lcb_respquery_status(resp);
+    if (status != LCB_SUCCESS) {
+        const lcb_QUERY_ERROR_CONTEXT* ctx;
+        lcb_respquery_error_context(resp, &ctx);
 
-    // Check if this is the last invocation
-    if (resp->rflags & LCB_RESP_F_FINAL) {
-        rows->rc = resp->rc;
+        uint32_t err_code = 0;
+        lcb_errctx_query_first_error_code(ctx, &err_code);
 
-        // Assign the metadata (usually not needed)
-        rows->metadata.assign(resp->row, resp->nrow);
-
-    } else {
-        rows->rows.push_back(std::string(resp->row, resp->nrow));
-    }
-}
-
-void dump_results(const Rows &rows)
-{
-    if (rows.rc == LCB_SUCCESS) {
-        std::cout << "Query successful!" << std::endl;
-        std::vector< std::string >::const_iterator ii;
-        for (ii = rows.rows.begin(); ii != rows.rows.end(); ++ii) {
-            std::cout << *ii << std::endl;
+        const char* err_msg = nullptr;
+        size_t err_msg_len = 0;
+        lcb_errctx_query_first_error_message(ctx, &err_msg, &err_msg_len);
+        std::string error_message{};
+        if (err_msg_len > 0) {
+            error_message.assign(err_msg, err_msg_len);
         }
-    } else {
-        std::cerr << "Query failed!";
-        std::cerr << "(" << int(rows.rc) << "). ";
-        std::cerr << lcb_strerror(NULL, rows.rc) << std::endl;
+
+        std::cerr << "[ERROR] failed to execute query " << lcb_strerror_short(status) << ". " << error_message << " (" << err_code << ")\n";
+        return;
+    }
+
+    const char* buf = nullptr;
+    std::size_t buf_len = 0;
+    lcb_respquery_row(resp, &buf, &buf_len);
+    if (buf_len > 0) {
+        Rows* result = nullptr;
+        lcb_respquery_cookie(resp, reinterpret_cast<void**>(&result));
+        if (lcb_respquery_is_final(resp)) {
+            result->metadata.assign(buf, buf_len);
+        } else {
+            result->rows.emplace_back(std::string(buf, buf_len));
+        }
     }
 }
 
-static void query_city(lcb_t instance, const char *city)
+static void
+query_city(lcb_INSTANCE* instance, const std::string& bucket_name, const std::string& city)
 {
-    lcb_N1QLPARAMS *params = lcb_n1p_new();
-    lcb_error_t rc;
-    lcb_CMDN1QL cmd = {};
-    Rows rows;
+    Rows result{};
 
-    // Need to make this properly formatted JSON
-    std::string city_str;
-    city_str += '"';
-    city_str += city;
-    city_str += '"';
+    std::string statement = "SELECT airportname, city, country FROM `" + bucket_name + R"(` WHERE type="airport" AND city=$1)";
 
-    rc = lcb_n1p_setstmtz(params, "SELECT airportname FROM `travel-sample` "
-                                  "WHERE city=$1 AND type=\"airport\"");
-    rc = lcb_n1p_posparam(params, city_str.c_str(), city_str.size());
+    lcb_CMDQUERY* cmd = nullptr;
+    check(lcb_cmdquery_create(&cmd), "create QUERY command");
+    check(lcb_cmdquery_statement(cmd, statement.c_str(), statement.size()), "assign statement for QUERY command");
+    std::string city_json = "\"" + city + "\""; // production code should use JSON encoding library
+    check(lcb_cmdquery_positional_param(cmd, city_json.c_str(), city_json.size()), "add positional parameter for QUERY comand");
+    // Enable using prepared (optimized) statements
+    check(lcb_cmdquery_adhoc(cmd, false), "enable prepared statements for QUERY command");
+    check(lcb_cmdquery_callback(cmd, query_callback), "assign callback for QUERY command");
+    check(lcb_query(instance, &result, cmd), "schedule QUERY command");
+    check(lcb_cmdquery_destroy(cmd), "destroy QUERY command");
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
 
-    cmd.callback = query_callback;
-
-    // To enable using prepared (optimized) statements, you can use
-    // the LCB_CMDN1QL_F_PREPCACHE flag. This is equivalent to setting
-    // 'adhoc=False' in other SDKs
-    cmd.cmdflags |= LCB_CMDN1QL_F_PREPCACHE;
-
-    rc = lcb_n1p_mkcmd(params, &cmd);
-    rc = lcb_n1ql_query(instance, &rows, &cmd);
-    if (rc != LCB_SUCCESS) {
-        printf("Unable to schedule N1QL query: %s\n", lcb_strerror_short(rc));
-        exit(1);
+    std::cout << "\n--- Query returned " << result.rows.size() << " rows for " << city << std::endl;
+    for (const auto& row : result.rows) {
+        std::cout << row << "\n";
     }
-    lcb_wait(instance);
-
-    std::cout << "Results for " << city << std::endl;
-    dump_results(rows);
-    lcb_n1p_free(params);
 }
 
-int main(int, char **)
+int
+main(int, char**)
 {
-    lcb_t instance;
-    lcb_create_st crst = {};
-    lcb_error_t rc;
+    std::string username{ "Administrator" };
+    std::string password{ "password" };
+    std::string connection_string{ "couchbase://localhost" };
+    std::string bucket_name{ "travel-sample" };
 
-    crst.version = 3;
-    crst.v.v3.connstr = "couchbase://127.0.0.1/travel-sample";
-    crst.v.v3.username = "testuser";
-    crst.v.v3.passwd = "password";
-    rc = lcb_create(&instance, &crst);
-    rc = lcb_connect(instance);
-    lcb_wait(instance);
-    rc = lcb_get_bootstrap_status(instance);
-    if (rc != LCB_SUCCESS) {
-        printf("Unable to bootstrap cluster: %s\n", lcb_strerror_short(rc));
-        exit(1);
-    }
+    lcb_CREATEOPTS* create_options = nullptr;
+    check(lcb_createopts_create(&create_options, LCB_TYPE_BUCKET), "build options object for lcb_create");
+    check(lcb_createopts_credentials(create_options, username.c_str(), username.size(), password.c_str(), password.size()),
+          "assign credentials");
+    check(lcb_createopts_connstr(create_options, connection_string.c_str(), connection_string.size()), "assign connection string");
+    check(lcb_createopts_bucket(create_options, bucket_name.c_str(), bucket_name.size()), "assign bucket name");
 
-    query_city(instance, "Reno");
-    query_city(instance, "Dallas");
-    query_city(instance, "Los Angeles");
+    lcb_INSTANCE* instance = nullptr;
+    check(lcb_create(&instance, create_options), "create lcb_INSTANCE");
+    check(lcb_createopts_destroy(create_options), "destroy options object");
+    check(lcb_connect(instance), "schedule connection");
+    check(lcb_wait(instance, LCB_WAIT_DEFAULT), "wait for connection");
+    check(lcb_get_bootstrap_status(instance), "check bootstrap status");
+
+    query_city(instance, bucket_name, "Reno");
+    query_city(instance, bucket_name, "Dallas");
+    query_city(instance, bucket_name, "Los Angeles");
 
     lcb_destroy(instance);
 }
+
+// OUTPUT
+//
+// --- Query returned 1 rows for Reno
+// {"airportname":"Reno Tahoe Intl","city":"Reno","country":"United States"}
+//
+// --- Query returned 3 rows for Dallas
+// {"airportname":"Dallas Love Fld","city":"Dallas","country":"United States"}
+// {"airportname":"Dallas Executive Airport","city":"Dallas","country":"United States"}
+// {"airportname":"Fort Worth NAS","city":"Dallas","country":"United States"}
+//
+// --- Query returned 2 rows for Los Angeles
+// {"airportname":"Whiteman Airport","city":"Los Angeles","country":"United States"}
+// {"airportname":"Los Angeles Intl","city":"Los Angeles","country":"United States"}
