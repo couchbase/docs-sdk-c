@@ -1,10 +1,15 @@
 # -*- mode: yaml; -*-
 
-BasedOnStyle: LLVM
+Language: Cpp
+BasedOnStyle: Mozilla
+Standard: c++11
+
+UseTab: Never
 IndentWidth: 4
+ColumnLimit: 140
+AllowShortFunctionsOnASingleLine: None
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
 BreakBeforeBraces: Linux
-ColumnLimit: 120
-AllowShortFunctionsOnASingleLine: Empty
 SortIncludes: false
-IndentCaseLabels: true
-SpacesInAngles: true
+FixNamespaceComments: true

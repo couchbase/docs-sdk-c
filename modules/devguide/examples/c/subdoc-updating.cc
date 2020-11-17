@@ -1,176 +1,228 @@
-// This file is a slight variation from subdoc-retrieving.cc
-
-#include <libcouchbase/couchbase.h>
-#if LCB_VERSION < 0x020508
-#error "Example requires libcouchbase 2.5.8 or greater!"
-#endif
-#include <libcouchbase/subdoc.h>
 #include <string>
 #include <vector>
+#include <iostream>
+
+#include <libcouchbase/couchbase.h>
+
+static void
+check(lcb_STATUS err, const char* msg)
+{
+    if (err != LCB_SUCCESS) {
+        std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
+        exit(EXIT_FAILURE);
+    }
+}
 
 struct Result {
-    std::string value;
-    lcb_error_t status;
-
-    Result() : status(LCB_MAX_ERROR) {}
-    bool valid() const
-    {
-        return status != LCB_MAX_ERROR;
-    }
-    void reset()
-    {
-        status = LCB_MAX_ERROR;
-        value.clear();
-    }
+    std::string value{};
+    lcb_STATUS status{ LCB_MAX_ERROR };
 };
 
 struct SubdocResults {
-    lcb_error_t status;
-    std::vector< Result > results;
-    void reset(size_t max_results)
-    {
-        results.resize(max_results);
-        for (size_t ii = 0; ii < max_results; ii++) {
-            results[ii].reset();
-        }
-    }
+    lcb_STATUS status{};
+    std::vector<Result> entries{};
 };
 
-extern "C" {
-static void sdmutate_callback(lcb_t, int, const lcb_RESPSUBDOC *resp)
+static void
+sdmutate_callback(lcb_INSTANCE*, int, const lcb_RESPSUBDOC* resp)
 {
-    // "cast" to specific callback type
-    SubdocResults *results = reinterpret_cast< SubdocResults * >(resp->cookie);
-    results->status = resp->rc;
+    SubdocResults* results = nullptr;
+    lcb_respsubdoc_cookie(resp, reinterpret_cast<void**>(&results));
+    results->status = lcb_respsubdoc_status(resp);
 
-    if (resp->rc != LCB_SUCCESS && resp->rc != LCB_SUBDOC_MULTI_FAILURE) {
-        // If the error code is neither SUCCESS nor SUBDOC_MULTI_FAILURE then
-        // it means that there are no results and an error occurred during
-        // document access.
+    if (results->status != LCB_SUCCESS) {
         return;
     }
 
-    lcb_SDENTRY ent = {};
-    size_t ii = 0;
-    while (lcb_sdresult_next(resp, &ent, &ii)) {
-        // Not all results are returned. Those that are returned
-        // can be correlated with the request path index by using
-        // lcb_SDENTRY::index
-
-        Result &r = results->results[ent.index];
-        r.status = ent.status;
-        if (ent.nvalue) {
-            r.value.assign(reinterpret_cast< const char * >(ent.value), ent.nvalue);
+    std::size_t number_of_results = lcb_respsubdoc_result_size(resp);
+    results->entries.resize(number_of_results);
+    for (size_t idx = 0; idx < number_of_results; ++idx) {
+        results->entries[idx].status = lcb_respsubdoc_result_status(resp, idx);
+        const char* buf = nullptr;
+        std::size_t buf_len = 0;
+        lcb_respsubdoc_result_value(resp, idx, &buf, &buf_len);
+        if (buf_len > 0) {
+            results->entries[idx].value.assign(buf, buf_len);
         }
     }
 }
 
-static void fulldoc_get_callback(lcb_t, int, const lcb_RESPGET *resp)
+static void
+fulldoc_get_callback(lcb_INSTANCE*, int, const lcb_RESPGET* resp)
 {
-    assert(resp->rc == LCB_SUCCESS);
-    printf("Document is now: %.*s\n", (int)resp->nvalue, (char *)resp->value);
-}
+    const char* buf = nullptr;
+    std::size_t buf_len = 0;
+
+    check(lcb_respget_status(resp), "status of full document GET operation");
+    check(lcb_respget_value(resp, &buf, &buf_len), "extract value from GET response");
+    std::cout << "Document content is: " << std::string(buf, buf_len) << "\n";
 }
 
-int main(int, char **)
+int
+main()
 {
-    lcb_create_st crst = {};
-    lcb_t instance;
-    lcb_error_t rc;
+    std::string username{ "Administrator" };
+    std::string password{ "password" };
+    std::string connection_string{ "couchbase://localhost" };
+    std::string bucket_name{ "default" };
 
-    crst.version = 3;
-    crst.v.v3.connstr = "couchbase://127.0.0.1/default";
-    crst.v.v3.username = "testuser";
-    crst.v.v3.passwd = "password";
+    lcb_CREATEOPTS* create_options = nullptr;
+    check(lcb_createopts_create(&create_options, LCB_TYPE_BUCKET), "build options object for lcb_create");
+    check(lcb_createopts_credentials(create_options, username.c_str(), username.size(), password.c_str(), password.size()),
+          "assign credentials");
+    check(lcb_createopts_connstr(create_options, connection_string.c_str(), connection_string.size()), "assign connection string");
+    check(lcb_createopts_bucket(create_options, bucket_name.c_str(), bucket_name.size()), "assign bucket name");
 
-    lcb_create(&instance, &crst);
-    lcb_connect(instance);
-    lcb_wait(instance);
-    rc = lcb_get_bootstrap_status(instance);
-    if (rc != LCB_SUCCESS) {
-        printf("Unable to bootstrap cluster: %s\n", lcb_strerror_short(rc));
-        exit(1);
-    }
+    lcb_INSTANCE* instance = nullptr;
+    check(lcb_create(&instance, create_options), "create lcb_INSTANCE");
+    check(lcb_createopts_destroy(create_options), "destroy options object");
+    check(lcb_connect(instance), "schedule connection");
+    check(lcb_wait(instance, LCB_WAIT_DEFAULT), "wait for connection");
+    check(lcb_get_bootstrap_status(instance), "check bootstrap status");
 
     // Store a key first, so we know it will exist later on. In real production
     // environments, we'd also want to install a callback for storage operations
     // so we know if they succeeded
-    lcb_CMDSTORE scmd = {};
-    const char *key = "a_key";
-    const char *value = "{\"name\":\"mark\", \"array\":[1,2,3,4], \"email\":\"m@n.com\"}";
-    LCB_CMD_SET_KEY(&scmd, key, strlen(key));
-    LCB_CMD_SET_VALUE(&scmd, value, strlen(value));
-    scmd.operation = LCB_SET; // Upsert
+    std::string key{ "a_key" };
 
-    lcb_store3(instance, NULL, &scmd);
-    lcb_wait(instance);
+    {
+        std::string value{ R"({"name":"john", "array":[1,2,3,4], "email":"john@example.com"})" };
+        std::cout << "Initial document is: " << value << "\n";
 
-    // Install the callback for GET operations. Note this can be done at any
-    // time before the operation is scheduled
-    lcb_install_callback3(instance, LCB_CALLBACK_SDMUTATE, reinterpret_cast< lcb_RESPCALLBACK >(sdmutate_callback));
+        lcb_CMDSTORE* cmd = nullptr;
+        check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
+        check(lcb_cmdstore_key(cmd, key.c_str(), key.size()), "assign ID for UPSERT command");
+        check(lcb_cmdstore_value(cmd, value.c_str(), value.size()), "assign value for UPSERT command");
+        check(lcb_store(instance, nullptr, cmd), "schedule UPSERT command");
+        check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+    }
 
-    SubdocResults my_results;
-    lcb_SDSPEC specs[3] = {};
-    lcb_CMDSUBDOC sdcmd = {};
+    lcb_install_callback(instance, LCB_CALLBACK_SDMUTATE, reinterpret_cast<lcb_RESPCALLBACK>(sdmutate_callback));
 
-    LCB_CMD_SET_KEY(&sdcmd, key, strlen(key));
+    {
+        SubdocResults results;
 
-    specs[0].sdcmd = LCB_SDCMD_ARRAY_ADD_LAST;
-    LCB_SDSPEC_SET_PATH(&specs[0], "array", strlen("array"));
-    LCB_SDSPEC_SET_VALUE(&specs[0], "42", 2);
+        lcb_SUBDOCSPECS* specs = nullptr;
+        check(lcb_subdocspecs_create(&specs, 3), "create SUBDOC operations container");
 
-    specs[1].sdcmd = LCB_SDCMD_COUNTER;
-    LCB_SDSPEC_SET_PATH(&specs[1], "array[0]", strlen("array[0]"));
-    LCB_SDSPEC_SET_VALUE(&specs[1], "99", 2);
+        std::vector<std::string> paths{
+            "array",
+            "array[0]",
+            "description",
+        };
 
-    specs[2].sdcmd = LCB_SDCMD_DICT_UPSERT;
-    LCB_SDSPEC_SET_PATH(&specs[2], "description", strlen("description"));
-    LCB_SDSPEC_SET_VALUE(&specs[2], "\"just a dev\"", strlen("\"just a dev\""));
-    sdcmd.specs = specs;
-    sdcmd.nspecs = 3;
-    my_results.reset(3);
+        std::string value_to_add{ "42" };
+        check(lcb_subdocspecs_array_add_last(specs, 0, 0, paths[0].c_str(), paths[0].size(), value_to_add.c_str(), value_to_add.size()),
+              "create ARRAY_ADD_LAST operation");
 
-    lcb_subdoc3(instance, &my_results, &sdcmd);
-    lcb_wait(instance);
+        check(lcb_subdocspecs_counter(specs, 1, 0, paths[1].c_str(), paths[1].size(), 99), "create COUNTER operation");
 
-    // Should have three results
-    assert(my_results.status == LCB_SUCCESS);
-    for (size_t ii = 0; ii < my_results.results.size(); ++ii) {
-        const Result &r = my_results.results[ii];
-        if (!r.valid()) {
-            printf("[%lu]: No output\n", ii);
-        } else {
-            printf("[%lu]: %s\n", ii, r.value.c_str());
+        std::string value_to_upsert{ R"("just a dev")" };
+        check(lcb_subdocspecs_dict_upsert(specs, 2, 0, paths[2].c_str(), paths[2].size(), value_to_upsert.c_str(), value_to_upsert.size()),
+              "create DICT_UPSERT operation");
+
+        lcb_CMDSUBDOC* cmd = nullptr;
+        check(lcb_cmdsubdoc_create(&cmd), "create SUBDOC command");
+        check(lcb_cmdsubdoc_key(cmd, key.c_str(), key.size()), "assign ID to SUBDOC command");
+        check(lcb_cmdsubdoc_specs(cmd, specs), "assign operations to SUBDOC command");
+        check(lcb_subdoc(instance, &results, cmd), "schedule SUBDOC command");
+        check(lcb_cmdsubdoc_destroy(cmd), "destroy SUBDOC command");
+        check(lcb_subdocspecs_destroy(specs), "destroy SUBDOC operations");
+
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+
+        check(results.status, "status of SUBDOC operation");
+        std::size_t idx = 0;
+        for (const auto& entry : results.entries) {
+            std::cout << idx << ": path=\"" << paths[idx] << "\", ";
+            if (entry.status == LCB_SUCCESS) {
+                std::cout << "value=" << (entry.value.empty() ? "(no value)" : entry.value) << "\n";
+            } else {
+                std::cout << "code=" << lcb_strerror_short(entry.status) << "\n";
+            }
+            ++idx;
         }
     }
 
-    lcb_install_callback3(instance, LCB_CALLBACK_GET, (lcb_RESPCALLBACK)fulldoc_get_callback);
+    lcb_install_callback(instance, LCB_CALLBACK_GET, reinterpret_cast<lcb_RESPCALLBACK>(fulldoc_get_callback));
 
-    printf("=== Current doc ===\n");
-    lcb_CMDGET gcmd = {};
-    LCB_CMD_SET_KEY(&gcmd, key, strlen(key));
-    lcb_get3(instance, NULL, &gcmd);
-    lcb_wait(instance);
+    {
+        lcb_CMDGET* cmd = nullptr;
+        check(lcb_cmdget_create(&cmd), "create GET command");
+        check(lcb_cmdget_key(cmd, key.c_str(), key.size()), "assign ID for GET command");
+        check(lcb_get(instance, nullptr, cmd), "schedule GET command");
+        check(lcb_cmdget_destroy(cmd), "destroy GET command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+    }
 
     // Show how to set command options!
-    memset(&specs[0], 0, sizeof specs[0]);
-    const char *deep_path = "some.deep.path";
-    LCB_SDSPEC_SET_PATH(&specs[0], deep_path, strlen(deep_path));
-    LCB_SDSPEC_SET_VALUE(&specs[0], "true", 4);
-    specs[0].sdcmd = LCB_SDCMD_DICT_UPSERT;
-    sdcmd.nspecs = 1;
-    my_results.reset(1);
-    lcb_subdoc3(instance, &my_results, &sdcmd);
-    lcb_wait(instance);
+    {
+        SubdocResults results;
 
-    // Should fail with LCB_SUBDOC_PATH_ENOENT
-    printf("upserting deep path fails: %s\n", lcb_strerror_short(my_results.results[0].status));
+        lcb_SUBDOCSPECS* specs = nullptr;
+        check(lcb_subdocspecs_create(&specs, 1), "create SUBDOC operations container");
+        std::string path = "some.deep.path";
+        std::string value = "true";
+        check(lcb_subdocspecs_dict_upsert(specs, 0, 0, path.c_str(), path.size(), value.c_str(), value.size()),
+              "create DICT_UPSERT command");
 
-    // Use a flag
-    specs[0].options = LCB_SDSPEC_F_MKINTERMEDIATES;
-    lcb_subdoc3(instance, &my_results, &sdcmd);
-    lcb_wait(instance);
-    printf("Status with MKINTERMEDIATES: %s\n", lcb_strerror_short(my_results.status));
+        lcb_CMDSUBDOC* cmd = nullptr;
+        check(lcb_cmdsubdoc_create(&cmd), "create SUBDOC command");
+        check(lcb_cmdsubdoc_key(cmd, key.c_str(), key.size()), "assign ID to SUBDOC command");
+        check(lcb_cmdsubdoc_specs(cmd, specs), "assign operations to SUBDOC command");
+        check(lcb_subdoc(instance, &results, cmd), "schedule SUBDOC command");
+        check(lcb_cmdsubdoc_destroy(cmd), "destroy SUBDOC command");
+        check(lcb_subdocspecs_destroy(specs), "destroy SUBDOC operations");
+
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+
+        std::cout << "Upsert with deep path \"" << path << "\" fails: " << lcb_strerror_short(results.entries[0].status) << "\n";
+    }
+
+    {
+        SubdocResults results;
+
+        lcb_SUBDOCSPECS* specs = nullptr;
+        check(lcb_subdocspecs_create(&specs, 1), "create SUBDOC operations container");
+        std::string path = "some.deep.path";
+        std::string value = "true";
+        check(
+          lcb_subdocspecs_dict_upsert(specs, 0, LCB_SUBDOCSPECS_F_MKINTERMEDIATES, path.c_str(), path.size(), value.c_str(), value.size()),
+          "create DICT_UPSERT command");
+
+        lcb_CMDSUBDOC* cmd = nullptr;
+        check(lcb_cmdsubdoc_create(&cmd), "create SUBDOC command");
+        check(lcb_cmdsubdoc_key(cmd, key.c_str(), key.size()), "assign ID to SUBDOC command");
+        check(lcb_cmdsubdoc_specs(cmd, specs), "assign operations to SUBDOC command");
+        check(lcb_subdoc(instance, &results, cmd), "schedule SUBDOC command");
+        check(lcb_cmdsubdoc_destroy(cmd), "destroy SUBDOC command");
+        check(lcb_subdocspecs_destroy(specs), "destroy SUBDOC operations");
+
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+
+        std::cout << "Upsert with deep path \"" << path << "\" and flags: " << lcb_strerror_short(results.entries[0].status) << "\n";
+    }
+
+    {
+        lcb_CMDGET* cmd = nullptr;
+        check(lcb_cmdget_create(&cmd), "create GET command");
+        check(lcb_cmdget_key(cmd, key.c_str(), key.size()), "assign ID for GET command");
+        check(lcb_get(instance, nullptr, cmd), "schedule GET command");
+        check(lcb_cmdget_destroy(cmd), "destroy GET command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+    }
 
     lcb_destroy(instance);
 }
+
+// OUTPUT
+//
+// Initial document is: {"name":"john", "array":[1,2,3,4], "email":"john@example.com"}
+// 0: path="array", value=(no value)
+// 1: path="array[0]", value=100
+// 2: path="description", value=(no value)
+// Document content is: {"name":"john", "array":[100,2,3,4,42], "email":"john@example.com","description":"just a dev"}
+// Upsert with deep path "some.deep.path" fails: LCB_ERR_SUBDOC_PATH_NOT_FOUND (313)
+// Upsert with deep path "some.deep.path" and flags: LCB_SUCCESS (0)
+// Document content is: {"name":"john", "array":[100,2,3,4,42], "email":"john@example.com","description":"just a dev","some":{"deep":{"path":true}}}

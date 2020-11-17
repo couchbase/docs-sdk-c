@@ -1,79 +1,101 @@
+#include <string>
+#include <iostream>
+
 #include <libcouchbase/couchbase.h>
-#include <libcouchbase/api3.h>
-#include <stdio.h>
 
-static void counter_callback(lcb_t, int, const lcb_RESPBASE *rb)
+static void
+check(lcb_STATUS err, const char* msg)
 {
-    const lcb_RESPCOUNTER *resp = reinterpret_cast< const lcb_RESPCOUNTER * >(rb);
-    if (resp->rc != LCB_SUCCESS) {
-        fprintf(stderr, "Couldn't perform counter operation!\n");
-        fprintf(stderr, "Error code 0x%x (%s)\n", resp->rc, lcb_strerror(NULL, resp->rc));
-        return;
+    if (err != LCB_SUCCESS) {
+        std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
+        exit(EXIT_FAILURE);
     }
-
-    printf("Current counter value is %llu\n", (unsigned long long)resp->value);
 }
 
-// Removes the counter. This is optional, but is helpful for demonstrative
-// purposes so that we always start off with a fresh counter
-static void remove_counter(lcb_t instance, const char *docid)
+static void
+counter_callback(lcb_INSTANCE*, int, const lcb_RESPCOUNTER* resp)
 {
-    lcb_CMDREMOVE cmd = {};
-    LCB_CMD_SET_KEY(&cmd, docid, strlen(docid));
-    lcb_sched_enter(instance);
-    lcb_remove3(instance, NULL, &cmd);
-    lcb_sched_leave(instance);
-    lcb_wait(instance);
+    check(lcb_respcounter_status(resp), "perform COUNTER operation (callback)");
+    std::uint64_t value;
+    check(lcb_respcounter_value(resp, &value), "extract current value from COUNTER result");
+    std::cout << "Current counter value is " << value << "\n";
 }
 
-int main(int, char **)
+int
+main()
 {
-    lcb_t instance;
-    lcb_create_st crst = {};
-    lcb_error_t rc;
+    std::string username{ "Administrator" };
+    std::string password{ "password" };
+    std::string connection_string{ "couchbase://localhost" };
+    std::string bucket_name{ "default" };
 
-    crst.version = 3;
-    crst.v.v3.connstr = "couchbase://127.0.0.1/default";
-    crst.v.v3.username = "testuser";
-    crst.v.v3.passwd = "password";
+    lcb_CREATEOPTS* create_options = nullptr;
+    check(lcb_createopts_create(&create_options, LCB_TYPE_BUCKET), "build options object for lcb_create");
+    check(lcb_createopts_credentials(create_options, username.c_str(), username.size(), password.c_str(), password.size()),
+          "assign credentials");
+    check(lcb_createopts_connstr(create_options, connection_string.c_str(), connection_string.size()), "assign connection string");
+    check(lcb_createopts_bucket(create_options, bucket_name.c_str(), bucket_name.size()), "assign bucket name");
 
-    rc = lcb_create(&instance, &crst);
-    rc = lcb_connect(instance);
-    lcb_wait(instance);
-    rc = lcb_get_bootstrap_status(instance);
-    if (rc != LCB_SUCCESS) {
-        printf("Unable to bootstrap cluster: %s\n", lcb_strerror_short(rc));
-        exit(1);
+    lcb_INSTANCE* instance = nullptr;
+    check(lcb_create(&instance, create_options), "create lcb_INSTANCE");
+    check(lcb_createopts_destroy(create_options), "destroy options object");
+    check(lcb_connect(instance), "schedule connection");
+    check(lcb_wait(instance, LCB_WAIT_DEFAULT), "wait for connection");
+    check(lcb_get_bootstrap_status(instance), "check bootstrap status");
+
+    lcb_install_callback(instance, LCB_CALLBACK_COUNTER, reinterpret_cast<lcb_RESPCALLBACK>(counter_callback));
+
+    std::string document_id{ "counter_id" };
+
+    {
+        // remove counter document
+        lcb_CMDREMOVE* cmd = nullptr;
+        check(lcb_cmdremove_create(&cmd), "create REMOVE command");
+        check(lcb_cmdremove_key(cmd, document_id.c_str(), document_id.size()), "assign ID for REMOVE command");
+        check(lcb_remove(instance, nullptr, cmd), "schedule REMOVE command");
+        check(lcb_cmdremove_destroy(cmd), "destroy REMOVE command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
     }
 
-    lcb_install_callback3(instance, LCB_CALLBACK_COUNTER, counter_callback);
+    {
+        // increment counter by 20 if it exists, and initialize with 100 otherwise
+        lcb_CMDCOUNTER* cmd = nullptr;
+        check(lcb_cmdcounter_create(&cmd), "create COUNTER command");
+        check(lcb_cmdcounter_key(cmd, document_id.c_str(), document_id.size()), "assign ID for COUNTER command");
+        check(lcb_cmdcounter_initial(cmd, 100), "assign initial value for COUNTER command");
+        check(lcb_cmdcounter_delta(cmd, 20), "assign delta value for COUNTER command");
+        check(lcb_counter(instance, nullptr, cmd), "schedule COUNTER command");
+        check(lcb_cmdcounter_destroy(cmd), "destroy COUNTER command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+    }
 
-    lcb_sched_enter(instance);
+    {
+        // increment counter by 1
+        lcb_CMDCOUNTER* cmd = nullptr;
+        check(lcb_cmdcounter_create(&cmd), "create COUNTER command");
+        check(lcb_cmdcounter_key(cmd, document_id.c_str(), document_id.size()), "assign ID for COUNTER command");
+        check(lcb_cmdcounter_delta(cmd, 1), "assign delta value for COUNTER command");
+        check(lcb_counter(instance, nullptr, cmd), "schedule COUNTER command");
+        check(lcb_cmdcounter_destroy(cmd), "destroy COUNTER command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+    }
 
-    const char *docid = "docid";
-    remove_counter(instance, docid);
-
-    lcb_CMDCOUNTER cmd = {};
-    LCB_CMD_SET_KEY(&cmd, docid, strlen(docid));
-    cmd.initial = 100;
-    cmd.delta = 20;
-    cmd.create = 1;
-
-    rc = lcb_counter3(instance, NULL, &cmd);
-    lcb_sched_leave(instance);
-    lcb_wait(instance);
-
-    lcb_sched_enter(instance);
-    cmd.delta = 1;
-    rc = lcb_counter3(instance, NULL, &cmd);
-    lcb_sched_leave(instance);
-    lcb_wait(instance);
-
-    lcb_sched_enter(instance);
-    cmd.delta = -50;
-    rc = lcb_counter3(instance, NULL, &cmd);
-    lcb_sched_leave(instance);
-    lcb_wait(instance);
+    {
+        // decrement counter by 50
+        lcb_CMDCOUNTER* cmd = nullptr;
+        check(lcb_cmdcounter_create(&cmd), "create COUNTER command");
+        check(lcb_cmdcounter_key(cmd, document_id.c_str(), document_id.size()), "assign ID for COUNTER command");
+        check(lcb_cmdcounter_delta(cmd, -50), "assign delta value for COUNTER command");
+        check(lcb_counter(instance, nullptr, cmd), "schedule COUNTER command");
+        check(lcb_cmdcounter_destroy(cmd), "destroy COUNTER command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+    }
 
     lcb_destroy(instance);
 }
+
+// OUTPUT
+//
+// Current counter value is 100
+// Current counter value is 101
+// Current counter value is 51

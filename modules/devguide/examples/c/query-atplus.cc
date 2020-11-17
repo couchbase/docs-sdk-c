@@ -1,152 +1,165 @@
-#include <libcouchbase/couchbase.h>
-#include <libcouchbase/n1ql.h>
 #include <string>
 #include <vector>
-#include <sstream>
+#include <iostream>
+#include <random>
 
-static int RandomNumber_g;
-typedef std::vector< std::string > RowList;
+#include <libcouchbase/couchbase.h>
 
-static void query_callback(lcb_t, int, const lcb_RESPN1QL *resp)
+static void
+check(lcb_STATUS err, const char* msg)
 {
-    if (resp->rc != LCB_SUCCESS) {
-        fprintf(stderr, "N1QL query failed (%s)\n", lcb_strerror(NULL, resp->rc));
+    if (err != LCB_SUCCESS) {
+        std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
+        exit(EXIT_FAILURE);
+    }
+}
+
+static void
+query_callback(lcb_INSTANCE*, int, const lcb_RESPQUERY* resp)
+{
+    lcb_STATUS status = lcb_respquery_status(resp);
+    if (status != LCB_SUCCESS) {
+        const lcb_QUERY_ERROR_CONTEXT* ctx;
+        lcb_respquery_error_context(resp, &ctx);
+
+        uint32_t err_code = 0;
+        lcb_errctx_query_first_error_code(ctx, &err_code);
+
+        const char* err_msg = nullptr;
+        size_t err_msg_len = 0;
+        lcb_errctx_query_first_error_message(ctx, &err_msg, &err_msg_len);
+        std::string error_message{};
+        if (err_msg_len > 0) {
+            error_message.assign(err_msg, err_msg_len);
+        }
+
+        std::cerr << "[ERROR] failed to execute query. " << error_message << " (" << err_code << ")\n";
+        return;
     }
 
-    if (resp->rflags & LCB_RESP_F_FINAL) {
+    if (lcb_respquery_is_final(resp)) {
         // We're simply notified here that the last row has already been returned.
         // no processing needed here.
         return;
     }
 
-    // Add rows to the vector, we'll process the results in the calling
-    // code.
-    RowList *rowlist = reinterpret_cast< RowList * >(resp->cookie);
-    rowlist->push_back(std::string(resp->row, resp->nrow));
-}
-
-static void storage_callback(lcb_t, int cbtype, const lcb_RESPBASE *resp)
-{
-    if (resp->rc != LCB_SUCCESS) {
-        fprintf(stderr, "Failed to store document: %s\n", lcb_strerror(NULL, resp->rc));
-        exit(EXIT_FAILURE);
+    // Add rows to the vector, we'll process the results in the calling code.
+    const char* buf = nullptr;
+    std::size_t buf_len = 0;
+    lcb_respquery_row(resp, &buf, &buf_len);
+    if (buf_len > 0) {
+        std::vector<std::string>* rows = nullptr;
+        lcb_respquery_cookie(resp, reinterpret_cast<void**>(&rows));
+        rows->emplace_back(std::string(buf, buf_len));
     }
-
-    lcb_MUTATION_TOKEN *mt = reinterpret_cast< lcb_MUTATION_TOKEN * >(resp->cookie);
-    *mt = *lcb_resp_get_mutation_token(cbtype, resp);
 }
 
-int main(int, char **)
+static void
+storage_callback(lcb_INSTANCE*, int, const lcb_RESPSTORE* resp)
 {
-    lcb_t instance;
-    lcb_create_st crst = {};
-    lcb_error_t rc;
+    check(lcb_respstore_status(resp), "get status of STORE operation in callback");
 
-    crst.version = 3;
-    crst.v.v3.connstr = "couchbase://127.0.0.1/default?fetch_mutation_tokens=true";
-    crst.v.v3.username = "testuser";
-    crst.v.v3.passwd = "password";
+    lcb_MUTATION_TOKEN* mutation_token = nullptr;
+    lcb_respstore_cookie(resp, reinterpret_cast<void**>(&mutation_token));
+    check(lcb_respstore_mutation_token(resp, mutation_token), "extract mutation token from STORE operation response");
+}
 
-    rc = lcb_create(&instance, &crst);
-    rc = lcb_connect(instance);
-    lcb_wait(instance);
-    rc = lcb_get_bootstrap_status(instance);
+int
+main(int, char**)
+{
+    std::string username{ "Administrator" };
+    std::string password{ "password" };
+    std::string connection_string{ "couchbase://localhost" };
+    std::string bucket_name{ "default" };
 
-    // Initialize random seed to get a "random" value in our documents
-    srand(time(NULL));
-    RandomNumber_g = rand() % 10000;
+    lcb_CREATEOPTS* create_options = nullptr;
+    check(lcb_createopts_create(&create_options, LCB_TYPE_BUCKET), "build options object for lcb_create");
+    check(lcb_createopts_credentials(create_options, username.c_str(), username.size(), password.c_str(), password.size()),
+          "assign credentials");
+    check(lcb_createopts_connstr(create_options, connection_string.c_str(), connection_string.size()), "assign connection string");
+    check(lcb_createopts_bucket(create_options, bucket_name.c_str(), bucket_name.size()), "assign bucket name");
 
-    // Install the storage callback which will be used to retrieve the
-    // mutation token
-    lcb_install_callback3(instance, LCB_CALLBACK_STORE, storage_callback);
+    lcb_INSTANCE* instance = nullptr;
+    check(lcb_create(&instance, create_options), "create lcb_INSTANCE");
+    check(lcb_createopts_destroy(create_options), "destroy options object");
+    check(lcb_connect(instance), "schedule connection");
+    check(lcb_wait(instance, LCB_WAIT_DEFAULT), "wait for connection");
+    check(lcb_get_bootstrap_status(instance), "check bootstrap status");
 
-    lcb_MUTATION_TOKEN mt;
-    memset(&mt, 0, sizeof mt);
+    // Get a "random" value in our documents
+    std::random_device rd;  // Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<long> distrib(1, 1000000);
+    long random_number = distrib(gen);
 
-    char key[256];
-    sprintf(key, "user:%d", RandomNumber_g);
-    char value[4096];
-    sprintf(value,
-            "{"
-            "  \"name\":[\"Brass\",\"Doorknob\"],"
-            "  \"email\":\"brass.doorknob@juno.com\","
-            "  \"random\":%d"
-            "}",
-            RandomNumber_g);
+    // Install the storage callback which will be used to retrieve the mutation token
+    lcb_install_callback(instance, LCB_CALLBACK_STORE, reinterpret_cast<lcb_RESPCALLBACK>(storage_callback));
 
-    printf("Will insert new document with random number %d\n", RandomNumber_g);
-
-    lcb_CMDSTORE scmd = {};
-    LCB_CMD_SET_KEY(&scmd, key, strlen(key));
-    LCB_CMD_SET_VALUE(&scmd, value, strlen(value));
-
-    rc = lcb_store3(instance, &mt, &scmd);
-    lcb_wait(instance);
-
-    lcb_CMDN1QL cmd = {};
-    RowList rows;
-    cmd.callback = query_callback;
-
-    // At the time of writing, the lcb_N1QLPARAMS implementation has some
-    // bugs in it with respect to adding mutation tokens. For this reason, we're
-    // encoding the query manually. This would look a bit nicer if we were
-    // using a real JSON library:
-
-    const char *bucketname;
-    lcb_cntl(instance, LCB_CNTL_GET, LCB_CNTL_BUCKETNAME, &bucketname);
-    std::stringstream stmt;
-
-    stmt << "{"
-            "\"statement\":\"SELECT name, email, random FROM default WHERE $1 in name\","
-            "\"args\":[\"Brass\"],"
-            "\"scan_consistency\":\"at_plus\",";
-
-    stmt << "\"scan_vectors\":{"
-         << "\"" << bucketname << "\":{"
-         << "\"" << LCB_MUTATION_TOKEN_VB(&mt) << "\":[" << LCB_MUTATION_TOKEN_SEQ(&mt) << ","
-         << "\"" << LCB_MUTATION_TOKEN_ID(&mt) << "\""
-         << "]"
-         << "}"
-         << "}"
-         << "}";
-
-    /*
-    The above expands to something like this:
+    lcb_MUTATION_TOKEN mutation_token{};
 
     {
-        "statement": "SELECT name, email, random FROM default WHERE $1 in name",
-        "args": ["Brass"],
-        "scan_consistency": "at_plus",
-        "scan_vectors": {
-            "default": {
-                "29": [3, "88598346863273"]
-            }
-        }
+        std::string key{ "user:" + std::to_string(random_number) };
+        std::string value{ R"({"name": ["Brass", "Doorknob"], "email": "b@email.com", "random":)" + std::to_string(random_number) + "}" };
+
+        lcb_CMDSTORE* cmd = nullptr;
+        std::cout << "Will insert new document with random number " << random_number << "\n" << value << "\n";
+        check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
+        check(lcb_cmdstore_key(cmd, key.c_str(), key.size()), "assign ID for UPSERT command");
+        check(lcb_cmdstore_value(cmd, value.c_str(), value.size()), "assign value for UPSERT command");
+        check(lcb_store(instance, &mutation_token, cmd), "schedule UPSERT command");
+        check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
     }
-    */
 
-    std::string stmt_str = stmt.str();
-    cmd.query = stmt_str.c_str();
-    cmd.nquery = stmt_str.size();
-    rc = lcb_n1ql_query(instance, &rows, &cmd);
-    assert(rc == LCB_SUCCESS);
-    lcb_wait(instance);
+    std::vector<std::string> rows{};
+    {
+        std::string statement = "SELECT name, email, random FROM `" + bucket_name + "` WHERE $1 IN name LIMIT 100";
+        std::string param = R"("Brass")";
 
-    // To demonstrate the at_plus feature,
-    // we check each row for the "random" value.
-    // Because the C standard library does not come with a JSON
-    // parser, we are limited in how we can inspect the row (which is JSON).
-    // For clarity, we print out only the row's "Random" field. When the
-    // at_plus feature is enabled, one of the results should contain
-    // the newest random number (the value of RandomNumber_g). When disabled, the
-    // row may or may not appear.
-    for (RowList::iterator ii = rows.begin(); ii != rows.end(); ++ii) {
-        std::string &row = *ii;
-        size_t begin_pos = row.find("\"random\"");
+        lcb_CMDQUERY* cmd = nullptr;
+        check(lcb_cmdquery_create(&cmd), "create QUERY command");
+        check(lcb_cmdquery_statement(cmd, statement.c_str(), statement.size()), "assign statement for QUERY command");
+        check(lcb_cmdquery_positional_param(cmd, param.c_str(), param.size()), "add positional parameter for QUERY command");
+        check(lcb_cmdquery_consistency_token_for_keyspace(cmd, bucket_name.c_str(), bucket_name.size(), &mutation_token),
+              "add consistency token for QUERY command");
+        check(lcb_cmdquery_callback(cmd, query_callback), "assign callback for QUERY command");
+        check(lcb_query(instance, &rows, cmd), "schedule QUERY command");
+        check(lcb_cmdquery_destroy(cmd), "destroy QUERY command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+    }
+    std::cout << "Query returned " << rows.size() << " rows\n";
+
+    // To demonstrate the at_plus feature, we check each row for the "random" value.
+    //
+    // For clarity, we print out only the row's "Random" field. When the at_plus feature is enabled, one of the results should contain
+    // the newest random number (the value of random_number). When disabled, the row may or may not appear.
+    size_t idx = 0;
+    std::string prop_name = R"("random":)";
+    for (auto& row : rows) {
+        size_t begin_pos = row.find(prop_name);
         size_t end_pos = row.find_first_of("},", begin_pos);
-        std::string row_number = row.substr(begin_pos, end_pos - begin_pos);
-        printf("Row has random number %s\n", row_number.c_str());
+        std::string field = row.substr(begin_pos + prop_name.size(), end_pos - begin_pos);
+        long row_random_number = std::stol(field);
+        std::cout << idx++ << " row has random number: " << row_random_number << (row_random_number == random_number ? " <---\n" : "\n");
     }
 
     lcb_destroy(instance);
 }
+
+// OUTPUT
+//
+// Will insert new document with random number 594145
+// {"name": ["Brass", "Doorknob"], "email": "brass@example.com", "random":594145}
+// Query returned 12 rows
+// 0 row has random number: 242901
+// 1 row has random number: 436510
+// 2 row has random number: 449062
+// 3 row has random number: 450020
+// 4 row has random number: 463949
+// 5 row has random number: 470900
+// 6 row has random number: 498086
+// 7 row has random number: 508091
+// 8 row has random number: 594145 <---
+// 9 row has random number: 659117
+// 10 row has random number: 667662
+// 11 row has random number: 697572

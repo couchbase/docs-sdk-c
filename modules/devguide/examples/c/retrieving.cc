@@ -1,92 +1,114 @@
-#include <libcouchbase/couchbase.h>
-#include <libcouchbase/api3.h>
 #include <string>
-#include <string.h>
 #include <iostream>
 
-struct Result {
-    std::string value;
-    lcb_error_t status;
+#include <libcouchbase/couchbase.h>
 
-    Result() : status(LCB_SUCCESS) {}
+static void
+check(lcb_STATUS err, const char* msg)
+{
+    if (err != LCB_SUCCESS) {
+        std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
+        exit(EXIT_FAILURE);
+    }
+}
+
+struct Result {
+    std::string value{};
+    lcb_STATUS status{ LCB_SUCCESS };
 };
 
-extern "C" {
-static void get_callback(lcb_t, int, const lcb_RESPBASE *rb)
+static void
+get_callback(lcb_INSTANCE*, int, const lcb_RESPGET* resp)
 {
-    // "cast" to specific callback type
-    const lcb_RESPGET *resp = reinterpret_cast< const lcb_RESPGET * >(rb);
-    Result *my_result = reinterpret_cast< Result * >(rb->cookie);
+    Result* result = nullptr;
+    lcb_respget_cookie(resp, reinterpret_cast<void**>(&result));
 
-    my_result->status = resp->rc;
-    my_result->value.clear(); // Remove any prior value
-    if (resp->rc == LCB_SUCCESS) {
-        my_result->value.assign(reinterpret_cast< const char * >(resp->value), resp->nvalue);
+    result->status = lcb_respget_status(resp);
+    result->value.clear(); // Remove any prior value
+    if (result->status == LCB_SUCCESS) {
+        const char* buf = nullptr;
+        std::size_t buf_len = 0;
+        check(lcb_respget_value(resp, &buf, &buf_len), "extract value from GET response");
+        result->value.assign(buf, buf_len);
     }
 }
-}
 
-int main(int, char **)
+int
+main()
 {
-    lcb_create_st crst = {};
-    lcb_t instance;
-    lcb_error_t rc;
+    std::string username{ "Administrator" };
+    std::string password{ "password" };
+    std::string connection_string{ "couchbase://localhost" };
+    std::string bucket_name{ "default" };
 
-    crst.version = 3;
-    crst.v.v3.connstr = "couchbase://127.0.0.1/travel-sample";
-    crst.v.v3.username = "testuser";
-    crst.v.v3.passwd = "password";
+    lcb_CREATEOPTS* create_options = nullptr;
+    check(lcb_createopts_create(&create_options, LCB_TYPE_BUCKET), "build options object for lcb_create");
+    check(lcb_createopts_credentials(create_options, username.c_str(), username.size(), password.c_str(), password.size()),
+          "assign credentials");
+    check(lcb_createopts_connstr(create_options, connection_string.c_str(), connection_string.size()), "assign connection string");
+    check(lcb_createopts_bucket(create_options, bucket_name.c_str(), bucket_name.size()), "assign bucket name");
 
-    lcb_create(&instance, &crst);
-    lcb_connect(instance);
-    lcb_wait(instance);
-    rc = lcb_get_bootstrap_status(instance);
-    if (rc != LCB_SUCCESS) {
-        printf("Unable to bootstrap cluster: %s\n", lcb_strerror_short(rc));
-        exit(1);
-    }
+    lcb_INSTANCE* instance = nullptr;
+    check(lcb_create(&instance, create_options), "create lcb_INSTANCE");
+    check(lcb_createopts_destroy(create_options), "destroy options object");
+    check(lcb_connect(instance), "schedule connection");
+    check(lcb_wait(instance, LCB_WAIT_DEFAULT), "wait for connection");
+    check(lcb_get_bootstrap_status(instance), "check bootstrap status");
 
     // Store a key first, so we know it will exist later on. In real production
     // environments, we'd also want to install a callback for storage operations
     // so we know if they succeeded
-    lcb_CMDSTORE scmd = {};
-    const char *key = "a_key";
-    const char *value = "{\"some\":\"json\"}";
-    LCB_CMD_SET_KEY(&scmd, key, strlen(key));
-    LCB_CMD_SET_VALUE(&scmd, value, strlen(value));
-    scmd.operation = LCB_SET; // Upsert
+    std::string key{ "a_key" };
 
-    lcb_sched_enter(instance);
-    lcb_store3(instance, NULL, &scmd);
-    lcb_sched_leave(instance);
-    lcb_wait(instance);
+    {
+        std::string value{ R"({"some":"json"})" };
+
+        lcb_CMDSTORE* cmd = nullptr;
+        check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
+        check(lcb_cmdstore_key(cmd, key.c_str(), key.size()), "assign ID for UPSERT command");
+        check(lcb_cmdstore_value(cmd, value.c_str(), value.size()), "assign value for UPSERT command");
+        check(lcb_store(instance, nullptr, cmd), "schedule UPSERT command");
+        check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+    }
 
     // Install the callback for GET operations. Note this can be done at any
     // time before the operation is scheduled
-    lcb_install_callback3(instance, LCB_CALLBACK_GET, get_callback);
+    lcb_install_callback(instance, LCB_CALLBACK_GET, reinterpret_cast<lcb_RESPCALLBACK>(get_callback));
 
-    Result my_result;
-    lcb_CMDGET gcmd = {};
-    LCB_CMD_SET_KEY(&gcmd, key, strlen(key));
-    lcb_sched_enter(instance);
-    lcb_get3(instance, &my_result, &gcmd);
-    lcb_sched_leave(instance);
-    lcb_wait(instance);
+    {
+        Result result{};
 
-    std::cout << "Status for getting " << key << ": ";
-    std::cout << lcb_strerror(NULL, my_result.status);
-    std::cout << ". Value: " << my_result.value << std::endl;
+        lcb_CMDGET* cmd = nullptr;
+        check(lcb_cmdget_create(&cmd), "create GET command");
+        check(lcb_cmdget_key(cmd, key.c_str(), key.size()), "assign ID for GET command");
+        check(lcb_get(instance, &result, cmd), "schedule GET command");
+        check(lcb_cmdget_destroy(cmd), "destroy GET command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+
+        std::cout << "Status for getting \"" << key << "\" is " << lcb_strerror_short(result.status) << ". Value: " << result.value << "\n";
+    }
 
     // Let's see what happens if we get a key that isn't yet stored:
-    key = "non-exist-key";
-    LCB_CMD_SET_KEY(&gcmd, key, strlen(key));
+    {
+        std::string non_existing{ "non-existing-key" };
 
-    lcb_sched_enter(instance);
-    lcb_get3(instance, &my_result, &gcmd);
-    lcb_sched_leave(instance);
-    lcb_wait(instance);
-    std::cout << "Status for getting " << key << ": ";
-    std::cout << lcb_strerror(NULL, my_result.status) << std::endl;
+        Result result{};
+
+        lcb_CMDGET* cmd = nullptr;
+        check(lcb_cmdget_create(&cmd), "create GET command");
+        check(lcb_cmdget_key(cmd, non_existing.c_str(), non_existing.size()), "assign ID for GET command");
+        check(lcb_get(instance, &result, cmd), "schedule GET command");
+        check(lcb_cmdget_destroy(cmd), "destroy GET command");
+        lcb_wait(instance, LCB_WAIT_DEFAULT);
+
+        std::cout << "Status for getting \"" << key << "\" is " << lcb_strerror_short(result.status) << ".\n";
+    }
 
     lcb_destroy(instance);
 }
+
+// OUTPUT
+//
+// Status for getting "a_key" is LCB_SUCCESS (0). Value: {"some":"json"}
+// Status for getting "a_key" is LCB_ERR_DOCUMENT_NOT_FOUND (301).
