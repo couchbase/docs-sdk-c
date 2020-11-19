@@ -4,7 +4,7 @@
 
 [abstract]
 Provisioning cluster resources is managed at the collection or bucket level, depending upon the service affected.
-Common use cases are outlined here, more recherché use cases are covered in the https://pkg.go.dev/github.com/couchbase/gocb/v2?tab=doc[API docs].
+Common use cases are outlined here, more recherché use cases are covered in the https://docs.couchbase.com/sdk-api/couchbase-c-client/[API docs].
 
 include::6.5@sdk:shared:partial$flush-info-pars.adoc[tag=management-intro]
 
