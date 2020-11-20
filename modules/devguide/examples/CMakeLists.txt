@@ -40,3 +40,7 @@ if (Threads_FOUND)
     add_example(cas)
     target_link_libraries(cas Threads::Threads)
 endif()
+
+add_example(management-bucket-flush)
+add_example(management-bucket-create)
+add_example(management-bucket-drop)
