@@ -44,3 +44,5 @@ endif()
 add_example(management-bucket-flush)
 add_example(management-bucket-create)
 add_example(management-bucket-drop)
+
+add_example(client-settings)
