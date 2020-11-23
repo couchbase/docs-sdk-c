@@ -10,6 +10,7 @@ Refer to the https://docs.couchbase.com/sdk-api/couchbase-c-client/group\__lcb-c
 and the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-cntl-settings.html[settings list].
 // == Timeout Options
 
+
 == I/O Options
 
 This section provides basic settings that will come in handy while configuring network related operations.
@@ -22,12 +23,11 @@ Possible values:
 * `on` or `true` -- turn feature on
 * `off` or `false` -- turn feature off
 +
-
 Gets the bootstrap node list from a DNS SRV record. See the Connection Management section for more information on how to
 use it properly.
-
-NOTE: this setting only available for connection string.
-
++
+NOTE: This setting is only available on the connection string.
++
 [source,c++]
 ----
 std::string connection_string { "couchbase://localhost?dnssrv=off" };
@@ -44,10 +44,10 @@ Default:  `true`
 Possible values:
 * `on` or `true` -- turn feature on
 * `off` or `false` -- turn feature off
-
++
 Mutation tokens allow enhanced durability requirements as well as advanced N1QL querying capabilities.  Set this to
 `false` if you do not require these features and wish to avoid the associated overhead.
-
++
 [source,c++]
 ----
 std::string connection_string { "couchbase://localhost?enable_mutation_tokens=off" };
@@ -70,10 +70,9 @@ Possible values:
 * `on` or `true` -- turn feature on
 * `off` or `false` -- turn feature off
 +
-
 If enabled, the client periodically sends a TCP keepalive to the server to prevent firewalls and other network equipment
 from dropping idle TCP connections.
-
++
 [source,c++]
 ----
 std::string connection_string { "couchbase://localhost?tcp_keepalive=on" };
@@ -92,9 +91,9 @@ Cluster Option: `config_poll_interval`
 Enumeration Symbol: `LCB_CNTL_CONFIG_POLL_INTERVAL`
 +
 Default:  `2.5` (2500 milliseconds)
-
++
 The interval at which the client fetches cluster topology information in order to proactively detect changes.
-
++
 [source,c++]
 ----
 // all examples below set configuration poll to 4.5 seconds
@@ -113,14 +112,15 @@ std::uint32_t timeout = 4500000; // in microseconds
 lcb_cntl_set32(instance, LCB_CNTL_TCP_KEEPALIVE, timeout);
 ----
 
+
 == Timeout Options
 
-The default timeout values are suitable for most environments, and should be adjusted only after profiling the expected
-latencies in your deployment environment. If you get a timeout exception, it may be a symptom of another issue;
+The default timeout values are suitable for most environments, and should be adjusted only after profiling the expected latencies in your deployment environment. 
+If you get a timeout exception, it may be a symptom of another issue;
 increasing the timeout duration is sometimes not the best long-term solution.
 
-Most timeouts can be overridden on a per-operation basis (for example, by passing a custom options block to a "get" or
-"query" method). The values set here are used as the defaults when no per-operation timeout is specified.
+Most timeouts can be overridden on a per-operation basis (for example, by passing a custom options block to a "get" or "query" method). 
+The values set here are used as the defaults when no per-operation timeout is specified.
 
 [source,c++]
 ----
@@ -142,7 +142,7 @@ enhanced durability requirements.
 +
 TIP: xref:concept-docs:durability-replication-failure-considerations.adoc#synchronous-writes[Durable Write operations]
 have their own timeout setting, `persistence_timeout_floor`, see below.
-
++
 [source,c++]
 ----
 // all examples below set operation timeout to 4.5 seconds
@@ -176,7 +176,7 @@ controls the minimum value for Key/Value operation with requested durability lev
 below this floor value.
 +
 WARNING: The `persistence_timeout_floor` property is not part of the stable API and may change or be removed at any time.
-
++
 [source,c++]
 ----
 // all examples below set operation timeout to 4.5 seconds
@@ -201,11 +201,10 @@ Enumeration Symbol: `LCB_CNTL_VIEW_TIMEOUT`
 +
 Default: `75.0` (75000 milliseconds)
 +
-
 The View timeout is used on view operations if not overridden by a custom timeout.
 Note that it is set to such a high timeout compared to key/value since it can affect hundreds or thousands of rows.
 Also, if there is a node failure during the request the internal cluster timeout is set to 60 seconds.
-
++
 [source,c++]
 ----
 // all examples below set operation timeout to 4.5 seconds
@@ -233,10 +232,9 @@ Enumeration Symbol: `LCB_CNTL_QUERY_TIMEOUT`
 +
 Default: `75.0` (75000 milliseconds)
 +
-
 The Query timeout is used on all N1QL query operations if not overridden by a custom timeout.
 Note that it is set to such a high timeout compared to key/value since it can affect hundreds or thousands of rows.
-
++
 [source,c++]
 ----
 // all examples below set operation timeout to 4.5 seconds
@@ -265,10 +263,9 @@ Enumeration Symbol: `LCB_CNTL_ANALYTICS_TIMEOUT`
 +
 Default: `75.0` (75000 milliseconds)
 +
-
 The Analytics timeout is used on all Analytics query operations if not overridden by a custom timeout.
 Note that it is set to such a high timeout compared to key/value since it can affect hundreds or thousands of rows.
-
++
 [source,c++]
 ----
 // all examples below set operation timeout to 4.5 seconds
@@ -297,10 +294,9 @@ Enumeration Symbol: `LCB_CNTL_SEARCH_TIMEOUT`
 +
 Default: `75.0` (75000 milliseconds)
 +
-
 The Search timeout is used on all FTS operations if not overridden by a custom timeout.
 Note that it is set to such a high timeout compared to key/value since it can affect hundreds or thousands of rows.
-
++
 [source,c++]
 ----
 // all examples below set operation timeout to 4.5 seconds
@@ -328,9 +324,8 @@ Enumeration Symbol: `LCB_CNTL_HTTP_TIMEOUT`
 +
 Default: `75.0` (75000 milliseconds)
 +
-
 The default is quite high because some operations (such as flushing a bucket, for example) might take a long time.
-
++
 [source,c++]
 ----
 // all examples below set operation timeout to 4.5 seconds
