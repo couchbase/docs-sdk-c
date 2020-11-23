@@ -176,7 +176,7 @@ Enumeration Symbol: `LCB_CNTL_PERSISTENCE_TIMEOUT_FLOOR`
 Default: `1.5` (1500 milliseconds)
 +
 Generally the library derives persistence timeout from operation timeout, and the application should not care about this. This setting
-controls the minimum value for Key/Value operation with requested durability level. It is guaranteed that the library will not use timeout
+controls the minimum value for Key-Value operation with requested durability level. It is guaranteed that the library will not use timeout
 below this floor value.
 +
 WARNING: The `persistence_timeout_floor` property is not part of the stable API and may change or be removed at any time.
@@ -206,7 +206,7 @@ Enumeration Symbol: `LCB_CNTL_VIEW_TIMEOUT`
 Default: `75.0` (75000 milliseconds)
 +
 The View timeout is used on view operations if not overridden by a custom timeout.
-Note that it is set to such a high timeout compared to key/value since it can affect hundreds or thousands of rows.
+Note that it is set to such a high timeout compared to key-value since it can affect hundreds or thousands of rows.
 Also, if there is a node failure during the request the internal cluster timeout is set to 60 seconds.
 +
 [source,c++]
@@ -237,7 +237,7 @@ Enumeration Symbol: `LCB_CNTL_QUERY_TIMEOUT`
 Default: `75.0` (75000 milliseconds)
 +
 The Query timeout is used on all N1QL query operations if not overridden by a custom timeout.
-Note that it is set to such a high timeout compared to key/value since it can affect hundreds or thousands of rows.
+Note that it is set to such a high timeout compared to key-value since it can affect hundreds or thousands of rows.
 +
 [source,c++]
 ----
@@ -268,7 +268,7 @@ Enumeration Symbol: `LCB_CNTL_ANALYTICS_TIMEOUT`
 Default: `75.0` (75000 milliseconds)
 +
 The Analytics timeout is used on all Analytics query operations if not overridden by a custom timeout.
-Note that it is set to such a high timeout compared to key/value since it can affect hundreds or thousands of rows.
+Note that it is set to such a high timeout compared to key-value since it can affect hundreds or thousands of rows.
 +
 [source,c++]
 ----
@@ -299,7 +299,7 @@ Enumeration Symbol: `LCB_CNTL_SEARCH_TIMEOUT`
 Default: `75.0` (75000 milliseconds)
 +
 The Search timeout is used on all FTS operations if not overridden by a custom timeout.
-Note that it is set to such a high timeout compared to key/value since it can affect hundreds or thousands of rows.
+Note that it is set to such a high timeout compared to key-value since it can affect hundreds or thousands of rows.
 +
 [source,c++]
 ----
