@@ -20,6 +20,7 @@ Connection String Option: `dnssrv`
 +
 Default: `true` (when only one node specified in server list)
 Possible values:
++
 * `on` or `true` -- turn feature on
 * `off` or `false` -- turn feature off
 +
@@ -42,6 +43,7 @@ Enumeration Symbol: `LCB_CNTL_ENABLE_MUTATION_TOKENS`
 Default:  `true`
 +
 Possible values:
++
 * `on` or `true` -- turn feature on
 * `off` or `false` -- turn feature off
 +
@@ -66,7 +68,9 @@ Connection String Option: `tcp_keepalive`
 Enumeration Symbol: `LCB_CNTL_TCP_KEEPALIVE`
 +
 Default:  `true`
++
 Possible values:
++
 * `on` or `true` -- turn feature on
 * `off` or `false` -- turn feature off
 +
@@ -134,10 +138,10 @@ Name: *Key-Value Timeout*::
 Connection String Option: `operation_timeout`
 Enumeration Symbol: `LCB_CNTL_OP_TIMEOUT`
 +
-Default: `2.5` 2500 milliseconds, _but see TIP, below_
+Default: `2.5` (2500 milliseconds), _but see TIP, below_
 +
-The Key/Value default timeout is used on operations which are performed on a specific key if not overridden by a custom timeout.
-This includes all commands like `get`, `lookup_in` and all mutation commands, but does not include operations that are performed with
+The Key-Value default timeout is used on operations which are performed on a specific key if not overridden by a custom timeout.
+This includes all commands like `get`, `lookup_in`, and all mutation commands, but does not include operations that are performed with
 enhanced durability requirements.
 +
 TIP: xref:concept-docs:durability-replication-failure-considerations.adoc#synchronous-writes[Durable Write operations]
