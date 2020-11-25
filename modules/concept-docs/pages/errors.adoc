@@ -26,5 +26,5 @@ include::6.5@sdk:shared:partial$errors.adoc[tag=observability]
 
 == ACID Transactions
 
-For a discussion of errors affecting multi-document ACID transactions, see xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc#error-handling[our documentation on transactions from the Java SDK].
+For a discussion of errors affecting multi-document ACID transactions, see xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc#error-handling[our documentation on {cpp} transactions from the C SDK].
 cxx-txns/current/distributed-acid-transactions-from-the-sdk.html#error-handling
