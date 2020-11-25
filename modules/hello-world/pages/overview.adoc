@@ -1,9 +1,9 @@
-= Couchbase .NET SDK 3.0
+= Couchbase C SDK 3.0
 :page-type: landing-page
 :page-layout: landing-page-top-level-sdk
 :page-role: tiles
 :!sectids:
-:page-aliases: ROOT:dotnet-sdk.sdoc
+// :page-aliases: ROOT:c-sdk.sdoc
 
 
 ++++
@@ -14,24 +14,19 @@
 [.column]
 ====== {empty}
 [.content]
-The Couchbase .NET client allows applications to connect to Couchbase Server using any Common Language Runtime (CLR) language, including C#, F#, and VB.NET. The SDK is written in C#, and some of its idiomatic patterns reflect that choice.
+The Couchbase C client, _libcouchbase_ (LCB), enables you to interact with a Couchbase Server cluster from the C language. 
+It is also used by the Node.js, PHP, and Python SDKs to communicate with the Couchbase Server.
+
 
 [.column]
 [.content]
-[source,c#]
+[source,c++]
 ----
-try
-{
-    var result = await _transactions.RunAsync(async (ctx) =>
-    {
-        var docB = await ctx.GetAsync(_collection, "doc-b").ConfigureAwait(false);
-        var content = docB.ContentAs<dynamic>();
-        content.put("transactions", "are awesome");
-        await ctx.ReplaceAsync(docB, content);
+const char *connection_string = "couchbase://192.168.56.101,192.168.56.102";
 
-        await ctx.CommitAsync().ConfigureAwait(false);
-    }).ConfigureAwait(false);
-}
+lcb_CREATEOPTS *options = NULL;
+lcb_createopts_create(&options, LCB_TYPE_CLUSTER);
+lcb_createopts_connstr(options, connection_string, strlen(connection_string));
 ----
 
 ++++
@@ -66,11 +61,14 @@ Dive right in with a xref:start-using-sdk.adoc[quick install and Hello World].
 
 [.content]
 Connect to our services -- xref:howtos:kv-operations.adoc[data (KV)]; 
-xref:howtos:n1ql-queries-with-sdk.adoc[Query]; 
+xref:howtos:n1ql-queries-with-sdk.adoc[Query] --
+and the xref:howtos:subdocument-operations.adoc[Sub-Document API].
+////
 xref:howtos:full-text-searching-with-sdk.adoc[Search]; 
 xref:howtos:analytics-using-sdk.adoc[Analytics]; 
 xref:howtos:view-queries-with-sdk.adoc[Views] -- 
-and the xref:howtos:subdocument-operations.adoc[Sub-Document API].
+////
+And follow the xref:howtos:concurrent-document-mutations.adoc[Concurrent Document Mutations] howto guide. 
 
 [.column]
 ====== {empty}
@@ -79,7 +77,7 @@ and the xref:howtos:subdocument-operations.adoc[Sub-Document API].
 [.content]
 The documentation supplements the practical Howto docs with references and xref:concept-docs:concepts.adoc[concept guides], for those who prefer a broader understanding before diving in and coding.
 []
-https://docs.couchbase.com/sdk-api/couchbase-net-client[API Docs^]
+https://docs.couchbase.com/sdk-api/couchbase-c-client/index.html[API Docs^]
 
 
 [.column]
@@ -87,11 +85,10 @@ https://docs.couchbase.com/sdk-api/couchbase-net-client[API Docs^]
 .What's Hot?
 
 [.content]
-The Couchbase .NET SDK 3.0 is a complete rewrite of the API, reducing the number of overloads to present a simplified surface area.
-In following Microsoft recommendations on .NET, the API has also been changed to surface many of the APIs as async using Tasks.
-// Dependency Injection
-// LINQ2
+Libcouchbase 3.0 is a complete rewrite, with a streamlined API.
 
+* xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc[{cpp} Distributed ACID Transactions from the C SDK]
+* xref:cbc.adoc[LCB includes our command line tools]
 * xref:concept-docs:collections.adoc[Works with our Collections Developer Preview]
 * xref:concept-docs:durability-replication-failure-considerations.adoc[New Synchronous Write Durability]
 
@@ -105,17 +102,16 @@ In following Microsoft recommendations on .NET, the API has also been changed to
 Those useful nuts-and-bolts guides to 
 xref:project-docs:compatibility.adoc[compatibility tables]; 
 xref:project-docs:sdk-release-notes.adoc[release notes]; 
-xref:project-docs:get-involved.adoc[contribution guide]; and the 
-xref:project-docs:migrating-sdk-code-to-3.n.adoc[migration guide] for moving to the 3.0 API.
+xref:project-docs:get-involved.adoc[contribution guide].
+// and the 
+// xref:project-docs:migrating-sdk-code-to-3.n.adoc[migration guide] for moving to the 3.0 API.
 
 [.column]
 ====== {empty}
 .Community
 
 [.content]
-For community help, visit the https://forums.couchbase.com/c/net-sdk/6[Couchbase forums^].
-The .NET SDK can be combined with many other projects in the broader .NET ecosystem and beyond.
-// Such as?
+For community help, visit the https://forums.couchbase.com/c/c-sdk/7[Couchbase forums^].
 //  -- in the https://blog.couchbase.com/[Couchbase Blog^] there are examples covering everything from ????
 
 ++++
