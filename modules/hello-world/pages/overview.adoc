@@ -38,7 +38,7 @@ lcb_createopts_connstr(options, connection_string, strlen(connection_string));
 [.column]
 ====== {empty}
 
-== Couchbase .NET SDK 3.0
+== Couchbase C SDK 3.0
 
 ++++
 <div class="card-row three-column-row">
