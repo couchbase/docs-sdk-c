@@ -20,7 +20,7 @@ IMPORTANT: The sub-document operations described on this page are for _Key-Value
 (Sub-document N1QL queries are explained in the section xref:concept-docs:n1ql-query.adoc[Querying with N1QL].)
 
 In order to use sub-document operations you need to specify a _path_ indicating the location of the sub-document.
-The _path_ follows N1QL syntax (see https://developer.couchbase.com/documentation/server/current/sdk/subdocument-operations.html#story-h2-12[below^], and xref:6.0@server:n1ql:n1ql-intro/queriesandresults.adoc[N1QL Queries and Results]).
+The _path_ follows N1QL syntax (see <<#path-syntax,below>>, and xref:6.5@server:n1ql:n1ql-intro/queriesandresults.adoc[N1QL Queries and Results]).
 Considering the document:
 
 .customer123.json
@@ -54,13 +54,13 @@ Considering the document:
 
 The paths `name`, `addresses.billing.country` and `purchases.complete[0]` are all valid paths.
 
-== Retrieving
 
+== Retrieving
 
 The _lookup-in_ operations query the document for certain path(s); these path(s) are then returned.
 You have a choice of actually retrieving the document path using the _subdoc-get_ sub-document operation, or simply querying the existence of the path using the _subdoc-exists_ sub-document operation.
 The latter saves even more bandwidth by not retrieving the contents of the path if it is not needed.
-
+////
 .Retrieve sub-document value
 [source,csharp]
 ----
@@ -94,12 +94,18 @@ var result = collection.LookupIn("customer123", ops => {
 Console.WriteLine("{0}", result.ContentAs<string>(0));
 Console.WriteLine("Path exists? {0}", result.ContentAs<bool>(1));
 ----
+////
+
+See the code sample at https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc^ for use in context.
 
 == Mutating
 
 Mutation operations modify one or more paths in the document.
-The simplest of these operations is _subdoc-upsert_, which, similar to the fulldoc-level _upsert_, will either modify the value of an existing path or create it if it does not exist:
+The simplest of these operations is _subdoc-upsert_, which, similar to the fulldoc-level _upsert_, will either modify the value of an existing path or create it if it does not exist.
 
+See the code sample at https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc^ for use in context.
+
+////
 .Upserting a new sub-document
 [source,csharp]
 ----
@@ -130,10 +136,11 @@ bucket.MutateIn("customer123", ops => {
     ops.Replace("email", "dougr96@hotmail.com")
 });
 ----
+////
 
 NOTE: `mutateIn` is an _atomic_ operation.
 If any single `ops` fails, then the entire document is left unchanged.
-
+////
 == Array append and prepend
 
 The _subdoc-array-prepend_ and _subdoc-array-append_ operations are true array prepend and append operations.
@@ -300,6 +307,7 @@ Note that there are several differences between _subdoc-counter_ and the full-do
 Full-document counters will use normal C semantics for overflow (in which the overflow value is carried over above 0), and will silently fail on underflow, setting the value to 0 instead.
 * Sub-Document counter operations can operate on any numeric value within a document, while xref:kv-operations.adoc#atomic-counters[full-document counter operations] require a specially formatted counter document with only the counter value.
 
+////
 == Executing multiple operations
 
 Multiple sub-document operations can be executed at once on the same document, allowing you to retrieve or modify several sub-documents at once.
@@ -341,6 +349,8 @@ However if we were to attempt to _subdoc-insert_ to `level_1.level_2.foo.bar` it
 Attempting to perform such an operation would result in a Path Not Found error.
 
 By default the automatic creation of parents is disabled, as a simple typo in application code can result in a rather confusing document structure.
+
+////
 Sometimes it is necessary to have the server create the hierarchy however.
 In this case, the _create-path_ option may be used.
 
@@ -386,8 +396,10 @@ Even when modifying the _same_ part of the document, operations will not necessa
 For example, two concurrent _subdoc-array-append_ operations to the same array will both succeed, never overwriting the other.
 
 While CAS is no longer so strongly required to ensure document updates are preserved, as Sub-Doc reduces the chance of losing a mutation, it may still be needed to ensure document state remains consistent over multiple invocations of _mutate-in_: Sometimes it's important to ensure the entire document didn't change state since the last operation, such as in the case _subdoc-remove_ operations to ensure that the element being removed was not already replaced by something else.
+////
 
 
+////
 == Durability
 
 Couchbase’s xref:concept-docs:durability-replication-failure-considerations.adoc#older-server-versions[traditional 'client verified' durability], 
@@ -404,7 +416,7 @@ In Couchbase Server 6.5 and up, this is built upon with xref:concept-docs:durabi
 ----
 // 6.5durability snippet
 ----
-
+////
 
 == Error handling
 

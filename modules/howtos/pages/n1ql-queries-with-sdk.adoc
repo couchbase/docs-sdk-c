@@ -9,7 +9,7 @@ Querying can solve typical programming tasks such as finding a user profile by e
 
 Our query service uses N1QL, which will be fairly familiar to anyone who's used any dialect of SQL.
 xref:#_additional_resources[Further resources] for learning about N1QL are listed at the bottom of the page.
-Before you get started you may wish to checkout the xref:6.0@server:n1ql:n1ql-language-reference/index.adoc[N1QL intro page], or just dive in with a query against our travel sample data set.
+Before you get started you may wish to checkout the xref:6.5@server:n1ql:n1ql-language-reference/index.adoc[N1QL intro page], or just dive in with a query against our travel sample data set.
 In this case, the one thing that you need to know is that in order to make a Bucket queryable, it must have at least one index defined.
 You can define a _primary_ index on a bucket. 
 When a primary index is defined you can issue non-covered queries on the bucket as well.
@@ -171,7 +171,7 @@ By default a UUID will be generated that is mirrored back from the query engine 
 A custom string can always be provided if you want to introduce application-specific semantics into it (so that for example in a network dump it shows up with a certain identifier).
 Whatever is chosen, we recommend making sure it is unique so different queries can be distinguished during debugging or monitoring.
 
-////
+
 
 
 
@@ -184,7 +184,7 @@ The query engine will ensure that actually no data is mutated when parsing and p
 
 
 
-////
+
 == Querying at Scope Level
 
 From version 3.0.7 of the C SDK, libcouchbase, it is possible to query off the xref:7.0@server:learn:data/scopes-and-collections.adoc[`Scope` level] _with the beta version of the next Couchbase Server release, 7.0β_,
@@ -204,6 +204,18 @@ include::example$queries.rb[tag=scope]
 
 A complete list of `QueryOptions` can be found in the https://docs.couchbase.com/sdk-api/couchbase-ruby-client/Couchbase/Options/Query.html[API docs].
 ////
+
+
+
+== Examples
+
+As well as the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-n1ql-api.html[API docs], there are examples in the GitHub repo for:
+
+* https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-criteria.cc[Query Example]
+* https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-placeholders.cc[Querying with Placeholders]
+* https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-consistency.cc[Scan Consistency]
+* https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-atplus.cc[AtPlus (Read Your Own Writes)}
+
 
 
 == Additional Resources

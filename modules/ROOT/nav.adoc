@@ -5,26 +5,31 @@
 * xref:hello-world:cbc.adoc[Browser and CLI Access]
 
 .Working with Data
-//* xref:howtos:kv-operations.adoc[Key Value Operations]
+* xref:howtos:kv-operations.adoc[Key Value Operations]
 // ** xref:howtos:caching-example.adoc[Caching Example]
-// * xref:howtos:json-libraries.adoc[Choosing & Using JSON Libraries]
-// * xref:howtos:subdocument-operations.adoc[Sub-Document Operations]
-//* xref:howtos:n1ql-queries-with-sdk.adoc[N1QL from the SDK]
-//* xref:howtos:analytics-using-sdk.adoc[Analytics from the SDK]
-//* xref:howtos:full-text-searching-with-sdk.adoc[Full Text Search from the SDK]
-//* xref:howtos:view-queries-with-sdk.adoc[MapReduce Views]
+* xref:howtos:subdocument-operations.adoc[Sub-Document Operations]
+* xref:howtos:n1ql-queries-with-sdk.adoc[Query]
+* xref:howtos:analytics-using-sdk.adoc[Analytics from the SDK]
+* xref:howtos:full-text-searching-with-sdk.adoc[Full Text Search from the SDK]
+* xref:howtos:view-queries-with-sdk.adoc[MapReduce Views]
 
 .Advanced Data Operations
+* xref:howtos:concurrent-async-apis.adoc[Async & Batching APIs]
 * xref:howtos:concurrent-document-mutations.adoc[Concurrent Document Mutations]
+* xref:howtos:working-with-collections.adoc[Working with Collections DP]
 //* xref:howtos:durability.adoc[Durability]
 
 .Managing Couchbase
 * xref:howtos:managing-connections.adoc[Managing Connections]
 ** xref:howtos:sdk-authentication.adoc[Authentication]
 ** xref:howtos:troubleshooting-cloud-connections.adoc[Troubleshooting Cloud Connections]
+* xref:howtos:provisioning-cluster-resources.adoc[Provisioning Cluster Resources]
+// ** xref:howtos:sdk-user-management-example.adoc[User Management]
 
 .Errors & Diagnostics
+* xref:howtos:error-handling.adoc[Handling Errors]
 * xref:howtos:health-check.adoc[Health Check]
+* xref:howtos:collecting-information-and-logging.adoc[Collecting Information & Logging]
 
 .Learn
 * xref:concept-docs:concepts.adoc[Overview]
