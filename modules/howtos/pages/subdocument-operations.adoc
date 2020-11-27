@@ -96,14 +96,14 @@ Console.WriteLine("Path exists? {0}", result.ContentAs<bool>(1));
 ----
 ////
 
-See the code sample at https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc^ for use in context.
+See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
 
 == Mutating
 
 Mutation operations modify one or more paths in the document.
 The simplest of these operations is _subdoc-upsert_, which, similar to the fulldoc-level _upsert_, will either modify the value of an existing path or create it if it does not exist.
 
-See the code sample at https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc^ for use in context.
+See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
 
 ////
 .Upserting a new sub-document

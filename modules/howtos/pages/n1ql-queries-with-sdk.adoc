@@ -214,7 +214,7 @@ As well as the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-
 * https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-criteria.cc[Query Example]
 * https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-placeholders.cc[Querying with Placeholders]
 * https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-consistency.cc[Scan Consistency]
-* https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-atplus.cc[AtPlus (Read Your Own Writes)}
+* https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-atplus.cc[AtPlus (Read Your Own Writes)]
 
 
 
