@@ -1,0 +1,79 @@
+= Working with the  Collections Developer Preview
+:nav-title: Collections DP
+:content-type: howto
+:page-topic-type: howto
+
+[abstract]
+Collections is introduced as a Developer Preview feature in Couchbase Server 6.5.
+The 3.0 API SDKs all work with Collections and Scopes.
+
+
+The xref:6.5@server:developer-preview:collections/collections-overview.adoc[Developer Preview of the upcoming Collections feature] in Couchbase Server is fully implemented in the 3.0 API versions of the Couchbase SDKs.
+When working with other server versions, the `defaultcollection` is used from the SDK.
+
+
+The 3.0 SDK is ready for the planned introduction of xref:concept-docs:collections.adoc[Collections] in a Couchbase Server 7.0.
+The latest Server releases, 6.5 and 6.6, brings a limited _Developer Preview_ of Collections, allowing Documents to be grouped by purpose or theme, according to specified _Scope_.
+Here we will use `NULL` for default collection, which covers the whole Bucket.
+To use named Collections (and Scopes), just substitute the Collection (and Scope) name for `NULL`.
+
+[source,c]
+----
+static void store_callback(lcb_INSTANCE *instance, int cbtype, const lcb_RESPSTORE *resp)
+{
+    const char *key;
+    size_t nkey;
+    uint64_t cas;
+    lcb_respstore_key(resp, &key, &nkey);
+    lcb_respstore_cas(resp, &cas);
+    printf("status: %s, key: %.*s, CAS: 0x%" PRIx64 "\n",
+       lcb_strerror_short(lcb_respstore_status(resp)), (int)nkey, key, cas);
+}
+
+lcb_install_callback3(instance, LCB_CALLBACK_STORE, (lcb_RESPCALLBACK)store_callback);
+
+lcb_STATUS rc;
+lcb_CMDSTORE *cmd;
+const char *collection = NULL, *scope = NULL;
+size_t collection_len = 0, scope_len = 0;
+const char *key = "my-document";
+const char *value = "{\"name\": \"mike\"}";
+rc = lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT);
+rc = lcb_cmdstore_collection(cmd, scope, scope_len, collection, collection_len);
+rc = lcb_cmdstore_key(cmd, key, strlen(key));
+rc = lcb_cmdstore_value(cmd, value, strlen(value));
+rc = lcb_store(instance, NULL, cmd);
+rc = lcb_cmdstore_destroy(cmd);
+rc = lcb_wait(instance);
+----
+
+
+[source,c]
+----
+static void get_callback(lcb_INSTANCE *instance, int cbtype, const lcb_RESPGET *resp)
+{
+    const char *key, *value;
+    size_t nkey, nvalue;
+    uint64_t cas;
+    lcb_respget_key(resp, &key, &nkey);
+    lcb_respget_value(resp, &value, &nvalue);
+    lcb_respget_cas(resp, &cas);
+    printf("status: %s, key: %.*s, CAS: 0x%" PRIx64 "\n",
+       lcb_strerror_short(lcb_respget_status(resp)), (int)nkey, key, cas);
+    printf("value:\n%s\n", (int)nvalue, value);
+}
+
+lcb_install_callback3(instance, LCB_CALLBACK_GET, (lcb_RESPCALLBACK)get_callback);
+
+lcb_STATUS rc;
+lcb_CMDGET *cmd;
+const char *collection = NULL, *scope = NULL;
+size_t collection_len = 0, scope_len = 0;
+const char *key = "my-document";
+rc = lcb_cmdget_create(&cmd);
+rc = lcb_cmdget_collection(cmd, scope, scope_len, collection, collection_len);
+rc = lcb_cmdget_key(cmd, key, strlen(key));
+rc = lcb_get(instance, NULL, cmd);
+rc = lcb_cmdget_destroy(cmd);
+rc = lcb_wait(instance);
+----

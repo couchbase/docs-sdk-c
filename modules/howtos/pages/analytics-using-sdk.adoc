@@ -25,6 +25,10 @@ NOTE: When using a Couchbase version < 6.5 you must create a valid Bucket connec
 
 
 
+== Example 
+
+For a full example, see the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2analytics_2analytics_8c-example.html[API documentation].
+
 ////
 [source,golang,indent=0]
 ----
