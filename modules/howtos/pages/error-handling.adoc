@@ -29,7 +29,7 @@ Is it even recoverable?
 // Below we examine error handling strategies in relation to the Couchbase SDKs, then take a practical walk through some common error scenarios you are likely to have to handle when working with a Couchbase cluster.
 
 
-Erro codes are https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-error-codes.html[listed in the API docs].
+Error codes are https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-error-codes.html[listed in the API docs].
 
 
 ////
