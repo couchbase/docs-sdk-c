@@ -21,58 +21,62 @@ Version 3.0.7 is the eighth release of the 3.0 series, bringing enhancements and
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.7/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1350[CCBC-1350]:
-  Implement an option for cbc-n1ql to control prepared/adhoc switch
+  Implemented an option for `cbc-n1ql` to control prepared/adhoc switch.
 
 * https://issues.couchbase.com/browse/CCBC-1345[CCBC-1345]:
-  Ensure all KV sockets select bucket on lcb_open
+  Ensure all KV sockets select bucket on `lcb_open`.
 
 * https://issues.couchbase.com/browse/CCBC-1348[CCBC-1348]:
-  Include bucket name into diag report
+  Bucket name now included in `diag` report.
 
 * https://issues.couchbase.com/browse/CCBC-1308[CCBC-1308]:
-  Define FATAL and TRANSIENT classes for errors. Also defines corresponding macros for easy access `LCB_ERROR_IS_TRANSIENT` and `LCB_ERROR_IS_FATAL`
+  Defined FATAL and TRANSIENT classes for errors. 
+  Also defines corresponding macros for easy access `LCB_ERROR_IS_TRANSIENT` and `LCB_ERROR_IS_FATAL`.
 
 * https://issues.couchbase.com/browse/CCBC-1342[CCBC-1342]:
   Check if collections supported by server before using them.
+  Specifying a non-default collection on an operation against servers which do not support collections will now return a `FeatureNotSupported` error.
 
 * https://issues.couchbase.com/browse/CCBC-1334[CCBC-1334]:
-  Preserve status of KV protocol response for retry queue
+  Preserve status of KV protocol response for retry queue.
 
 * https://issues.couchbase.com/browse/CCBC-1339[CCBC-1339]:
-  Do not relocate get with replica on failover. The library should not relocate replica reads when new configuration applied.
+  Do not relocate get with replica on failover. 
+  The library should not relocate replica reads when new configuration applied.
 
 * https://issues.couchbase.com/browse/CCBC-1344[CCBC-1344]:
-  Consume response after retried command to avoid logging the command as "timed out"
+  Consume response after retried command to avoid logging the command as "timed out".
 
 * https://issues.couchbase.com/browse/CCBC-1343[CCBC-1343]:
-  Do not schedule NMV immediately by default and use retry strategy instead.
+  Do not schedule `NotMyVbucket` immediately by default and use retry strategy instead.
 
 * https://issues.couchbase.com/browse/CCBC-1335[CCBC-1335]:
-  Fix next timeout computation on requesting config using `operation_timeout` instead of `config_node_timeout`
+  Fixed next timeout computation on requesting config using `operation_timeout` instead of `config_node_timeout`.
 
 * https://issues.couchbase.com/browse/CCBC-1337[CCBC-1337]:
-  Expose setting for to control default search timeout
+  Expose setting for to control default search timeout.
 
 * https://issues.couchbase.com/browse/CCBC-1331[CCBC-1331]:
-  Fix error at bootstrap callback, now it returns original error code, that caused the bootstrap failure.
+  Fixed error at bootstrap callback, now it returns original error code, that caused the bootstrap failure.
 
 * https://issues.couchbase.com/browse/CCBC-1333[CCBC-1333]:
   Allow setting `lcb_cmdget_locktime` to zero to use server default time.
 
 * https://issues.couchbase.com/browse/CCBC-1324[CCBC-1324]:
-  define HTTP type for Eventing management
+  Defined HTTP type for Eventing management.
 
-* Retry operations when the node is not ready
+* Retry operations when the node is not ready.
 
-* Report `LCB_ERR_BUCKET_NOT_FOUND` if Key/Value service is not configured
+* Report `LCB_ERR_BUCKET_NOT_FOUND` if Key/Value service is not configured.
 
 * Update error codes for Query. Translate code 4300 to `LCB_ERR_PLANNING_FAILURE` and 5000 to `LCB_ERR_INTERNAL_SERVER_FAILURE` by default.
 
 * Fix collection validation, it should pass empty string as valid collection specification element.
 
-* Remove verbosity and mcversions commands. These parts of API are non-standard and volatile
+* Remove verbosity and mcversions commands. 
+These parts of API are non-standard and volatile.
 
-* Bundle HdrHistogram_c v0.11.2 and allow to fall back to it
+* Bundle HdrHistogram_c v0.11.2 and allow to fall back to it.
 
 === Downloads
 
