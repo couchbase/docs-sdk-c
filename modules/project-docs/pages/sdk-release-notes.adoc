@@ -21,7 +21,7 @@ Version 3.0.7 is the eighth release of the 3.0 series, bringing enhancements and
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.7/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1350[CCBC-1350]:
-  Implemented an option for `cbc-n1ql` to control prepared/adhoc switch.
+  Implemented an option for `cbc-n1qlback` to control prepared/adhoc switch.
 
 * https://issues.couchbase.com/browse/CCBC-1345[CCBC-1345]:
   Ensure all KV sockets select bucket on `lcb_open`.
@@ -30,7 +30,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.7/index.html[API Refer
   Bucket name now included in `diag` report.
 
 * https://issues.couchbase.com/browse/CCBC-1308[CCBC-1308]:
-  Defined FATAL and TRANSIENT classes for errors. 
+  Defined FATAL and TRANSIENT classes for errors.
   Also defines corresponding macros for easy access `LCB_ERROR_IS_TRANSIENT` and `LCB_ERROR_IS_FATAL`.
 
 * https://issues.couchbase.com/browse/CCBC-1342[CCBC-1342]:
@@ -41,7 +41,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.7/index.html[API Refer
   Preserve status of KV protocol response for retry queue.
 
 * https://issues.couchbase.com/browse/CCBC-1339[CCBC-1339]:
-  Do not relocate get with replica on failover. 
+  Do not relocate get with replica on failover.
   The library should not relocate replica reads when new configuration applied.
 
 * https://issues.couchbase.com/browse/CCBC-1344[CCBC-1344]:
@@ -73,7 +73,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.7/index.html[API Refer
 
 * Fix collection validation, it should pass empty string as valid collection specification element.
 
-* Remove verbosity and mcversions commands. 
+* Remove verbosity and mcversions commands.
 These parts of API are non-standard and volatile.
 
 * Bundle HdrHistogram_c v0.11.2 and allow to fall back to it.
