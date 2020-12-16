@@ -39,6 +39,8 @@ add_example(query-placeholders)
 if (Threads_FOUND)
     add_example(cas)
     target_link_libraries(cas Threads::Threads)
+    add_example(pessimistic-lock)
+    target_link_libraries(pessimistic-lock Threads::Threads)
 endif()
 
 add_example(management-bucket-flush)
