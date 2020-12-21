@@ -14,7 +14,7 @@ include::hello-world:partial$installation.adoc[]
 
 
 [#latest-release]
-== Version 3.0.7 (21 October 2020)
+== Version 3.0.7 (16 December 2020)
 
 Version 3.0.7 is the eighth release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
