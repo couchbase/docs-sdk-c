@@ -227,6 +227,7 @@ main()
                 uint64_t cas = 0;
                 Result result;
 
+                // tag::errors[]
                 {
                     lcb_CMDGET* cmd = nullptr;
                     check(lcb_cmdget_create(&cmd), "create GET command");
@@ -256,6 +257,7 @@ main()
                     }
                     cas = result.cas;
                 }
+                // end::errors[]
 
                 std::string new_value = add_item_to_list(result.value, item_value);
                 result = {}; // reset result object
