@@ -183,6 +183,7 @@ The query engine will ensure that actually no data is mutated when parsing and p
 
 
 
+////
 
 
 == Querying at Scope Level
@@ -203,7 +204,6 @@ include::example$queries.rb[tag=scope]
 ----
 
 A complete list of `QueryOptions` can be found in the https://docs.couchbase.com/sdk-api/couchbase-ruby-client/Couchbase/Options/Query.html[API docs].
-////
 
 
 
