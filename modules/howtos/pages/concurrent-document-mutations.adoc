@@ -13,7 +13,7 @@ include::6.6@sdk:shared:partial$cas.adoc[tag=errors]
 
 [source,c]
 ----
-include::example$pessimistic-lock.cc[tag=errors,indent=0]
+include::devguide:example$c/pessimistic-lock.cc[tag=errors,indent=0]
 ----
 
 Sometimes more logic is needed when performing updates, for example, if a property is mutually exclusive with another property; only one or the other can exist, but not both.
