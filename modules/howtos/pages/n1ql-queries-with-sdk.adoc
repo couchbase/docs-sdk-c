@@ -183,7 +183,7 @@ The query engine will ensure that actually no data is mutated when parsing and p
 
 
 
-////
+
 
 
 == Querying at Scope Level
@@ -204,7 +204,7 @@ include::example$queries.rb[tag=scope]
 ----
 
 A complete list of `QueryOptions` can be found in the https://docs.couchbase.com/sdk-api/couchbase-ruby-client/Couchbase/Options/Query.html[API docs].
-
+////
 
 
 == Examples
@@ -215,6 +215,19 @@ As well as the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-
 * https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-placeholders.cc[Querying with Placeholders]
 * https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-consistency.cc[Scan Consistency]
 * https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/query-atplus.cc[AtPlus (Read Your Own Writes)]
+
+
+== Querying at Scope Level
+[.status]#Developer Preview#
+
+From version 3.0.4 of the C SDK, it is possible to query off the xref:7.0@server:learn:data/scopes-and-collections.adoc[`Scope` level] _with the beta version of the next Couchbase Server release, 7.0β_,
+using the `lcb_cmdquery_scope_name()` method.
+It takes the statement as a required argument, and then allows additional options if needed.
+
+CAUTION: This feature is marked xref:project-docs:compatibility.adoc#interface-stability[_Uncommitted_].
+Expect a promotion to _Committed_ API in a future release.
+
+usage details for this and `lcb_cmdquery_scope_qualifier()` can be found in the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-n1ql-api.html#gadcd89153027afd789e2d31e250424c48[API docs].
 
 
 
