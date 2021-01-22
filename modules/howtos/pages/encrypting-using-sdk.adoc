@@ -7,7 +7,7 @@
 [abstract]
 Fields within a document can be securely encrypted by the SDK, to support FIPS-140-2 compliance.
 
-Client-side implementation of Field Level Encryption is available in the 3.1@java-sdk:howtos:encrypting-using-sdk.html[3.x Java version of the SDK]. 
+Client-side implementation of Field Level Encryption is available in the xref:3.1@java-sdk:howtos:encrypting-using-sdk.adoc[3.x Java version of the SDK]. 
 It will be enabled in a future release of the other third generation SDKs.
 
 NOTE: Field Level Encryption is normally carried out at a higher level than _libcouchbase_ (LCB).
