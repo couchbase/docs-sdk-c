@@ -88,10 +88,12 @@ include::6.5@sdk:shared:partial$flush-info-pars.adoc[tag=flush-intro]
 
 You can flush a bucket in the SDK by using the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-flush.html[`lcb_cbflush3()` method].
 
+////
 [source,golang,indent=0]
 ----
 include::devguide:example$go/provisioning-resources-buckets.go[tag=flushBucket]
 ----
+////
 
 The `lcb_cbflush3()` operation may fail if the bucket does not have flush enabled, in that case it will return an `ErrBucketNotFlushable`.
 
