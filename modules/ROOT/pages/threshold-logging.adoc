@@ -19,7 +19,7 @@ Response Time Observability is implemented as Threshold Logging in libcouchbase 
 | `enable_tracing`
 | `LCB_CNTL_ENABLE_TRACING`
 | Boolean used to determine tracing is enabled.
-Defaults to using the `ThesholdLoggingTracer` if enabled.
+Defaults to using the `ThresholdLoggingTracer` if enabled.
 When false a Noop or similar tracing implementation should be used instead.
 Also when enabled the SDK will try and retrieve duration metrics from the server for KV operations.
 | true
