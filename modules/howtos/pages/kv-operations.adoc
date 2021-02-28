@@ -23,6 +23,100 @@ The core interface to Couchbase Server is simple KV operations on full documents
 Make sure you're familiar with the basics of authorization and connecting to a Cluster from the xref:hello-world:start-using-sdk.adoc[Start Using the SDK section].
 
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/retrieving.cc[code sample^] for use in context.
+
+== Upsert
+
+[TIP]
+.Sub-Document Operations
+====
+All of these operations involve fetching the complete document from the Cluster.
+Where the number of operations or other circumstances make bandwidth a significant issue, the SDK can work on just a specific _path_ of the document with xref:subdocument-operations.adoc[Sub-Document Operations].
+====
+////
+== Retrieving full documents
+
+Using the `Get()` method with the document key can be done in a similar fashion to the other operations:
+
+[source,csharp]
+----
+var result = await collection.Get("document-key");
+var content = result.ContentAs<string>();
+----
+
+Timeout can also be set - as in the earlier `Insert` example:
+
+[source,csharp]
+----
+Get (with options)
+var result = await collection.Get("document-key",
+    new GetOptions
+    {
+        Timeout = TimeSpan.FromSeconds(5)
+    }
+);
+var content = result.ContentAs<string>();
+----
+
+
+== Removing
+
+When removing a document, you will have the same concern for durability as with any additive modification to the Bucket:
+
+Remove (with options)
+[source,csharp]
+----
+var result = await collection.Remove("document-key",
+    new RemoveOptions
+    {
+        Cas = 12345,
+        PersistTo = PersistTo.One,
+        ReplicateTo = ReplicateTo.One,
+        Timeout = TimeSpan.FromSeconds(5)
+    }
+);
+----
+////
+
+Here is a simple upsert operation, which will insert the document if it does not exist, or replace it if it does.
+
+We'll use the built-in JSON types for simplicity, but you can use different types if you want.
+
+----
+lcb_cmdstore_create(&scmd, LCB_STORE_UPSERT);
+    lcb_cmdstore_key(scmd, "key", strlen("key"));
+    lcb_cmdstore_value(scmd, "value", strlen("value"));
+
+    err = lcb_store(instance, NULL, scmd);
+    lcb_cmdstore_destroy(scmd);
+    if (err != LCB_SUCCESS) {
+        die(instance, "Couldn't schedule storage operation", err);
+    }
+----
+
+== Insert
+
+Insert works very similarly to upsert , but will fail if the  document already exists.
+
+== Replace
+
+A very common sequence  of operations is to `get` a document, modify its contents, and `replace` it.
+// Insert code sample here
+
+We `upsert` an initial version of the document. We don't care about  the exact details of the result,
+just whether it succeeded or not, so do not assign a value. Then we get back into  `doc` and pull out the
+document's content as a `Json`
+
+So what is CAS?
+
+CAS, or  Compare and  Swap, is a form of optimistic locking. Every  document is Couchbase has a CAS value,
+and it's changed on every mutation. When you get a document you also get the document's CAS, and then when it
+is time to write the document, you send the same CAS back. If another thread or program has  modified that document
+in the  meantime, the  Couchbase Server can detect you've provided a now-outdated CAS, and return an error. This provides
+cheap and safe concurrency. See this xref:concurrent-document-mutations.adoc[this detailed description of CAS] for further details.
+
+In general, you'll want to provide a CAS value whenever you `replace` a document, to prevent overwriting another agent's mutations.
+
+
 ////
 We're going to expand on the short _Upsert_ example we used there, adding options as we move through the various CRUD operations.
 Here is the _Insert_ operation at its simplest:
@@ -73,7 +167,7 @@ var result = await collection.Replace("document-key", document,
 
 Expiration sets an explicit time to live (TTL) for a document.
 We'll discuss modifying `Expiration` in more details xref:#expiration-ttl[below].
-For a discussion of item (Document) _vs_ Bucket expiration, see the 
+For a discussion of item (Document) _vs_ Bucket expiration, see the
 xref:6.5@server:learn:buckets-memory-and-storage/expiration.adoc#expiration-bucket-versus-item[Expiration Overview page].
 
 [source,csharp]
@@ -96,60 +190,11 @@ Here, we have add _Durability_ options, namely `PersistTo` and `ReplicateTo`.
 
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/cas.cc[code sample^] for use in context.
 ////
-In Couchbase Server releases before 6.5, Durability was set with these two options -- see the xref:https://docs.couchbase.com/dotnet-sdk/2.7/durability.html[6.0 Durability documentation] -- covering  how many replicas the operation must be propagated to and how many persisted copies of the modified record must exist. 
+In Couchbase Server releases before 6.5, Durability was set with these two options -- see the xref:https://docs.couchbase.com/dotnet-sdk/2.7/durability.html[6.0 Durability documentation] -- covering  how many replicas the operation must be propagated to and how many persisted copies of the modified record must exist.
 Couchbase Data Platform 6.5 refines these two options, with xref:6.5@server:learn:data/durability.adoc[Synchronous Replication] -- although they remain essentially the same in use -- see xref:#durability[Durability, below].
 ////
 
-[TIP]
-.Sub-Document Operations
-====
-All of these operations involve fetching the complete document from the Cluster.
-Where the number of operations or other circumstances make bandwidth a significant issue, the SDK can work on just a specific _path_ of the document with xref:subdocument-operations.adoc[Sub-Docunent Operations].
-====
-////
-== Retrieving full documents
 
-Using the `Get()` method with the document key can be done in a similar fashion to the other operations:
-
-[source,csharp]
-----
-var result = await collection.Get("document-key");
-var content = result.ContentAs<string>();
-----
-
-Timeout can also be set - as in the earlier `Insert` example:
-
-[source,csharp]
-----
-Get (with options)
-var result = await collection.Get("document-key",
-    new GetOptions
-    {
-        Timeout = TimeSpan.FromSeconds(5)
-    }
-);
-var content = result.ContentAs<string>();
-----
-
-
-== Removing
-
-When removing a document, you will have the same concern for durability as with any additive modification to the Bucket:
-
-Remove (with options)
-[source,csharp]
-----
-var result = await collection.Remove("document-key",
-    new RemoveOptions
-    {
-        Cas = 12345,
-        PersistTo = PersistTo.One,
-        ReplicateTo = ReplicateTo.One,
-        Timeout = TimeSpan.FromSeconds(5)
-    }
-);
-----
-////
 
 == Durability
 Writes in Couchbase are written to a single node, and from there the Couchbase Server will take care of sending that mutation to any configured replicas.
@@ -165,25 +210,25 @@ It can be used like this:
 ////
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/durability.cc[code sample^] for use in context.
 
-If no argument is provided the application will report success back as soon as the primary node has acknowledged the mutation in its memory. 
-However, we recognize that there are times when the application needs that extra certainty that especially vital mutations have been successfully replicated, 
+If no argument is provided the application will report success back as soon as the primary node has acknowledged the mutation in its memory.
+However, we recognize that there are times when the application needs that extra certainty that especially vital mutations have been successfully replicated,
 and the other durability options provide the means to achieve this.
 
-The options differ depend on what Couchbase Server version is in use. 
-If 6.5 or above is being used, you can take advantage of the xref:concept-docs:durability-replication-failure-considerations.adoc#durable-writes[Durable Write] feature, 
-in which Couchbase Server will only return success to the SDK after the requested replication level has been achieved. 
+The options differ depend on what Couchbase Server version is in use.
+If 6.5 or above is being used, you can take advantage of the xref:concept-docs:durability-replication-failure-considerations.adoc#durable-writes[Durable Write] feature,
+in which Couchbase Server will only return success to the SDK after the requested replication level has been achieved.
 The three replication levels are:
 
  * `Majority` - The server will ensure that the change is available in memory on the majority of configured replicas.
  * `MajorityAndPersistToActive` - Majority level, plus persisted to disk on the active node.
  * `PersistToMajority` - Majority level, plus persisted to disk on the majority of configured replicas.
 
-The options are in increasing levels of safety. 
+The options are in increasing levels of safety.
 Note that nothing comes for free - for a given node, waiting for writes to storage is considerably slower than waiting for it to be available in-memory.
 These trade offs, as well as which settings may be tuned, are discussed in the xref:concept-docs:durability-replication-failure-considerations.adoc#durable-writes[durability page].
 
-If a version of Couchbase Server lower than 6.5 is being used then the application can fall-back to xref:concept-docs:durability-replication-failure-considerations.adoc#older-server-versions['client verified' durability.] 
-Here the SDK will do a simple poll of the replicas and only return once the requested durability level is achieved. 
+If a version of Couchbase Server lower than 6.5 is being used then the application can fall-back to xref:concept-docs:durability-replication-failure-considerations.adoc#older-server-versions['client verified' durability.]
+Here the SDK will do a simple poll of the replicas and only return once the requested durability level is achieved.
 ////
 This can be achieved like this:
 
@@ -192,12 +237,15 @@ This can be achieved like this:
 // Durability observed snippet
 ----
 ////
-To stress, durability is a useful feature but should not be the default for most applications, as there is a performance consideration, 
+To stress, durability is a useful feature but should not be the default for most applications, as there is a performance consideration,
 and the default level of safety provided by Couchbase will be reasonable for the majority of situations.
 
 == Expiration / TTL
 
-By default, Couchbase documents do not expire, but transient or temporary data may be needed for user sessions, caches, or other temporary documents. 
+Couchbase Server includes an option top have particular documents automatically expire after a set time. This can be useful is some use cases,
+such as user sessions, caches, or other temporary documents.
+
+By default, Couchbase documents do not expire, but transient or temporary data may be needed for user sessions, caches, or other temporary documents.
 Using `Touch()`, you can set expiration values on documents to handle transient data.
 ////
 
@@ -280,4 +328,3 @@ For working with metadata on a document, reference our xref:sdk-xattr-example.ad
 // As well as various xref:concept-docs:data-model.adoc[Formats] of JSON, Couchbase can work directly with xref:concept-docs:nonjson.adoc[arbitary bytes, or binary format].
 
 Our xref:n1ql-queries-with-sdk.adoc[Query Engine] enables retrieval of information using the SQL-like syntax of N1QL.
-
