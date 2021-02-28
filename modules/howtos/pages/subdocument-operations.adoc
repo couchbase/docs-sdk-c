@@ -98,6 +98,18 @@ Console.WriteLine("Path exists? {0}", result.ContentAs<bool>(1));
 
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
 
+== Choosing an API
+
+_libcouchbase_ is an asynchronous library which means that operations results are passed to callbacks you define rather than
+being returned to functions.
+Callbacks are passed `cookie` parameter which is a user defined pointer(i.e your own pointer which can be  NULL) to associate
+a specific command with a specific callback invocation.
+
+For simple synchronous use, you will need to call `lcb_wait()` after each set of scheduled operations. During `lcb_wait`
+the library will block for I/O and invoke your callbacks as the results of the operations arrive.
+See the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2minimal_2minimal_8c-example.html#a5[code sample^] for use in context.
+
+
 == Mutating
 
 Mutation operations modify one or more paths in the document.
@@ -217,7 +229,7 @@ If you wish to create an array if it does not exist and also push elements to it
 [source,csharp]
 ----
 bucket.MutateIn("some_doc", ops =>
-    ops.ArrayAppend("some.array", "Hello", "World", 
+    ops.ArrayAppend("some.array", "Hello", "World",
         options => options.WithCreateParents(true)
     )
 );
@@ -402,7 +414,7 @@ While CAS is no longer so strongly required to ensure document updates are prese
 ////
 == Durability
 
-Couchbase’s xref:concept-docs:durability-replication-failure-considerations.adoc#older-server-versions[traditional 'client verified' durability], 
+Couchbase’s xref:concept-docs:durability-replication-failure-considerations.adoc#older-server-versions[traditional 'client verified' durability],
 using `PersistTo` and `ReplicateTo`, is still available, particularly for talking to Couchbase Server 6.0 and earlier:
 
 [source,c]
