@@ -96,14 +96,14 @@ Console.WriteLine("Path exists? {0}", result.ContentAs<bool>(1));
 ----
 ////
 
-See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
+See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
 
 == Mutating
 
 Mutation operations modify one or more paths in the document.
 The simplest of these operations is _subdoc-upsert_, which, similar to the fulldoc-level _upsert_, will either modify the value of an existing path or create it if it does not exist.
 
-See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
+See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
 
 ////
 .Upserting a new sub-document
@@ -217,7 +217,7 @@ If you wish to create an array if it does not exist and also push elements to it
 [source,csharp]
 ----
 bucket.MutateIn("some_doc", ops =>
-    ops.ArrayAppend("some.array", "Hello", "World", 
+    ops.ArrayAppend("some.array", "Hello", "World",
         options => options.WithCreateParents(true)
     )
 );
@@ -402,7 +402,7 @@ While CAS is no longer so strongly required to ensure document updates are prese
 ////
 == Durability
 
-Couchbase’s xref:concept-docs:durability-replication-failure-considerations.adoc#older-server-versions[traditional 'client verified' durability], 
+Couchbase’s xref:concept-docs:durability-replication-failure-considerations.adoc#older-server-versions[traditional 'client verified' durability],
 using `PersistTo` and `ReplicateTo`, is still available, particularly for talking to Couchbase Server 6.0 and earlier:
 
 [source,c]

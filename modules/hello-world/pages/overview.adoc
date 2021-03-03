@@ -1,4 +1,4 @@
-= Couchbase C SDK 3.0
+= Couchbase C SDK 3.1
 :page-type: landing-page
 :page-layout: landing-page-top-level-sdk
 :page-role: tiles
@@ -14,7 +14,7 @@
 [.column]
 ====== {empty}
 [.content]
-The Couchbase C client, _libcouchbase_ (LCB), enables you to interact with a Couchbase Server cluster from the C language. 
+The Couchbase C client, _libcouchbase_ (LCB), enables you to interact with a Couchbase Server cluster from the C language.
 It is also used by the Node.js, PHP, and Python SDKs to communicate with the Couchbase Server.
 
 
@@ -38,7 +38,7 @@ lcb_createopts_connstr(options, connection_string, strlen(connection_string));
 [.column]
 ====== {empty}
 
-== Couchbase C SDK 3.0
+== Couchbase C SDK 3.1
 
 ++++
 <div class="card-row three-column-row">
@@ -60,15 +60,15 @@ Dive right in with a xref:start-using-sdk.adoc[quick install and Hello World].
 .Practical Howto Docs
 
 [.content]
-Connect to our services -- xref:howtos:kv-operations.adoc[data (KV)]; 
+Connect to our services -- xref:howtos:kv-operations.adoc[data (KV)];
 xref:howtos:n1ql-queries-with-sdk.adoc[Query] --
 and the xref:howtos:subdocument-operations.adoc[Sub-Document API].
 ////
-xref:howtos:full-text-searching-with-sdk.adoc[Search]; 
-xref:howtos:analytics-using-sdk.adoc[Analytics]; 
-xref:howtos:view-queries-with-sdk.adoc[Views] -- 
+xref:howtos:full-text-searching-with-sdk.adoc[Search];
+xref:howtos:analytics-using-sdk.adoc[Analytics];
+xref:howtos:view-queries-with-sdk.adoc[Views] --
 ////
-And follow the xref:howtos:concurrent-document-mutations.adoc[Concurrent Document Mutations] howto guide. 
+And follow the xref:howtos:concurrent-document-mutations.adoc[Concurrent Document Mutations] howto guide.
 
 [.column]
 ====== {empty}
@@ -85,7 +85,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client/index.html[API Docs^]
 .What's Hot?
 
 [.content]
-Libcouchbase 3.0 is a complete rewrite, with a streamlined API.
+Libcouchbase 3.1 is a complete rewrite, with a streamlined API.
 
 * xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc[{cpp} Distributed ACID Transactions from the C SDK]
 * xref:cbc.adoc[LCB includes our command line tools]
@@ -99,11 +99,11 @@ Libcouchbase 3.0 is a complete rewrite, with a streamlined API.
 .About
 
 [.content]
-Those useful nuts-and-bolts guides to 
-xref:project-docs:compatibility.adoc[compatibility tables]; 
-xref:project-docs:sdk-release-notes.adoc[release notes]; 
+Those useful nuts-and-bolts guides to
+xref:project-docs:compatibility.adoc[compatibility tables];
+xref:project-docs:sdk-release-notes.adoc[release notes];
 xref:project-docs:get-involved.adoc[contribution guide].
-// and the 
+// and the
 // xref:project-docs:migrating-sdk-code-to-3.n.adoc[migration guide] for moving to the 3.0 API.
 
 [.column]
