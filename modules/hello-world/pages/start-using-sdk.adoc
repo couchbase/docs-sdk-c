@@ -72,8 +72,8 @@ rc = lcb_open(instance, name, strlen(name)),
 
 If you installed the travel sample data bucket, substitute _travel-sample_ for _bucket-name_.
 
-The 3.1 SDK is ready for the planned introduction of xref:concept-docs:collections.adoc[Collections] in a future release of the Couchbase Data Platform.
-The latest release, 6.5 _Beta_, brings a limited _Developer Preview_ of Collections, allowing Documents to be grouped by purpose or theme, according to specified _Scope_.
+The 3.1 SDK is ready for the planned introduction of xref:concept-docs:collections.adoc[Collections] in Couchbase Server 7.0 -- the xref:7.0@server:introduction:whats-new.adoc#whats-new-server-700[beta release of this is available now].
+The latest release, 6.6, brings a limited _Developer Preview_ of Collections, allowing Documents to be grouped by purpose or theme, according to specified _Scope_.
 Here we will use `NULL` for default collection, which covers the whole Bucket.
 
 [source,c]
