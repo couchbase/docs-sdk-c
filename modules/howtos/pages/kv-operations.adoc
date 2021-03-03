@@ -79,24 +79,64 @@ var result = await collection.Remove("document-key",
 
 Here is a simple upsert operation, which will insert the document if it does not exist, or replace it if it does.
 
-We'll use the built-in JSON types for simplicity, but you can use different types if you want.
+We use `lcb_cmdstore_create` for storing an item in Couchbase as it is only one operation with different set of
+attributes/constraints for storage modes.
 
 ----
-lcb_cmdstore_create(&scmd, LCB_STORE_UPSERT);
-    lcb_cmdstore_key(scmd, "key", strlen("key"));
-    lcb_cmdstore_value(scmd, "value", strlen("value"));
-
-    err = lcb_store(instance, NULL, scmd);
+    lcb_CMDSTORE *scmd;
+    lcb_cmdstore_create(&scmd, LCB_STORE_UPSERT);
+    lcb_cmdstore_key(scmd, "key", 3);
+    const char *initialval = "{\"hello\":\"world\"}";
+    lcb_cmdstore_value(scmd, initval, strlen(initialval));
+    rc = lcb_store(instance, NULL, scmd);
     lcb_cmdstore_destroy(scmd);
-    if (err != LCB_SUCCESS) {
-        die(instance, "Couldn't schedule storage operation", err);
-    }
+    assert(rc == LCB_SUCCESS);
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
+
+
 ----
 
 == Insert
 
-Insert works very similarly to upsert , but will fail if the  document already exists.
+Insert works very similarly to upsert , but will fail if the document already exists.
 
+----
+    lcb_CMDSTORE *scmd;
+    lcb_cmdstore_create(&scmd, LCB_STORE_INSERT);
+    lcb_cmdstore_key(scmd, "key", 3);
+    const char *initialval = "{\"hello\":\"world\"}";
+    lcb_cmdstore_value(scmd, initval, strlen(initialval));
+    rc = lcb_store(instance, NULL, scmd);
+    lcb_cmdstore_destroy(scmd);
+    assert(rc == LCB_SUCCESS);
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
+
+----
+
+== Retrieving documents
+
+We've tried upserting and inserting documents into the Couchbase Server, let's get them back:
+
+----
+      static void get_callback(lcb_INSTANCE *instance , int type, const lcb_RESPGET *resp)
+      {
+        const char *key;
+        size_t nkey;
+        char* value;
+        size_t value_len;
+        lcb_respget_key(resp, &key, &nkey);
+        printf("Key found : %.*s/n",nkey, key);
+
+        lcb_STATUS rc  = lcb_respget_status(resp);
+        if (rc!=LCB_SUCCESS){
+          printf("Could not find item \n");
+        }
+        else{
+          lcb_respget_value(resp, &value, &value_len);
+          printf("Got value: %.*s\n", value_len, value);
+        }
+      }
+----
 == Replace
 
 A very common sequence  of operations is to `get` a document, modify its contents, and `replace` it.
@@ -188,6 +228,30 @@ var result = await collection.Upsert("document-key", document,
 Here, we have add _Durability_ options, namely `PersistTo` and `ReplicateTo`.
 ////
 
+----
+struct Result {
+    std::string value{};
+    std::uint64_t cas{ 0 };
+    lcb_STATUS rc{ LCB_SUCCESS };
+};
+result = {}; // reset result object
+{
+    lcb_CMDSTORE* cmd = nullptr;
+    check(lcb_cmdstore_create(&cmd, LCB_STORE_REPLACE), "create REPLACE command");
+    check(lcb_cmdstore_key(cmd, document_id.c_str(), document_id.size()), "assign ID for REPLACE command");
+    check(lcb_cmdstore_value(cmd, new_value.c_str(), new_value.size()), "assign value for REPLACE command");
+    check(lcb_store(local_instance, &result, cmd), "schedule REPLACE command");
+    check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
+    lcb_wait(local_instance, LCB_WAIT_DEFAULT);
+
+    if (result.rc != LCB_SUCCESS) {
+        std::stringstream msg;
+        msg << "failed to append " << item_value << ": " << lcb_strerror_short(result.rc) << "\n";
+        std::cout << msg.str();
+      }
+}
+----
+
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/cas.cc[code sample^] for use in context.
 ////
 In Couchbase Server releases before 6.5, Durability was set with these two options -- see the xref:https://docs.couchbase.com/dotnet-sdk/2.7/durability.html[6.0 Durability documentation] -- covering  how many replicas the operation must be propagated to and how many persisted copies of the modified record must exist.
@@ -274,7 +338,17 @@ include::6.5@sdk:shared:partial$documents.adoc[tag=exp-note]
 
 == Atomic Counters
 
-The value of a document can be increased or decreased atomically using `Binary.Increment()` and `.Binary.Decrement()`.
+The numeric content of a document can be manipulated using https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-counter.html[lcb_RESPCOUNTER^]. Counter opeations treat the document
+as a numeric value (the document must contain a parseable integer as its content). This value may then be incremented
+or decremented.
+
+----
+lcb_CMDCOUNTER* cmd = nullptr;
+lcb_cmdcounter_create(&cmd);
+lcb_cmdcounter_key(cmd, document_id.c_str(), document_id.size());
+lcb_cmdcounter_delta(cmd, 1) // Increment by 1
+lcb_wait(instance, LCB_WAIT_DEFAULT);
+----
 ////
 .Increment
 [source,csharp]

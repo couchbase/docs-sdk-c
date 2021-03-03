@@ -104,9 +104,27 @@ _libcouchbase_ is an asynchronous library which means that operations results ar
 being returned to functions.
 Callbacks are passed `cookie` parameter which is a user defined pointer(i.e your own pointer which can be  NULL) to associate
 a specific command with a specific callback invocation.
+----
+   #define VALUE_SIZE 100876
+   static int counter = 0;
+   static const char *key = "travel-sample";
+   static char value[VALUE_SIZE];
 
+   lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT);
+   lcb_cmdstore_key(cmd, key, strlen(key));
+   lcb_cmdstore_value(cmd, value, VALUE_SIZE);
+----
 For simple synchronous use, you will need to call `lcb_wait()` after each set of scheduled operations. During `lcb_wait`
 the library will block for I/O and invoke your callbacks as the results of the operations arrive.
+
+----
+    lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT);
+    lcb_cmdstore_key(cmd, key, strlen(key));
+    lcb_cmdstore_value(cmd, value, VALUE_SIZE);
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
+----
+
+
 See the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2minimal_2minimal_8c-example.html#a5[code sample^] for use in context.
 
 
