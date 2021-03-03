@@ -98,12 +98,13 @@ Console.WriteLine("Path exists? {0}", result.ContentAs<bool>(1));
 
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
 
+
 == Choosing an API
 
-_libcouchbase_ is an asynchronous library which means that operations results are passed to callbacks you define rather than
-being returned to functions.
-Callbacks are passed `cookie` parameter which is a user defined pointer(i.e your own pointer which can be  NULL) to associate
-a specific command with a specific callback invocation.
+_libcouchbase_ is an asynchronous library which means that operations results are passed to callbacks you define rather than being returned to functions.
+Callbacks are passed a `cookie` parameter which is a user defined pointer (i.e your own pointer, which can be `NULL`) to associate a specific command with a specific callback invocation.
+
+[source,c]
 ----
    #define VALUE_SIZE 100876
    static int counter = 0;
@@ -114,16 +115,17 @@ a specific command with a specific callback invocation.
    lcb_cmdstore_key(cmd, key, strlen(key));
    lcb_cmdstore_value(cmd, value, VALUE_SIZE);
 ----
-For simple synchronous use, you will need to call `lcb_wait()` after each set of scheduled operations. During `lcb_wait`
-the library will block for I/O and invoke your callbacks as the results of the operations arrive.
 
+For simple synchronous use, you will need to call `lcb_wait()` after each set of scheduled operations. 
+During `lcb_wait` the library will block for I/O, and invoke your callbacks as the results of the operations arrive.
+
+[source,c]
 ----
     lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT);
     lcb_cmdstore_key(cmd, key, strlen(key));
     lcb_cmdstore_value(cmd, value, VALUE_SIZE);
     lcb_wait(instance, LCB_WAIT_DEFAULT);
 ----
-
 
 See the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2minimal_2minimal_8c-example.html#a5[code sample^] for use in context.
 
