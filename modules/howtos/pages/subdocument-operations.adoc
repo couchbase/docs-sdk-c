@@ -13,14 +13,15 @@ Sub-document operations are also atomic, allowing safe modifications to document
 
 Starting with Couchbase Server 4.5 you can atomically and efficiently update and retrieve _parts_ of a document.
 These parts are called _sub-documents_.
+
+
 While full-document retrievals retrieve the entire document and full document updates require sending the entire document, sub-document retrievals only retrieve relevant parts of a document and sub-document updates only require sending the updated portions of a document.
 You should use sub-document operations when you are modifying only portions of a document, and full-document operations when the contents of a document is to change significantly.
 
 IMPORTANT: The sub-document operations described on this page are for _Key-Value_ requests only: they are not related to sub-document N1QL queries.
 (Sub-document N1QL queries are explained in the section xref:concept-docs:n1ql-query.adoc[Querying with N1QL].)
 
-In order to use sub-document operations you need to specify a _path_ indicating the location of the sub-document.
-The _path_ follows N1QL syntax (see <<#path-syntax,below>>, and xref:6.5@server:n1ql:n1ql-intro/queriesandresults.adoc[N1QL Queries and Results]).
+
 Considering the document:
 
 .customer123.json
@@ -28,28 +29,14 @@ Considering the document:
 ----
 {
   "name": "Douglas Reynholm",
-  "email": "douglas@reynholmindustries.com",
-  "addresses": {
-    "billing": {
-      "line1": "123 Any Street",
-      "line2": "Anytown",
-      "country": "United Kingdom"
-    },
-    "delivery": {
-      "line1": "123 Any Street",
-      "line2": "Anytown",
-      "country": "United Kingdom"
-    }
-  },
-  "purchases": {
-    "complete": [
-      339, 976, 442, 666
-    ],
-    "abandoned": [
-      157, 42, 999
-    ]
-  }
-}
+  "array": "1,2,3,4",
+  "email":"john@example.com"
+
+
+ }
+
+
+
 ----
 
 The paths `name`, `addresses.billing.country` and `purchases.complete[0]` are all valid paths.
@@ -60,6 +47,38 @@ The paths `name`, `addresses.billing.country` and `purchases.complete[0]` are al
 The _lookup-in_ operations query the document for certain path(s); these path(s) are then returned.
 You have a choice of actually retrieving the document path using the _subdoc-get_ sub-document operation, or simply querying the existence of the path using the _subdoc-exists_ sub-document operation.
 The latter saves even more bandwidth by not retrieving the contents of the path if it is not needed.
+
+.Check existence of Subdocument path
+[source,c]
+include::example$subdoc-retrieving.cc[]
+----
+       std::vector<std::string> paths{
+           "email",
+           "array[1]",
+           "non-exist",
+       };
+
+       check(lcb_subdocspecs_get(specs, 0, 0, paths[0].c_str(), paths[0].size()), "create SUBDOC-GET operation");
+       check(lcb_subdocspecs_get(specs, 1, 0, paths[1].c_str(), paths[1].size()), "create SUBDOC-GET operation");
+       check(lcb_subdocspecs_exists(specs, 2, 0, paths[2].c_str(), paths[2].size()), "create SUBDOC-EXISTS operation");
+
+----
+.Retrieve Subdocument value
+[source,c]
+  ----
+check(results.status, "status of SUBDOC operation");
+        std::size_t idx = 0;
+        for (const auto& entry : results.entries) {
+            std::cout << idx << ": path=\"" << paths[idx] << "\", ";
+            if (entry.status == LCB_SUCCESS) {
+                std::cout << "value=" << (entry.value.empty() ? "(no value)" : entry.value) << "\n";
+            } else {
+                std::cout << "code=" << lcb_strerror_short(entry.status) << "\n";
+            }
+            ++idx;
+            ----
+
+
 ////
 .Retrieve sub-document value
 [source,csharp]
@@ -104,6 +123,7 @@ _libcouchbase_ is an asynchronous library which means that operations results ar
 being returned to functions.
 Callbacks are passed `cookie` parameter which is a user defined pointer(i.e your own pointer which can be  NULL) to associate
 a specific command with a specific callback invocation.
+[source,c]
 ----
    #define VALUE_SIZE 100876
    static int counter = 0;
@@ -116,7 +136,7 @@ a specific command with a specific callback invocation.
 ----
 For simple synchronous use, you will need to call `lcb_wait()` after each set of scheduled operations. During `lcb_wait`
 the library will block for I/O and invoke your callbacks as the results of the operations arrive.
-
+[source,c]
 ----
     lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT);
     lcb_cmdstore_key(cmd, key, strlen(key));
@@ -133,6 +153,20 @@ See the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2minimal_2
 Mutation operations modify one or more paths in the document.
 The simplest of these operations is _subdoc-upsert_, which, similar to the fulldoc-level _upsert_, will either modify the value of an existing path or create it if it does not exist.
 
+[source,c]
+----
+std::string value{ R"({"name":"john", "array":[1,2,3], "email":"john@example.com"})" };
+
+std::cout << "Initial document is: " << value << "\n";
+
+lcb_CMDSTORE* cmd = nullptr;
+check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
+check(lcb_cmdstore_key(cmd, key.c_str(), key.size()), "assign ID for UPSERT command");
+check(lcb_cmdstore_value(cmd, value.c_str(), value.size()), "assign value for UPSERT command");
+check(lcb_store(instance, nullptr, cmd), "schedule UPSERT command");
+check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
+lcb_wait(instance, LCB_WAIT_DEFAULT);
+----
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
 
 ////
@@ -170,6 +204,7 @@ bucket.MutateIn("customer123", ops => {
 
 NOTE: `mutateIn` is an _atomic_ operation.
 If any single `ops` fails, then the entire document is left unchanged.
+
 ////
 == Array append and prepend
 
@@ -277,26 +312,27 @@ Note that currently the _addunique_ will fail with a _Path Mismatch_ error if th
 The _addunique_ operation will also fail with _Cannot Insert_ if the value to be added is one of those types as well.
 
 Note that the actual position of the new element is undefined, and that the array is not ordered.
-
+////
 == Array insertion
 
 New elements can also be _inserted_ into an array.
 While _append_ will place a new item at the _end_ of an array and _prepend_ will place it at the beginning, _insert_ allows an element to be inserted at a specific _position_.
 The position is indicated by the last path component, which should be an array index.
-For example, to insert `"cruel"` as the second element in the array `["Hello", "world"]`, the code would look like:
+For example, to insert `"42"` as the last element in the array `[1,2,3,4]`, the code would look like:
 
-[source,csharp]
+[source,c]
 ----
-bucket.MutateIn("array", ops =>
-    ops.ArrayInsert("[1]", "cruel")
-);
+std::string value_to_add{ "42" };
+check(lcb_subdocspecs_array_add_last(specs, 0, 0, paths[0].c_str(), paths[0].size(), value_to_add.c_str(), value_to_add.size()),"create ARRAY_ADD_LAST operation");
+
+
 ----
 
 // for your examples, above, CD: “I feel like somewhere in this we should also just a an example path like "my.path[1]" too, just to show how to use the index with a nested path. I don't think it's necessarily clear.”
 
 Note that the array must already exist and that the index must be valid (i.e.
 it must not point to an element which is out of bounds).
-
+////
 == Counters and numeric fields
 
 Counter operations allow the manipulation of a _numeric_ value inside a document.

@@ -81,7 +81,7 @@ Here is a simple upsert operation, which will insert the document if it does not
 
 We use `lcb_cmdstore_create` for storing an item in Couchbase as it is only one operation with different set of
 attributes/constraints for storage modes.
-
+[source,c]
 ----
     lcb_CMDSTORE *scmd;
     lcb_cmdstore_create(&scmd, LCB_STORE_UPSERT);
@@ -99,7 +99,7 @@ attributes/constraints for storage modes.
 == Insert
 
 Insert works very similarly to upsert , but will fail if the document already exists.
-
+[source,c]
 ----
     lcb_CMDSTORE *scmd;
     lcb_cmdstore_create(&scmd, LCB_STORE_INSERT);
@@ -116,7 +116,7 @@ Insert works very similarly to upsert , but will fail if the document already ex
 == Retrieving documents
 
 We've tried upserting and inserting documents into the Couchbase Server, let's get them back:
-
+[source,c]
 ----
       static void get_callback(lcb_INSTANCE *instance , int type, const lcb_RESPGET *resp)
       {
@@ -141,11 +141,6 @@ We've tried upserting and inserting documents into the Couchbase Server, let's g
 
 A very common sequence  of operations is to `get` a document, modify its contents, and `replace` it.
 // Insert code sample here
-
-We `upsert` an initial version of the document. We don't care about  the exact details of the result,
-just whether it succeeded or not, so do not assign a value. Then we get back into  `doc` and pull out the
-document's content as a `Json`
-
 So what is CAS?
 
 CAS, or  Compare and  Swap, is a form of optimistic locking. Every  document is Couchbase has a CAS value,
@@ -156,33 +151,6 @@ cheap and safe concurrency. See this xref:concurrent-document-mutations.adoc[thi
 
 In general, you'll want to provide a CAS value whenever you `replace` a document, to prevent overwriting another agent's mutations.
 
-
-////
-We're going to expand on the short _Upsert_ example we used there, adding options as we move through the various CRUD operations.
-Here is the _Insert_ operation at its simplest:
-
-[source,csharp]
-----
-Insert
-var document = new {foo = "bar", bar = "foo"};
-var result = await collection.Insert("document-key", document);
-----
-
-Options may be added to operations:
-
-[source,csharp]
-----
-Insert (with options)
-var document = new {foo = "bar", bar = "foo"};
-var result = await collection.Insert("document-key", document,
-    new InsertOptions
-    {
-        Cas = 12345,
-        Timeout = TimeSpan.FromSeconds(5)
-    }
-);
-----
-////
 Setting a Compare and Swap (CAS) value is a form of optimistic locking - dealt with in depth in the xref:concurrent-document-mutations.adoc[CAS page].
 Here we just note that the CAS is a value representing the current state of an item; each time the item is modified, its CAS changes.
 The CAS value is returned as part of a document’s metadata whenever a document is accessed.
@@ -227,7 +195,7 @@ var result = await collection.Upsert("document-key", document,
 
 Here, we have add _Durability_ options, namely `PersistTo` and `ReplicateTo`.
 ////
-
+[source,c]
 ----
 struct Result {
     std::string value{};
@@ -293,14 +261,21 @@ These trade offs, as well as which settings may be tuned, are discussed in the x
 
 If a version of Couchbase Server lower than 6.5 is being used then the application can fall-back to xref:concept-docs:durability-replication-failure-considerations.adoc#older-server-versions['client verified' durability.]
 Here the SDK will do a simple poll of the replicas and only return once the requested durability level is achieved.
-////
 This can be achieved like this:
 
 [source,c]
 ----
 // Durability observed snippet
+
+    lcb_durability_opts_t options;
+    memset(&options, 0, sizeof options);
+    options.v.v0.cap_max = 1;
+    options.v.v0.persist_to = -1;
+    options.v.v0.replicate_to = -1;
+
 ----
-////
+
+
 To stress, durability is a useful feature but should not be the default for most applications, as there is a performance consideration,
 and the default level of safety provided by Couchbase will be reasonable for the majority of situations.
 
@@ -309,8 +284,19 @@ and the default level of safety provided by Couchbase will be reasonable for the
 Couchbase Server includes an option top have particular documents automatically expire after a set time. This can be useful is some use cases,
 such as user sessions, caches, or other temporary documents.
 
-By default, Couchbase documents do not expire, but transient or temporary data may be needed for user sessions, caches, or other temporary documents.
-Using `Touch()`, you can set expiration values on documents to handle transient data.
+You can set an expiry value to `lmd_cmdstore_expiry` when creating a document:
+[source,c]
+----
+
+    lcb_CMDSTORE* cmd = nullptr;
+    check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
+    check(lcb_cmdstore_key(cmd, key.c_str(), key.size()), "assign ID for UPSERT command");
+    check(lcb_cmdstore_value(cmd, value.c_str(), value.size()), "assign value for UPSERT command");
+    check(lcb_cmdstore_expiry(cmd, static_cast<std::uint32_t>(expiry.count())), "assign expiration to UPSERT command");
+    check(lcb_store(instance, nullptr, cmd), "schedule UPSERT command");
+    check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
+----
 ////
 
 [source,csharp]
@@ -333,7 +319,7 @@ var result = await collection.Touch("document-key", TimeSpan.FromSeconds(30),
 
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/expiration.cc[code sample^] for use in context.
 
-include::6.5@sdk:shared:partial$documents.adoc[tag=exp-note]
+
 
 
 == Atomic Counters
@@ -341,7 +327,7 @@ include::6.5@sdk:shared:partial$documents.adoc[tag=exp-note]
 The numeric content of a document can be manipulated using https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-counter.html[lcb_RESPCOUNTER^]. Counter opeations treat the document
 as a numeric value (the document must contain a parseable integer as its content). This value may then be incremented
 or decremented.
-
+[source,c]
 ----
 lcb_CMDCOUNTER* cmd = nullptr;
 lcb_cmdcounter_create(&cmd);
