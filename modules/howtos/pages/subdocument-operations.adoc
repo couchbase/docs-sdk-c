@@ -49,9 +49,11 @@ You have a choice of actually retrieving the document path using the _subdoc-get
 The latter saves even more bandwidth by not retrieving the contents of the path if it is not needed.
 
 .Check existence of Subdocument path
+include::devguide:example$subdoc-retrieving.cc[]
 [source,c]
-include::example$subdoc-retrieving.cc[]
+
 ----
+
        std::vector<std::string> paths{
            "email",
            "array[1]",
