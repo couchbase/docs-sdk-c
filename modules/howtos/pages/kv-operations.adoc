@@ -83,17 +83,7 @@ We use `lcb_cmdstore_create` for storing an item in Couchbase as it is only one 
 attributes/constraints for storage modes.
 [source,c]
 ----
-    lcb_CMDSTORE *scmd;
-    lcb_cmdstore_create(&scmd, LCB_STORE_UPSERT);
-    lcb_cmdstore_key(scmd, "key", 3);
-    const char *initialval = "{\"hello\":\"world\"}";
-    lcb_cmdstore_value(scmd, initval, strlen(initialval));
-    rc = lcb_store(instance, NULL, scmd);
-    lcb_cmdstore_destroy(scmd);
-    assert(rc == LCB_SUCCESS);
-    lcb_wait(instance, LCB_WAIT_DEFAULT);
-
-
+include::example$insert-upsert.c[tag=upsert]
 ----
 
 == Insert
@@ -101,16 +91,7 @@ attributes/constraints for storage modes.
 Insert works very similarly to upsert , but will fail if the document already exists.
 [source,c]
 ----
-    lcb_CMDSTORE *scmd;
-    lcb_cmdstore_create(&scmd, LCB_STORE_INSERT);
-    lcb_cmdstore_key(scmd, "key", 3);
-    const char *initialval = "{\"hello\":\"world\"}";
-    lcb_cmdstore_value(scmd, initval, strlen(initialval));
-    rc = lcb_store(instance, NULL, scmd);
-    lcb_cmdstore_destroy(scmd);
-    assert(rc == LCB_SUCCESS);
-    lcb_wait(instance, LCB_WAIT_DEFAULT);
-
+include::example$insert-upsert.c[tag=insert]
 ----
 
 == Retrieving documents
@@ -118,24 +99,7 @@ Insert works very similarly to upsert , but will fail if the document already ex
 We've tried upserting and inserting documents into the Couchbase Server, let's get them back:
 [source,c]
 ----
-      static void get_callback(lcb_INSTANCE *instance , int type, const lcb_RESPGET *resp)
-      {
-        const char *key;
-        size_t nkey;
-        char* value;
-        size_t value_len;
-        lcb_respget_key(resp, &key, &nkey);
-        printf("Key found : %.*s/n",nkey, key);
-
-        lcb_STATUS rc  = lcb_respget_status(resp);
-        if (rc!=LCB_SUCCESS){
-          printf("Could not find item \n");
-        }
-        else{
-          lcb_respget_value(resp, &value, &value_len);
-          printf("Got value: %.*s\n", value_len, value);
-        }
-      }
+include::example$insert-upsert.c[tag=retrieve]
 ----
 == Replace
 
@@ -197,27 +161,7 @@ Here, we have add _Durability_ options, namely `PersistTo` and `ReplicateTo`.
 ////
 [source,c]
 ----
-struct Result {
-    std::string value{};
-    std::uint64_t cas{ 0 };
-    lcb_STATUS rc{ LCB_SUCCESS };
-};
-result = {}; // reset result object
-{
-    lcb_CMDSTORE* cmd = nullptr;
-    check(lcb_cmdstore_create(&cmd, LCB_STORE_REPLACE), "create REPLACE command");
-    check(lcb_cmdstore_key(cmd, document_id.c_str(), document_id.size()), "assign ID for REPLACE command");
-    check(lcb_cmdstore_value(cmd, new_value.c_str(), new_value.size()), "assign value for REPLACE command");
-    check(lcb_store(local_instance, &result, cmd), "schedule REPLACE command");
-    check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
-    lcb_wait(local_instance, LCB_WAIT_DEFAULT);
-
-    if (result.rc != LCB_SUCCESS) {
-        std::stringstream msg;
-        msg << "failed to append " << item_value << ": " << lcb_strerror_short(result.rc) << "\n";
-        std::cout << msg.str();
-      }
-}
+include::example$cas.c[tag=cas]
 ----
 
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/cas.cc[code sample^] for use in context.
@@ -265,14 +209,7 @@ This can be achieved like this:
 
 [source,c]
 ----
-// Durability observed snippet
-
-    lcb_durability_opts_t options;
-    memset(&options, 0, sizeof options);
-    options.v.v0.cap_max = 1;
-    options.v.v0.persist_to = -1;
-    options.v.v0.replicate_to = -1;
-
+include::example$durability.c[tag=durability]
 ----
 
 
@@ -287,15 +224,7 @@ such as user sessions, caches, or other temporary documents.
 You can set an expiry value to `lmd_cmdstore_expiry` when creating a document:
 [source,c]
 ----
-
-    lcb_CMDSTORE* cmd = nullptr;
-    check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
-    check(lcb_cmdstore_key(cmd, key.c_str(), key.size()), "assign ID for UPSERT command");
-    check(lcb_cmdstore_value(cmd, value.c_str(), value.size()), "assign value for UPSERT command");
-    check(lcb_cmdstore_expiry(cmd, static_cast<std::uint32_t>(expiry.count())), "assign expiration to UPSERT command");
-    check(lcb_store(instance, nullptr, cmd), "schedule UPSERT command");
-    check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
-    lcb_wait(instance, LCB_WAIT_DEFAULT);
+include::example$expiration.c[tag=expiration]
 ----
 ////
 
@@ -329,11 +258,7 @@ as a numeric value (the document must contain a parseable integer as its content
 or decremented.
 [source,c]
 ----
-lcb_CMDCOUNTER* cmd = nullptr;
-lcb_cmdcounter_create(&cmd);
-lcb_cmdcounter_key(cmd, document_id.c_str(), document_id.size());
-lcb_cmdcounter_delta(cmd, 1) // Increment by 1
-lcb_wait(instance, LCB_WAIT_DEFAULT);
+include::example$atomic-counters.c[tag=atomic-counter]
 ----
 ////
 .Increment
