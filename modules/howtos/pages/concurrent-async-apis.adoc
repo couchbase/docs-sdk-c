@@ -11,7 +11,7 @@ Libcouchbase is an asynchronous client that may also be used in blocking mode.
 The library contains I/O plugins for common libraries such as _libevent_, _libev_, and _libuv_, and a libevent-based example can be found https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2libeventdirect_2main_8c-example.html[here].
 
 
-Batching examples are given for https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/bulk-store.cc[bulk store] and for https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/bulk-get.cc[bulk get].
+
 
 
 == Usage Differences in Non-Blocking Mode
@@ -43,3 +43,12 @@ You need to use the callback variant that notifies your application when the lib
 Likewise, you are responsible for freeing the `iops` structure via [.api]`lcb_destroy_io_opts()` when it is no longer required.
 * Currently the library does blocking DNS look-ups via the standard [.api]`getaddrinfo()` call.
 Typically this should not take a long time but may potentially block your application if an invalid host name is detected or the DNS server in use is slow to respond.
+
+== Batching
+
+The most simplistic bulk fetch looks like this:
+
+[source,c]
+----
+include::example$bulk-get.cc[tag=batching,indent=0]
+----
