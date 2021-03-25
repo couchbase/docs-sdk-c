@@ -1,0 +1,1 @@
+../../devguide/examples/c/bulk-get.cc
