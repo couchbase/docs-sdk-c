@@ -28,6 +28,7 @@ static void
 store_key(lcb_INSTANCE* instance, const std::string& key, const std::string& value, std::chrono::seconds expiry = {})
 {
     lcb_CMDSTORE* cmd = nullptr;
+    // tag::expiration[]
     check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
     check(lcb_cmdstore_key(cmd, key.c_str(), key.size()), "assign ID for UPSERT command");
     check(lcb_cmdstore_value(cmd, value.c_str(), value.size()), "assign value for UPSERT command");
@@ -35,6 +36,7 @@ store_key(lcb_INSTANCE* instance, const std::string& key, const std::string& val
     check(lcb_store(instance, nullptr, cmd), "schedule UPSERT command");
     check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
     lcb_wait(instance, LCB_WAIT_DEFAULT);
+    // end::expiration[]
 }
 
 static void

@@ -105,8 +105,12 @@ main(int, char**)
         };
 
         check(lcb_subdocspecs_get(specs, 0, 0, paths[0].c_str(), paths[0].size()), "create SUBDOC-GET operation");
+        // tag::sub-doc-retrieve[]
         check(lcb_subdocspecs_get(specs, 1, 0, paths[1].c_str(), paths[1].size()), "create SUBDOC-GET operation");
+        // end::sub-doc-retrieve[]
+        // tag::sub-doc-exists[]
         check(lcb_subdocspecs_exists(specs, 2, 0, paths[2].c_str(), paths[2].size()), "create SUBDOC-EXISTS operation");
+        // end::sub-doc-exists[]
 
         lcb_CMDSUBDOC* cmd = nullptr;
         check(lcb_cmdsubdoc_create(&cmd), "create SUBDOC command");

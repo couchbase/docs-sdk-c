@@ -164,6 +164,7 @@ main()
             }
 
             std::string new_value = add_item_to_list(result.value, item_value);
+            // tag::cas[]
             result = {}; // reset result object
             {
                 lcb_CMDSTORE* cmd = nullptr;
@@ -180,6 +181,7 @@ main()
                     std::cout << msg.str();
                 }
             }
+            // end::cas[]
 
             lcb_destroy(local_instance);
         });

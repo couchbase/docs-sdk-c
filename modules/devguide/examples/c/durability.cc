@@ -1,146 +1,131 @@
+#include <string>
+#include <iostream>
+#include <cstdlib>
+
 #include <libcouchbase/couchbase.h>
-#include <libcouchbase/api3.h>
-#include <stdio.h>
 
-// Low-level durability
-static void durability_callback(lcb_t, int, const lcb_RESPBASE *rb)
+static void die(const char *msg, lcb_STATUS err)
 {
-    const lcb_RESPENDURE *resp = reinterpret_cast< const lcb_RESPENDURE * >(rb);
-    if (resp->rc != LCB_SUCCESS) {
-        printf("Durability failed! %s\n", lcb_strerror(NULL, rb->rc));
-    }
-    printf("Persisted to %d nodes. Replicated to %d nodes\n", resp->npersisted, resp->nreplicated);
+    std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
+    exit(EXIT_FAILURE);
 }
 
-static void store_callback(lcb_t instance, int, const lcb_RESPBASE *rb)
+static void store_with_observe_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp)
 {
-    const lcb_RESPSTORE *resp = reinterpret_cast< const lcb_RESPSTORE * >(rb);
-    if (resp->rc != LCB_SUCCESS) {
-        printf("Storage operation failed (%s)\n", lcb_strerror(NULL, rb->rc));
+    lcb_STATUS rc = lcb_respstore_status(resp);
+    int store_ok, exists_master, persisted_master;
+    uint16_t num_responses, num_replicated, num_persisted;
+
+    lcb_respstore_observe_stored(resp, &store_ok);
+    lcb_respstore_observe_master_exists(resp, &exists_master);
+    lcb_respstore_observe_master_persisted(resp, &persisted_master);
+    lcb_respstore_observe_num_responses(resp, &num_responses);
+    lcb_respstore_observe_num_replicated(resp, &num_replicated);
+    lcb_respstore_observe_num_persisted(resp, &num_persisted);
+
+    std::cout << "Got status of operation: " << lcb_strerror_short(rc) << "\n";
+    std::cout << "Stored: " << (store_ok ? "true" : "false") << "\n";
+    std::cout << "Number of round-trips: " << num_responses << "\n";
+    std::cout << "In memory on master: " << (exists_master ? "true" : "false") << "\n";
+    std::cout << "Persisted on master: " << (persisted_master ? "true" : "false") << "\n";
+    std::cout << "Nodes have value replicated: " << num_replicated << "\n";
+    std::cout << "Nodes have value persisted (including master): " << num_persisted << "\n";
+}
+
+static void do_store_with_observe_durability(lcb_INSTANCE *instance)
+{
+    lcb_install_callback(instance, LCB_CALLBACK_STORE, reinterpret_cast<lcb_RESPCALLBACK>(store_with_observe_callback));
+
+    std::string key = "docid";
+    std::string value = "[1,2,3]";
+
+    // tag::durability[]
+    lcb_CMDSTORE *cmd;
+    lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT);
+    lcb_cmdstore_key(cmd, key.data(), key.size());
+    lcb_cmdstore_value(cmd, value.data(), value.size());
+    lcb_cmdstore_durability_observe(cmd, -1, -1);
+    // end::durability[]
+
+    lcb_sched_enter(instance);
+    lcb_STATUS err = lcb_store(instance, nullptr, cmd);
+    lcb_cmdstore_destroy(cmd);
+    if (err != LCB_SUCCESS) {
+        printf("Unable to schedule store+durability operation: %s\n", lcb_strerror_short(err));
+        lcb_sched_fail(instance);
         return;
     }
+    lcb_sched_leave(instance);
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
+}
 
-    lcb_durability_opts_t options;
-    memset(&options, 0, sizeof options);
-    options.v.v0.cap_max = 1;
-    options.v.v0.persist_to = -1;
-    options.v.v0.replicate_to = -1;
+static void store_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp)
+{
+    lcb_STATUS rc = lcb_respstore_status(resp);
+    std::cout << "Got status of operation: " << lcb_strerror_short(rc) << "\n";
+}
 
-    lcb_error_t rc;
+static void do_store_with_server_durability(lcb_INSTANCE *instance)
+{
+    lcb_install_callback(instance, LCB_CALLBACK_STORE, reinterpret_cast<lcb_RESPCALLBACK>(store_callback));
+
+    std::string key = "docid";
+    std::string value = "[1,2,3]";
+
+    lcb_CMDSTORE *cmd;
+    lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT);
+    lcb_cmdstore_key(cmd, key.data(), key.size());
+    lcb_cmdstore_value(cmd, value.data(), value.size());
+    lcb_cmdstore_durability(cmd, LCB_DURABILITYLEVEL_MAJORITY);
+
     lcb_sched_enter(instance);
-    lcb_MULTICMD_CTX *mctx = lcb_endure3_ctxnew(instance, &options, &rc);
-    if (mctx == NULL) {
-        printf("Couldn't create durability context! (%s)\n", lcb_strerror(NULL, rc));
+    lcb_STATUS err = lcb_store(instance, nullptr, cmd);
+    lcb_cmdstore_destroy(cmd);
+    if (err != LCB_SUCCESS) {
+        printf("Unable to schedule store+durability operation: %s\n", lcb_strerror_short(err));
+        lcb_sched_fail(instance);
         return;
     }
-
-    printf("Store OK. Performing explicit lcb_endure3\n");
-
-    lcb_CMDENDURE cmd = {};
-    LCB_CMD_SET_KEY(&cmd, resp->key, resp->nkey);
-    // Set the old CAS
-    cmd.cas = resp->cas;
-    rc = mctx->addcmd(mctx, (const lcb_CMDBASE *)&cmd);
-    // Check RC
-    rc = mctx->done(mctx, NULL);
     lcb_sched_leave(instance);
-    // No need to call lcb_wait() here since we are already inside lcb_wait()
-}
-
-static void do_store_and_endure(lcb_t instance)
-{
-    lcb_CMDSTORE scmd = {};
-    lcb_error_t rc;
-
-    const char *key = "docid";
-    const char *value = "[1,2,3]";
-
-    scmd.operation = LCB_SET;
-    LCB_CMD_SET_KEY(&scmd, key, strlen(key));
-    LCB_CMD_SET_VALUE(&scmd, value, strlen(value));
-    lcb_sched_enter(instance);
-    rc = lcb_store3(instance, NULL, &scmd);
-    if (rc != LCB_SUCCESS) {
-        printf("Unable to schedule store operation: %s\n", lcb_strerror_short(rc));
-    }
-    lcb_sched_leave(instance);
-    lcb_wait(instance);
-}
-
-// New-style durability
-static void durstore_callback(lcb_t, int, const lcb_RESPBASE *rb)
-{
-    const lcb_RESPSTOREDUR *resp = reinterpret_cast< const lcb_RESPSTOREDUR * >(rb);
-    if (resp->dur_resp) {
-        const lcb_RESPENDURE *r2 = resp->dur_resp;
-        printf("Persisted to %d nodes. Replicated to %d nodes\n", r2->npersisted, r2->nreplicated);
-    }
-    if (resp->rc != LCB_SUCCESS) {
-        if (resp->store_ok) {
-            printf("Store succeeded but durability failed:");
-        } else {
-            printf("Store failed:");
-        }
-        printf("%s\n", lcb_strerror(NULL, resp->rc));
-    }
-}
-
-static void do_durstore(lcb_t instance)
-{
-    lcb_error_t rc;
-    lcb_CMDSTOREDUR sdcmd = {};
-    const char *key = "docid";
-    const char *value = "[1,2,3]";
-    LCB_CMD_SET_KEY(&sdcmd, key, strlen(key));
-    LCB_CMD_SET_VALUE(&sdcmd, value, strlen(value));
-    sdcmd.operation = LCB_SET;
-    sdcmd.persist_to = -1;
-    sdcmd.replicate_to = -1;
-
-    lcb_sched_enter(instance);
-    rc = lcb_storedur3(instance, NULL, &sdcmd);
-    if (rc != LCB_SUCCESS) {
-        printf("Unable to schedule store+durability operation: %s\n", lcb_strerror_short(rc));
-    }
-    lcb_sched_leave(instance);
-    lcb_wait(instance);
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
 }
 
 int main(int, char **)
 {
-    lcb_create_st crst = {};
-    lcb_error_t rc;
-    lcb_t instance;
+    lcb_STATUS rc;
+    std::string connection_string = "couchbase://localhost";
+    std::string username = "Administrator";
+    std::string password = "password";
 
-    crst.version = 3;
-    crst.v.v3.connstr = "couchbase://127.0.0.1/default";
-    crst.v.v3.username = "testuser";
-    crst.v.v3.passwd = "password";
+    lcb_CREATEOPTS *create_options = nullptr;
+    lcb_createopts_create(&create_options, LCB_TYPE_BUCKET);
+    lcb_createopts_connstr(create_options, connection_string.data(), connection_string.size());
+    lcb_createopts_credentials(create_options, username.data(), username.size(), password.data(), password.size());
 
-    rc = lcb_create(&instance, &crst);
-    rc = lcb_connect(instance);
-    lcb_wait(instance);
-    rc = lcb_get_bootstrap_status(instance);
+    lcb_INSTANCE *instance;
+    rc = lcb_create(&instance, create_options);
+    lcb_createopts_destroy(create_options);
     if (rc != LCB_SUCCESS) {
-        printf("Unable to bootstrap cluster: %s\n", lcb_strerror_short(rc));
-        exit(1);
+        die("Couldn't create couchbase handle", rc);
     }
 
-    lcb_install_callback3(instance, LCB_CALLBACK_STOREDUR, durstore_callback);
-    lcb_install_callback3(instance, LCB_CALLBACK_STORE, store_callback);
-    lcb_install_callback3(instance, LCB_CALLBACK_ENDURE, durability_callback);
+    rc = lcb_connect(instance);
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't schedule connection", rc);
+    }
 
-    // The C SDK provides a convenient way to perform storage operations and
-    // ensure durability in one API call.
-    printf("Performing DURSTORE!\n");
-    do_durstore(instance);
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
 
-    // For more control (or perhaps when doing multiple batched operations), it
-    // may be more prudent to perform durability and storage as two discreet
-    // operations. Note durability is not exposed as a distinct API call to
-    // most SDKs:
-    printf("Performing store + durability\n");
-    do_store_and_endure(instance);
+    rc = lcb_get_bootstrap_status(instance);
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't bootstrap from cluster", rc);
+    }
+
+    std::cout << "--- Performing store with observe-based durability check\n";
+    do_store_with_observe_durability(instance);
+
+    std::cout << "--- Performing store server-side durability check\n";
+    do_store_with_server_durability(instance);
 
     lcb_destroy(instance);
     return 0;
