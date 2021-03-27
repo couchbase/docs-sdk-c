@@ -21,9 +21,21 @@ Once you have a reference to the bucket you need to at least supply the name of 
 ----
 include::example$views.cc[tag=views,indent=0]
 ----
-//== Working with View Rows
+== Working with View Rows
+In the C client library, query results are delivered on a per-row basis to a given callback, which is specified at query time.
+[source,c]
+----
+include::example$views.cc[tag=view-rows,indent=0]
+----
+The callback is invoked for each row. The end of the query is signaled by having the `LCB_RESP_F_FINAL` bit set in the response's field.
 
+The response structure contains a `key` and `nkey`,`docid` and `ndocid` fields that contain the buffer and lengths for the  emitted keys of the view result and corresponding document ID.
+All the fields (except `docid`) are JSON encoded and should be decoded by a JSON decoder before use.
 
+== Accessing View metadata
+The callback function (`lcb_VIEW_CALLBACK`) will contain the `LCB_RESP_F_FINAL` flag set after all the rows have been returned.
+Applications should check for the presence of this flag.
+If this flag is present, the row itself will contain the raw response metadata in its value field.
 
 ////
 include::6.5@sdk:shared:partial$views.adoc[tag=example-beer]

@@ -71,12 +71,13 @@ static void do_store_with_server_durability(lcb_INSTANCE *instance)
 
     std::string key = "docid";
     std::string value = "[1,2,3]";
-
+    //tag::subdoc-durability[]
     lcb_CMDSTORE *cmd;
     lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT);
     lcb_cmdstore_key(cmd, key.data(), key.size());
     lcb_cmdstore_value(cmd, value.data(), value.size());
     lcb_cmdstore_durability(cmd, LCB_DURABILITYLEVEL_MAJORITY);
+    //end::subdoc_durabilty[]
 
     lcb_sched_enter(instance);
     lcb_STATUS err = lcb_store(instance, nullptr, cmd);

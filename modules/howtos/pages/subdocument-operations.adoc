@@ -65,15 +65,15 @@ The latter saves even more bandwidth by not retrieving the contents of the path 
 .Check existence of Subdocument path
 [source,c]
 ----
-include::example$subdoc-retrieving.cc[tag=sub-doc-exists]
+include::example$subdoc-retrieving.cc[tag=sub-doc-exists,indent=0]
 ----
 
 .Retrieve Subdocument value
 [source,c]
 ----
-include::example$subdoc-retrieving.cc[tag=sub-doc-retrieve]
+include::example$subdoc-retrieving.cc[tag=sub-doc-retrieve,indent=0]
 ----
-
+////
 Multiple operations can be combined as well:
 
 .Combine multiple lookup operations
@@ -99,7 +99,7 @@ Callbacks are passed a `cookie` parameter which is a user defined pointer (i.e y
 
 [source,c]
 ----
-include::example$insert-upsert.cc[tag=upsert]
+include::example$insert-upsert.cc[tag=upsert,indent=0]
 ----
 
 For simple synchronous use, you will need to call `lcb_wait()` after each set of scheduled operations.
@@ -107,7 +107,7 @@ During `lcb_wait` the library will block for I/O, and invoke your callbacks as t
 
 [source,c]
 ----
-include::example$insert-upsert.cc[tag=async]
+include::example$insert-upsert.cc[tag=async,indent=0]
 ----
 
 See the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2minimal_2minimal_8c-example.html#a5[code sample^] for use in context.
@@ -120,7 +120,7 @@ The simplest of these operations is _subdoc-upsert_, which, similar to the fulld
 
 [source,c]
 ----
-include::example$subdoc-updating.cc[tag=sub-doc-mutate]
+include::example$subdoc-updating.cc[tag=sub-doc-mutate,indent=0]
 ----
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
 
@@ -389,6 +389,8 @@ bucket.MutateIn("customer123", ops =>
 );
 ----
 
+////
+////
 == CAS Semantics
 
 Subdoc mostly eliminates the need for tracking the xref:concurrent-document-mutations.adoc[CAS] value.
@@ -420,9 +422,22 @@ While CAS is no longer so strongly required to ensure document updates are prese
 ////
 
 
-////
-== Durability
 
+
+== Concurrent Modifications
+
+Concurrent Sub-Document operations on different parts of a document will not conflict. For example the following two blocks can execute concurrently without any risk of conflict:
+
+[source,c]
+----
+include::example$array-append-prepend.cc[tag=concurrent,indent=0]
+----
+Even when modifying the same part of the document, operations will not necessarily conflict. For example, two concurrent `lcb_subdocspecs_array_add_first` and `lcb_subdocspecs_array_add_unique` will both succeed.
+
+So in some cases the application will not need to supply a xref:concurrent-document-mutations.adoc[CAS] value to protect against concurrent modifications.
+
+== Durability
+////
 Couchbase’s xref:concept-docs:durability-replication-failure-considerations.adoc#older-server-versions[traditional 'client verified' durability],
 using `PersistTo` and `ReplicateTo`, is still available, particularly for talking to Couchbase Server 6.0 and earlier:
 
@@ -430,14 +445,14 @@ using `PersistTo` and `ReplicateTo`, is still available, particularly for talkin
 ----
 // 6.0 durability snippet
 ----
-
+////
 In Couchbase Server 6.5 and up, this is built upon with xref:concept-docs:durability-replication-failure-considerations.adoc#durable-writes[Durable Writes], which uses the concept of majority to indicate the number of configured Data Service nodes to which commitment is required:
 
 [source,c]
 ----
-// 6.5durability snippet
+include::example$durability.cc[tag=subdoc-durability,indent=0]
 ----
-////
+
 
 == Error handling
 

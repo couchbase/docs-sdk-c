@@ -16,7 +16,7 @@ When a primary index is defined you can issue non-covered queries on the bucket 
 
 [source,c]
 ----
-include::example$query-criteria.cc[tag=query]
+include::example$query-criteria.cc[tag=query,indent=0]
 ----
 
 == Queries & Placeholders
@@ -28,7 +28,7 @@ Note that both parameters and options are optional.
 
 [source,c]
 ----
-include::example$query-placeholders.cc[tag=placeholder]
+include::example$query-placeholders.cc[tag=placeholder,indent=0]
 ----
 
 
@@ -62,8 +62,21 @@ Nevertheless, the result format recieved using an SDK may be different than that
 
 
 
+== Scan Consistency
 
+By default the results are read from a potentially stale snapshot of data. This may be good for most cases; however at times you want the absolutely most recent data.
+If you need to ensure that mutations up to the vector indicated by the mutation token passed to `lcb_cmdquery_consistency_token_for_keyspace` are used , use `LCB_QUERY_CONSISTENCY_RYROW`.
+`LCB_QUERY_CONSISTENCY_REQUEST` refreshes the snapshot for each request, while `LCB_QUERY_CONSISTENCY_STATEMENT` refreshes the snapshot for each statement.
 
+[source,c]
+----
+include::example$query-consistency.cc[tag=consistency,indent=0]
+----
+
+== Async APIs
+
+For full details on Async API, please visit
+https://docs.couchbase.com/c-sdk/current/howtos/concurrent-async-apis.html[Async and Batching APIs].
 
 ////
 == Getting Started

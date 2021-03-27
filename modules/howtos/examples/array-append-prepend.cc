@@ -215,6 +215,7 @@ int main(int argc, char **argv)
     /**
      * Add element to the beginning of an array
      */
+     //tag::concurrent[]
     // tag::array-prepend[]
     std::cout << "Prepending element to array (array must exist)\n";
     lcb_subdocspecs_create(&ops, 1);
@@ -245,7 +246,7 @@ int main(int argc, char **argv)
     lcb_wait(instance, LCB_WAIT_DEFAULT);
     demoKey(instance, "key");
     // end::array-unique[]
-
+    //end::concurrent[]
     /**
      * Get the first element back..
      */

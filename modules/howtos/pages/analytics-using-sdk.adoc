@@ -59,6 +59,11 @@ The analytics service provides an array of options to customize your query. The 
 | `lcb_cmdanalytics_readonly(command, readonly)` | Marks analytics query as read-only ( set readonly value to non zero ).
 |====
 
+== Async APIs
+
+For full details on Async API, please visit
+https://docs.couchbase.com/c-sdk/current/howtos/concurrent-async-apis.html[Async and Batching APIs].
+
 ////
 [source,golang,indent=0]
 ----

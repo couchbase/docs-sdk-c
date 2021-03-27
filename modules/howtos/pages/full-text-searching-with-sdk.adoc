@@ -23,10 +23,33 @@ Search queries are executed at Cluster level (not bucket or collection).
 As of Couchbase Server 6.5+ they do also not require a bucket to be opened first.
 In older versions of Couchbase Server, even though executed at Cluster level, a bucket must be opened before performing queries.
 
+[source,c]
+----
+include::example$fts-basic.cc[tag=query-example,indent=0]
+----
+== Search Queries
+The query string is the simplest form available in the API, but there are many more available.
+Please refer to the
+https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-cbft-api.html[API Documentation].
 
-== Example 
+== The Search Result
+Once a search query is executed sucessfully, the callback will be invoked after each hit.
+It will be invoked one last time with the result metadata (including any facets) and the `LCB_RESP_F_FINAL` will return true.
 
-For a full Search example, see the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2fts_2fts_8c-example.html[API documentation].
+[source,c]
+----
+include::example$fts-basic.cc[tag=query-result,indent=0]
+----
+
+== Async APIs
+
+For full details on Async API, please visit
+https://docs.couchbase.com/c-sdk/current/howtos/concurrent-async-apis.html[Async and Batching APIs].
+
+
+//== Example
+
+//For a full Search example, see the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2fts_2fts_8c-example.html[API documentation].
 
 
 ////
@@ -60,10 +83,10 @@ include::devguide:example$go/search.go[tag=conjunctionquery]
 
 == Working with Results
 
-The result of a search query has three components: rows, facets, and metdata. 
-Rows are the documents that match the query. 
-Facets allow the aggregation of information collected on a particular result set. 
-Metdata holds additional information not directly related to your query, 
+The result of a search query has three components: rows, facets, and metdata.
+Rows are the documents that match the query.
+Facets allow the aggregation of information collected on a particular result set.
+Metdata holds additional information not directly related to your query,
 such as success total hits and how long the query took to execute in the cluster.
 
 .Iterating Rows
