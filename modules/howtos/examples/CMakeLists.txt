@@ -41,6 +41,7 @@ add_example(subdoc-retrieving)
 add_example(subdoc-updating)
 add_example(views)
 add_example(fts-basic)
+add_example(query-consistency)
 
 
 if (Threads_FOUND)
