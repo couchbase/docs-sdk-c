@@ -23,6 +23,7 @@ macro(add_example name)
     target_link_libraries(${name} project_options project_warnings couchbase)
 endmacro()
 
+
 add_example(bulk-get)
 add_example(bulk-store)
 add_example(connecting)

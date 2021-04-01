@@ -13,6 +13,22 @@ Errors are inevitable.
 The developer’s job is to be prepared for whatever is likely to come up -- and to try and be prepared for anything that conceivably could come up.
 Couchbase gives you a lot of flexibility, but it is recommended that you equip yourself with an understanding of the possibilities.
 
+== Error Handling Fundamentals
+
+The following fundamentals help you understand how the SDK makes retry decisions and how errors are surfaced.
+
+=== The Request Lifecycle
+
+The following image shows the high-level phases during a request lifecycle:
+
+image::request-lifecycle.png[Request Lifecycle]
+
+- *Pre-Dispatch:* This is the initial phase of the request lifecycle.
+The request is created and the SDK is trying to find the right socket/endpoint to dispatch the operation into.
+- *Dispatch:* The SDK puts the operation onto the network and waits for a response.
+This is a critical point in the lifecycle because the retryability depends on the idempotence of the request (discussed later).
+- *Response Arrived:* Once a response arrives from the server, the SDK decides what to do with it (in the best case, complete the operation successfully).
+
 
 == How the SDK Handles Errors
 
@@ -20,7 +36,62 @@ Couchbase-specific exceptions are all derived from `CouchbaseException`.
 Errors that cannot be recovered by the SDK will be returned to the application.
 These unrecoverable errors are left to the application developer to handle -- this section covers handling many of the common error scenarios.
 
+==== Document Does not Exist
 
+If a document is not found, then it has either not yet been created or has since been deleted.
+It is received on retrieval (_get_) operations (get a document), _replace_ operations (replace a document that already exists), and _remove_ operations (delete a document).
+
+If this error is received when attempting to retrieve a document, then the item should either be created (if possible) or return an error to the user.
+
+If this error is received when replacing a document, then it indicates an issue in the application state (perhaps you can raise an exception up the stack).
+If you do not care that the document exists, the _upsert_ method may be used instead which ignores this case
+
+If receiving this error when removing a document, it may safely be ignored: not-found on remove essentially means the item is already removed.
+
+==== Document Already exists
+
+The insert operation requires that the document does not exist yet; it is intended to create a new unique record (think about inserting a "new user ID").
+This error is returned by the server when a document already exists.
+Applications at this point should probably return an error up the stack to the user (when applicable); for example indicating that a new account could not be registered with the given user name, since it already exists.
+
+==== CAS Mismatch
+
+A CAS mismatch error is returned when an operation was executed with a CAS value (supplied by the application) and the CAS value passed differs from the CAS value on the server.
+The corrective course of action in this case is for the application to re-try the read-update cycle as explained in detail in the CAS documentation.
+
+==== Document too Big
+
+If the maximum content size is larger than 20MB the server responds with an error noting that it can’t store it since it is too big.
+ This error is not transient and must be raised up the stack since it likely indicates an application error that creates too large document contents.
+
+==== Transient
+
+This error type indicates an environment and/or resource limitation either on the server or on the network link between the client and the server.
+Examples of transient errors include timeout errors or temporary failures such as `LCB_ERR_TIMEOUT`(The request was not completed by the user-defined timeout) and `LCB_ERR_TEMPORARY_FAILURE`(Temporary failure).
+Transient errors are typically best handled on the application side by backing off and retrying the operation, with the intent of reducing stress on the exhausted resource.
+Some examples of transient error causes:
+
+* Insufficient cache memory on the server
+* Overutilization of the network link between the client and server or between several servers
+* Router or switch failure
+* Failover of a node
+* Overutilization of application-side CPU
+
+
+==== Fatal
+
+This error type indicates that the client has potentially entered into an irrecoverable failed state, either because of invalid user input (or client configuration), or because an administrator has modified settings on the cluster (for example, a bucket has been removed).
+Examples of fatal errors include `LCB_ERR_AUTHENTICATION_FAILURE` (authentication failed) and `LCB_ERR_BUCKET_NOT_FOUND` (bucket not found).
+
+Fatal errors typically require inspection of the client configuration and a restart of the client application or a reversal of the change performed at the cluster.
+Some examples of fatal error causes:
+
+* Bucket does not exist
+* Bucket password is wrong
+* None of the nodes in the cluster are reachable
+
+
+////
 == Handling Errors
 
 The approach will depend upon the type of error thrown.
@@ -30,6 +101,26 @@ Is it even recoverable?
 
 
 Error codes are https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-error-codes.html[listed in the API docs].
+////
+== Error codes
+
+The approach will depend upon the type of error thrown.
+Is it transient?
+Is it even recoverable?
+
+Most functions in the C SDK return an error code of type `lcb_STATUS`.
+As an application developer, you should be prepared to handle non-successful error codes and treat them appropriately.
+If the library is not behaving as expected then your first action should be to determine if your application is properly handling (and checking) any error codes returned by the library.
+Remember that error codes are only significant when there is an error condition!
+
+A successful operation is defined by the return code of `LCB_SUCCESS`, while any other code indicates an error condition.
+
+Error codes are https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-error-codes.html[listed in the API docs].
+
+
+
+
+
 
 
 ////
