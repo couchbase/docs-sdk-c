@@ -53,6 +53,9 @@ main()
      * More on bucket create REST API
      * https://docs.couchbase.com/server/current/rest-api/rest-bucket-create.html
      */
+
+    // tag::create-bucket[]
+
     std::string bucket_name{ "mybucket" };
     std::size_t bucket_ram_quota_in_mb{ 200 };
 
@@ -73,6 +76,8 @@ main()
     check(lcb_cmdhttp_destroy(cmd), "destroy command object");
 
     check(lcb_wait(instance, LCB_WAIT_DEFAULT), "wait for completion");
+
+    // end::create-bucket[]
 
     lcb_destroy(instance);
     return 0;

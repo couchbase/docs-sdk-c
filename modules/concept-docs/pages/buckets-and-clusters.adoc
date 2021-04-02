@@ -10,33 +10,20 @@ include::6.5@sdk:shared:partial$clusters-buckets.adoc[tag=management]
 
 == Creating and Removing Buckets
 
-To create or delete a bucket using the REST API :
+To create a bucket using the REST API :
 
 [source,c]
 ----
-    lcb_CMDHTTP htcmd = {};
-    LCB_CMD_SET_KEY(&htcmd, path.c_str(), path.size());
-    htcmd.body = params.c_str();
-    htcmd.nbody = params.size();
-    htcmd.content_type = "application/x-www-form-urlencoded";
-    htcmd.method = LCB_HTTP_METHOD_POST;
-    htcmd.type = LCB_HTTP_TYPE_MANAGEMENT;
-    htcmd.username = "Administrator";
-    htcmd.password = "password";
-    lcb_http3(instance, NULL, &htcmd);
-    lcb_wait(instance);
-
-    // now remove the bucket
-    memset(&htcmd, 0, sizeof htcmd);
-    path = "/pools/default/buckets/newBucket";
-    LCB_CMD_SET_KEY(&htcmd, path.c_str(), path.size());
-    htcmd.method = LCB_HTTP_METHOD_DELETE;
-    htcmd.type = LCB_HTTP_TYPE_MANAGEMENT;
-    htcmd.username = "Administrator";
-    htcmd.password = "password";
-    lcb_http3(instance, NULL, &htcmd);
-    lcb_wait(instance);
+include::devguide:example$c/management-bucket-create.cc[tag=create-bucket]
 ----
+
+To delete a bucket using the REST API :
+
+[source,c]
+----
+include::devguide:example$c/management-bucket-drop.cc[tag=delete-bucket]
+----
+
 ////
 Management operations in the C SDK may be performed through several interfaces depending on the object:
 

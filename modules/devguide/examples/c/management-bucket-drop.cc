@@ -53,6 +53,8 @@ main()
      * More on bucket create REST API
      * https://docs.couchbase.com/server/current/rest-api/rest-bucket-delete.html
      */
+
+    // tag::delete-bucket[]
     std::string bucket_name{ "mybucket" };
 
     std::string drop_path{ "/pools/default/buckets/" + bucket_name };
@@ -66,6 +68,8 @@ main()
     check(lcb_cmdhttp_destroy(cmd), "destroy command object");
 
     check(lcb_wait(instance, LCB_WAIT_DEFAULT), "wait for completion");
+
+    // end::delete-bucket[]
 
     lcb_destroy(instance);
     return 0;
