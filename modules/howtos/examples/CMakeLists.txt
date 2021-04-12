@@ -28,7 +28,7 @@ endmacro()
 add_example(analytics)
 target_link_libraries(analytics cJSON)
 
-add_example(create-remove-bucket)
+
 add_example(array-append-prepend)
 add_example(atomic-counters)
 add_example(bulk-get)
@@ -42,6 +42,8 @@ add_example(subdoc-updating)
 add_example(views)
 add_example(fts-basic)
 add_example(query-consistency)
+add_example(client-settings)
+
 
 
 if (Threads_FOUND)

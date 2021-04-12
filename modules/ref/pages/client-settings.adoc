@@ -10,6 +10,82 @@ Refer to the https://docs.couchbase.com/sdk-api/couchbase-c-client/group\__lcb-c
 and the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-cntl-settings.html[settings list].
 // == Timeout Options
 
+== Security Options
+
+By default the client will connect to Couchbase Server using an unencrypted connection.
+If you are using the Enterprise Edition, it’s possible to secure the connection using TLS.
+
+Name: *Retrieve SSL Mode*::
+
+Retrieve the SSL mode currently in use by the library.
+This is a read-only setting. To set the SSL mode at the library, specify the appropriate values within the connection string.
+
+Enumeration symbol : `LCB_CNTL_SSL_MODE`
+
+Enumeration modes :
+
+* `LCB_SSL_ENABLED` -- Use SSL.
+* `LCB_SSL_NOVERIFY` -- Don't verify certificates.
+* `LCB_SSL_NOGLOBALINIT` -- Do not call SSL's global init functions.
+
+Name: *Retrieve the private key path*::
+
+Enumeration symbol : `LCB_CNTL_SSL_CERT`
+
+Retrieve the path to the private key (if any) being used.
+When the key is specified, the library will use it to authenticate on the services, skipping all other authentication mechanisms (SASL, HTTP Basic auth, etc).
+
+
+Name: *Retrieve the SSL trust store path*::
+
+Enumeration symbol : `LCB_CNTL_SSL_KEY`
+
+Default : `NULL`
+
+Get SSL trust store path.
+
+== Compression Options
+
+Starting in Couchbase Server 3.0, compression can optionally be applied to incoming and outgoing data.
+For incoming (i.e. GET requests) the data may be received in compressed format and then allow the client to inflate the data upon receipt.
+For outgoing (i.e. SET requests) the data may be compressed on the client side and then be stored and recognized on the server itself.
+
+[source,c]
+----
+include::devguide:example$c/client-settings.cc[tag=client-settings,indent=0]
+
+----
+
+Name: *Compression Options*::
+
+Connection string : `compression`
+Enumeration symbol : `LCB_CNTL_COMPRESSION_OPTS`
+Options :
+* `LCB_COMPRESS_NONE` -- Do not perform compression in any direction.
+* `LCB_COMPRESS_IN` -- Decompress incoming data, if the data has been compressed at the server.
+* `LCB_COMPRESS_OUT` -- Compress outgoing data.
+* `LCB_COMPRESS_FORCE` -- By default the library will send a HELLO command to the server to determine whether compression is supported or not.
+
+Control how the library handles compression and deflation to and from the server.
+The default behaviour is to transparently handle compression for both incoming and outgoing data.
+
+Name: *Compression Minimum Size*::
+
+Connection string : `compression_min_size`
+Enumeration symbol : `LCB_CNTL_COMPRESSION_MIN_SIZE`
+Default : `32`
+
+Minimum size of the document payload to be compressed when compression enabled.
+
+Name: *Document Minimum Compressibility*::
+
+Connection string : `compression_min_ratio`
+Enumeration symbol : `LCB_CNTL_COMPRESSION_MIN_RATIO`
+Default : `0.83`
+
+Minimum compression ratio (compressed / original) of the compressed payload to allow sending it to cluster.
+
+
 
 == I/O Options
 
@@ -119,11 +195,11 @@ lcb_cntl_set32(instance, LCB_CNTL_TCP_KEEPALIVE, timeout);
 
 == Timeout Options
 
-The default timeout values are suitable for most environments, and should be adjusted only after profiling the expected latencies in your deployment environment. 
+The default timeout values are suitable for most environments, and should be adjusted only after profiling the expected latencies in your deployment environment.
 If you get a timeout exception, it may be a symptom of another issue;
 increasing the timeout duration is sometimes not the best long-term solution.
 
-Most timeouts can be overridden on a per-operation basis (for example, by passing a custom options block to a "get" or "query" method). 
+Most timeouts can be overridden on a per-operation basis (for example, by passing a custom options block to a "get" or "query" method).
 The values set here are used as the defaults when no per-operation timeout is specified.
 
 [source,c++]

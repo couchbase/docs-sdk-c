@@ -23,7 +23,7 @@ open_callback(lcb_INSTANCE*, lcb_STATUS rc)
 int
 main()
 {
-    std::string username{ "Administrator" };
+    std::string username{ "admin" };
     std::string password{ "password" };
     std::string connection_string{ "couchbase://localhost" };
 //tag::client-settings[]
