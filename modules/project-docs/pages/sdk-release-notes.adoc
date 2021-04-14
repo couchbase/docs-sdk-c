@@ -27,16 +27,21 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.1/index.html[API Refer
   Fixed default collection parsing.
 
 * https://issues.couchbase.com/browse/CCBC-1383[CCBC-1383]:
-  Fixed protocol magic for durable remove. When durability level provided, the remove command should use "alternative request" as protocol magic byte.
+  Fixed protocol magic for durable remove. 
+  When durability level provided, the remove command should use "alternative request" as protocol magic byte.
 
 * https://issues.couchbase.com/browse/CCBC-1381[CCBC-1381]:
-  Protocol changes for `PROTOCOL_BINARY_CMD_COLLECTIONS_GET_CID` (`0xbb`). The server now expects collection specification passed as a command value during collection ID resolution.
+  Protocol changes for `PROTOCOL_BINARY_CMD_COLLECTIONS_GET_CID` (`0xbb`). 
+  The server now expects collection specification passed as a command value during collection ID resolution.
 
 * https://issues.couchbase.com/browse/CCBC-1385[CCBC-1385]:
-  Restrict cases when Query error code `12009` is converted to `LCB_ERR_CAS_MISMATCH`. Now it returned only in cases where concurrency problem detected by query engine. Otherwise `LCB_ERR_DML_FAILURE` will be used.
+  Restrict cases when Query error code `12009` is converted to `LCB_ERR_CAS_MISMATCH`. 
+  Now it returned only in cases where concurrency problem detected by query engine. 
+  Otherwise `LCB_ERR_DML_FAILURE` will be used.
 
 * https://issues.couchbase.com/browse/CCBC-1373[CCBC-1373]:
-  Return `LCB_ERR_TIMEOUT` if the library is not able to resolve collection identifier. Previously either `LCB_ERR_COLLECTION_NOT_FOUND` or `LCB_ERR_SCOPE_NOT_FOUND` might be returned.
+  Return `LCB_ERR_TIMEOUT` if the library is not able to resolve collection identifier. 
+  Previously either `LCB_ERR_COLLECTION_NOT_FOUND` or `LCB_ERR_SCOPE_NOT_FOUND` might be returned.
 
 * https://issues.couchbase.com/browse/CCBC-1109[CCBC-1109]:
   When dynamic authenticator is being used, the library will retry Query on error code `13014` (`datastore.couchbase.insufficient_credentials`).
@@ -48,8 +53,10 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.1/index.html[API Refer
   Error map could be disabled now using `LCB_CNTL_ENABLE_ERRMAP` or in the connection string with `enable_errmap=false`.
 
 * https://issues.couchbase.com/browse/CCBC-1269[CCBC-1269]:
-  Expose setting for N1QL grace period. This is a port of https://issues.couchbase.com/browse/CCBC-1122[CCBC-1122]. The example below will add extra 100ms to each N1QL query:
-
+  Expose setting for N1QL grace period. 
+  This is a port of https://issues.couchbase.com/browse/CCBC-1122[CCBC-1122]. 
+  The example below will add extra 100ms to each N1QL query:
++
 [source,c]
 ----
 lcb_cntl_setu32(instance, LCB_CNTL_QUERY_GRACE_PERIOD, 100000);
