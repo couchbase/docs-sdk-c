@@ -1,10 +1,11 @@
 = Browser and CLI Access
+:description: Web and command line interfaces to Couchbase Server are available.
 :page-topic-type: landing-page
 :page-aliases: ROOT:webui-cli-access
 
 [abstract]
-Web and command line interfaces to Couchbase Server are available. 
-Installation of the cbc command line tools is covered here, and links are given to the man pages, for full usage instuctions. 
+{description}
+Installation of the cbc command line tools is covered here, and links are given to the man pages, for full usage instuctions.
 The Web console is documented in the Server docs.
 
 

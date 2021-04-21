@@ -1,10 +1,11 @@
 = Client Settings
+:description: Client settings
 :nav-title: Client Settings
 :page-topic-type: reference
 :page-aliases: ROOT:client-settings
 
 [abstract]
-Client settings
+{description}
 
 Refer to the https://docs.couchbase.com/sdk-api/couchbase-c-client/group\__lcb-cntl.html[API doc on `lcb_cntl()`]
 and the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-cntl-settings.html[settings list].
