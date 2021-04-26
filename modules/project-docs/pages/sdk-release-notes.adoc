@@ -21,11 +21,12 @@ Version 3.1.2 is the third release of the 3.1 series.
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.2/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1394[CCBC-1395]:
-  Do not expose `LCB_ERR_BUCKET_NOT_FOUND` in operation callbacks. Instead retry operation automatically until timeout.
+  We no longer expose `LCB_ERR_BUCKET_NOT_FOUND` in operation callbacks. 
+  Instead, the operation is automatically retried until timeout.
 
 * https://issues.couchbase.com/browse/CCBC-1373[CCBC-1373]:
-  Do not send collection in the key. Sending collection specification in both key and body breaks protocol, and the
-  server will close the socket.
+  Do not send collection in the key. 
+  Sending collection specification in both key and body breaks protocol, and the server will close the socket.
 
 * https://issues.couchbase.com/browse/CCBC-1396[CCBC-1396]:
   Fix recalculaton of key length for alternative packets.
