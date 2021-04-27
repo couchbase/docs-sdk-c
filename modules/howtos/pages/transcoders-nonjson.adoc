@@ -1,9 +1,10 @@
 = Transcoders & Non-JSON Documents
+:description: Libcouchbase operates on bare memory, and does not have a transcoders API.
 :nav-title: Using Transcoders
 :page-topic-type: howtos
 
 [abstract]
-Libcouchbase operates on bare memory, and does not have a transcoders API. 
+{description}
 Custom transcoders and serializers provide support for applications needing to perform advanced operations, including supporting non-JSON data, and are available in the other SDKs, including those that sit on top of LCB.
 
 

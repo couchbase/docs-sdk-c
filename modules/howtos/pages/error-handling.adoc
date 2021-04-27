@@ -1,11 +1,12 @@
 = Handling Errors with the C SDK
+:description: Common errors and exceptions, and how to handle them.
 :navtitle: Handling Errors
 :page-topic-type: howto
 :page-aliases: ROOT:handling-error-conditions,handling-error-conditions,errors
 :source-language: csharp
 
 [abstract]
-Common errors and exceptions, and how to handle them.
+{description}
 
 include::partial$alpha-warning.adoc[]
 

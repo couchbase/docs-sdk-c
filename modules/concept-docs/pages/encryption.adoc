@@ -1,11 +1,12 @@
 = Field Level Encryption
+:description: Fields within a document can be securely encrypted by the SDK, to support FIPS-140-2 compliance.
 :page-topic-type: concept
 :page-edition: Enterprise Edition
 include::partial$attributes.adoc[]
 :page-aliases: ROOT:encryption
 
 [abstract]
-Fields within a document can be securely encrypted by the SDK, to support FIPS-140-2 compliance.
+{description}
 
 Client-side implementation of Field Level Encryption is available in the xref:3.1@java-sdk:concept-docs:encryption.adoc[3.x Java version of the SDK]. 
 It will be enabled in a future release of the other third generation SDKs.

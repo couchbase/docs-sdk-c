@@ -1,9 +1,10 @@
 = Install and Start Using the C SDK with Couchbase Server
+:description: The Couchbase C SDK (libcouchbase - LCB) enables you to interact with a Couchbase Server cluster from the C language.
 :page-aliases: ROOT:getting-started,ROOT:start-using,ROOT:hello-couchbase,ROOT:start-using-sdk
 :navtitle: Start Using the SDK
 
 [abstract]
-The Couchbase C SDK (libcouchbase - LCB) enables you to interact with a Couchbase Server cluster from the C language.
+{description}
 It is also used by the Node.js, PHP, and Python SDKs to communicate with the Couchbase Server.
 
 

@@ -1,11 +1,12 @@
 = Distributed Transactions from the C SDK
+:description: The C++ Transactions built upon the C SDK.
 :navtitle: ACID Transactions
 :page-topic-type: howto
 :page-aliases: acid-transactions
 
 
 [abstract]
-The C++ Transactions built upon the C SDK.
+{description}
 
 
 Transactions are not available directly via the C SDK. Although our {cpp} Distributed ACID Transactions are built upon the C SDK it doesn't expose any C symbols explicitly. 
