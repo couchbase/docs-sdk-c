@@ -1,0 +1,1 @@
+../../devguide/examples/c/durability.cc

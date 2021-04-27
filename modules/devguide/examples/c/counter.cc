@@ -60,6 +60,7 @@ main()
     {
         // increment counter by 20 if it exists, and initialize with 100 otherwise
         lcb_CMDCOUNTER* cmd = nullptr;
+        // tag::atomic-counter[]
         check(lcb_cmdcounter_create(&cmd), "create COUNTER command");
         check(lcb_cmdcounter_key(cmd, document_id.c_str(), document_id.size()), "assign ID for COUNTER command");
         check(lcb_cmdcounter_initial(cmd, 100), "assign initial value for COUNTER command");
@@ -67,6 +68,7 @@ main()
         check(lcb_counter(instance, nullptr, cmd), "schedule COUNTER command");
         check(lcb_cmdcounter_destroy(cmd), "destroy COUNTER command");
         lcb_wait(instance, LCB_WAIT_DEFAULT);
+        // end::atomic-counter[]
     }
 
     {

@@ -14,18 +14,53 @@ In this case, the one thing that you need to know is that in order to make a Buc
 You can define a _primary_ index on a bucket.
 When a primary index is defined you can issue non-covered queries on the bucket as well.
 
-Use
-xref:6.5@server::tools/cbq-shell.html[cbq], our interactive Query shell.
-Open it, and enter the following:
-
-[source,n1ql]
+[source,c]
 ----
-CREATE PRIMARY INDEX ON `travel-sample`
+include::example$query-criteria.cc[tag=query]
 ----
 
-or replace _travel-sample_ with a different Bucket name to build an index on a different dataset.
+== Queries & Placeholders
 
-NOTE: The default installation places cbq in `/opt/couchbase/bin/` on Linux, `/Applications/Couchbase Server.app/Contents/Resources/couchbase-core/bin/cbq` on OS X, and `C:\Program Files\Couchbase\Server\bin\cbq.exe` on Microsoft Windows.
+Placeholders allow you to specify variable constraints for an otherwise constant query.
+There are two variants of placeholders: postional and named parameters.
+Positional parameters use an ordinal placeholder for substitution and named parameters use variables.
+Note that both parameters and options are optional.
+
+[source,c]
+----
+include::example$query-placeholders.cc[tag=placeholder]
+----
+
+
+== The Query Result
+
+The result for each query is JSON and as a result queries will function the same regardless whether they are executed using the _cbq_ shell, an SDK, or using the  REST API directly.
+Nevertheless, the result format recieved using an SDK may be different than that received using the `cbq` or the REST API.
+
+== Query Options
+
+.Available Query options
+[options="header"]
+|====
+| Name    | Description
+| `lcb_cmdquery_reset(command)` | Reset the structure so that it may be reused for a subsequent query.
+| `lcb_cmdquery_encoded_payload(command,payload,payload length)` | Get the JSON-encoded query payload.
+| `lcb_cmdquery_payload(command, query, query length)` | Sets the JSON-encodes query payload to be executed.
+| `lcb_cmdquery_statement(command, statement, statement length )` | Sets the actual statement to be executed.
+| `lcb_cmdquery_scope_name(command, scope name, scope length)` | Associate scope name with the query.
+| `lcb_cmdquery_named_param(command, argument name, name length, argument value, value length)` | Sets a named argument for the query.
+| `lcb_cmdquery_positional_param(command, argument value, argument length)` | Adds a positional argument for the query.
+| `lcb_cmdquery_readonly(command, readonly)` | Marks query as read-only ( set readonly value to non zero ).
+| `lcb_cmdquery_scan_cap(command, value)` | Sets maximum buffered channel size between the indexer client and the query service for index scans.
+| `lcb_cmdquery_flex_index(command, value)` | Tells the query engine to use a flex index (utilizing the search service).
+| `lcb_cmdquery_pipeline_cap(command, item number)` | Sets maximum number of items each execution operator can buffer between various operators.
+| `lcb_cmdquery_pipeline_batch(command, item number)` | Sets the number of items execution operators can batch for fetch from the KV.
+| `lcb_cmdquery_consistency(command, mode)` | Sets the consistency mode for the request.
+| `lcb_cmdquery_consistency_token_for_keyspace(command, keyspace, keyspace length, token)` | Indicate that the query should synchronize its internal snapshot to reflect the changes indicated by the given mutation token.
+| `lcb_cmdquery_option(command, option name, name length, option value, value length)` | Set a query option.
+|====
+
+
 
 
 
@@ -245,4 +280,3 @@ The http://query.pub.couchbase.com/tutorial/#1[N1QL interactive tutorial] is a g
 // Indexes / GSI links?
 
 // SQL++ / Analytics.
-

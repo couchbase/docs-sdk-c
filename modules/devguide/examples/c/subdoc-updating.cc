@@ -89,6 +89,7 @@ main()
         std::string value{ R"({"name":"john", "array":[1,2,3,4], "email":"john@example.com"})" };
         std::cout << "Initial document is: " << value << "\n";
 
+        // tag::sub-doc-mutate[]
         lcb_CMDSTORE* cmd = nullptr;
         check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
         check(lcb_cmdstore_key(cmd, key.c_str(), key.size()), "assign ID for UPSERT command");
@@ -96,6 +97,7 @@ main()
         check(lcb_store(instance, nullptr, cmd), "schedule UPSERT command");
         check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
         lcb_wait(instance, LCB_WAIT_DEFAULT);
+        // end::sub-doc-mutate[]
     }
 
     lcb_install_callback(instance, LCB_CALLBACK_SDMUTATE, reinterpret_cast<lcb_RESPCALLBACK>(sdmutate_callback));
@@ -106,22 +108,23 @@ main()
         lcb_SUBDOCSPECS* specs = nullptr;
         check(lcb_subdocspecs_create(&specs, 3), "create SUBDOC operations container");
 
+        // tag::path[]
         std::vector<std::string> paths{
             "array",
             "array[0]",
             "description",
         };
-
+        // tag::array-insert[]
         std::string value_to_add{ "42" };
         check(lcb_subdocspecs_array_add_last(specs, 0, 0, paths[0].c_str(), paths[0].size(), value_to_add.c_str(), value_to_add.size()),
               "create ARRAY_ADD_LAST operation");
-
+        // end::array-insert[]
         check(lcb_subdocspecs_counter(specs, 1, 0, paths[1].c_str(), paths[1].size(), 99), "create COUNTER operation");
 
         std::string value_to_upsert{ R"("just a dev")" };
         check(lcb_subdocspecs_dict_upsert(specs, 2, 0, paths[2].c_str(), paths[2].size(), value_to_upsert.c_str(), value_to_upsert.size()),
               "create DICT_UPSERT operation");
-
+        // end::path[]
         lcb_CMDSUBDOC* cmd = nullptr;
         check(lcb_cmdsubdoc_create(&cmd), "create SUBDOC command");
         check(lcb_cmdsubdoc_key(cmd, key.c_str(), key.size()), "assign ID to SUBDOC command");

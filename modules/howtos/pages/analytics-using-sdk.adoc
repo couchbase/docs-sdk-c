@@ -13,9 +13,9 @@ The analytics service is available in Couchbase Data Platform 6.0 and later (dev
 == Getting Started
 
 After familiarizing yourself with our xref:6.5@server:analytics:primer-beer.adoc[introductory primer],
-in particular creating a dataset and linking it to a bucket to shadow the operational data, 
+in particular creating a dataset and linking it to a bucket to shadow the operational data,
 try Couchbase Analytics using the Go SDK.
-Intentionally, the API for analytics is very similar to that of the query service. 
+Intentionally, the API for analytics is very similar to that of the query service.
 In these examples we will be using an `airports` dataset created on the `travel-sample` bucket.
 
 In Go SDK 1.x, Analytics was only available on the `Bucket` object;
@@ -24,10 +24,40 @@ in Go SDK 2.0, Analytics queries are submitted using the Cluster reference, not 
 NOTE: When using a Couchbase version < 6.5 you must create a valid Bucket connection using `cluster.Bucket(name)` before you can use Analytics.
 
 
+Here is an example of doing an analytics query :
 
-== Example 
-
+[source,c]
+----
+include::example$analytics.cc[tag=analytics,indent=0]
+----
 For a full example, see the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2analytics_2analytics_8c-example.html[API documentation].
+
+== Analytics Result
+
+When performing an analytics query, `lcb_RESPANALYTICS` is delivered in the `lcb_ANALYTICS_CALLBACK` function for each result row received.
+
+[source,c]
+----
+include::example$analytics.cc[tag=result, indent=0]
+----
+
+== Analytics Options
+
+The analytics service provides an array of options to customize your query. The following table lists them :
+
+.Available Analytics options
+[options="header"]
+|====
+| Name    | Description
+| `lcb_cmdanalytics_reset(command)` | Reset the structure so that it may be reused for a subsequent analytics query.
+| `lcb_cmdanalytics_encoded_payload(command,query,query length)` | Get the JSON-encoded analytics query payload.
+| `lcb_cmdanalytics_payload(command, query, query length)` | Sets the JSON-encodes analytics query payload to be executed.
+| `lcb_cmdanalytics_statement(command, statement, statement length )` | Sets the actual statement to be executed.
+| `lcb_cmdanalytics_scope_name(command, scope name, scope length)` | Associate scope name with the analytics query.
+| `lcb_cmdanalytics_named_param(command, argument name, name length, argument value, value length)` | Sets a named argument for the analytics query.
+| `lcb_cmdanalytics_positional_param(command, argument value, argument length)` | Adds a positional argument for the analytics query.
+| `lcb_cmdanalytics_readonly(command, readonly)` | Marks analytics query as read-only ( set readonly value to non zero ).
+|====
 
 ////
 [source,golang,indent=0]
@@ -37,7 +67,7 @@ include::example$analytics.go[tag=query]
 
 == Queries
 
-A query can either be `simple` or be `parameterized`. If parameters are used, they can either be `positional` or `named`. 
+A query can either be `simple` or be `parameterized`. If parameters are used, they can either be `positional` or `named`.
 Here is one example of each:
 
 [source,golang,indent=0]
@@ -69,9 +99,9 @@ Additional parameters may be sent as part of the query.
 There are currently three parameters:
 
 * *Client Context ID*, sets a context ID that is returned back as part of the result.
-Uses `ClientContextID string` default is a random UUID 
+Uses `ClientContextID string` default is a random UUID
 * *Timeout*, customizes the timeout sent to the server.
-Does not usually have to be set, as the client sets it based on the timeout on the operation. 
+Does not usually have to be set, as the client sets it based on the timeout on the operation.
 Uses `Timeout time.Duration`, and defaults to the Analytics timeout set on the client (75s).
 This can be adjusted at the xref:ref:client-settings.adoc#timeout-options[cluster global config level].
 * *Priority*, set if the request should have priority over others.
@@ -88,9 +118,9 @@ include::example$analytics.go[tag=options]
 
 == Handling the Response
 
-These query result may contain various sorts of data and metadata, 
-depending upon the nature of the query, 
-as you will have seen when working through our xref:6.5@server:analytics:primer-beer.adoc[introductory primer]. 
+These query result may contain various sorts of data and metadata,
+depending upon the nature of the query,
+as you will have seen when working through our xref:6.5@server:analytics:primer-beer.adoc[introductory primer].
 
 Results are iterated using the `Next` function.
 Within the `for` loop the result is read using the `Row` by supplying a pointer to the variable in which to store the value.
@@ -104,7 +134,7 @@ include::devguide:example$go/analytics-simple-query.go[tag=results]
 // Move these to Error reference doc?
 Common errors are listed in our xref:ref:error-codes.adoc#analytics-errors[Errors Reference doc], with errors caused by resource unavailability (such as timeouts and _Operation cannot be performed during rebalance_ messages) leading to an xref:howtos:error-handling.adoc#retry[automatic retry] by the SDK.
 
-If you only expect a single result or only want to use the first result in a results set then you can use `One` 
+If you only expect a single result or only want to use the first result in a results set then you can use `One`
 (note: this function will iterate any remaining rows in the resultset so can only be called once and should only be used on small results sets):
 
 [source,golang,indent=0]
@@ -138,8 +168,6 @@ For a listing of available `Metrics` in `MetaData`, see the xref:concept-docs:an
 ////
 
 
-== Additional Resources 
+== Additional Resources
 
 To learn more about using N1QL for Analytics -- the first commercial implementation of SQL\++ -- see our https://sqlplusplus-tutorial.couchbase.com/tutorial/#1[Tutorial Introduction to SQL++ for SQL users].
-
-

@@ -12,6 +12,19 @@ include::6.5@sdk:shared:partial$views.adoc[tag=views-intro]
 
 You can find further information https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-view-api.html[in the API docs].
 
+== Querying Views
+
+View operations are accessible via `lcb_CMDVIEW`.
+Once you have a reference to the bucket you need to at least supply the name of the design document and the name of the view:
+
+[source,c]
+----
+include::example$views.cc[tag=views,indent=0]
+----
+//== Working with View Rows
+
+
+
 ////
 include::6.5@sdk:shared:partial$views.adoc[tag=example-beer]
 

@@ -60,6 +60,7 @@ query_city(lcb_INSTANCE* instance, const std::string& bucket_name, const std::st
 {
     Rows result{};
 
+    // tag::placeholder[]
     std::string statement = "SELECT airportname, city, country FROM `" + bucket_name + R"(` WHERE type="airport" AND city=$1)";
 
     lcb_CMDQUERY* cmd = nullptr;
@@ -73,6 +74,7 @@ query_city(lcb_INSTANCE* instance, const std::string& bucket_name, const std::st
     check(lcb_query(instance, &result, cmd), "schedule QUERY command");
     check(lcb_cmdquery_destroy(cmd), "destroy QUERY command");
     lcb_wait(instance, LCB_WAIT_DEFAULT);
+    // end::placeholder[]
 
     std::cout << "\n--- Query returned " << result.rows.size() << " rows for " << city << std::endl;
     for (const auto& row : result.rows) {

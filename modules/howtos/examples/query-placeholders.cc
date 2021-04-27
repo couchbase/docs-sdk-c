@@ -1,0 +1,1 @@
+../../devguide/examples/c/query-placeholders.cc

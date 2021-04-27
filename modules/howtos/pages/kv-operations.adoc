@@ -22,90 +22,17 @@ Or read on, for a hands-on introduction to working with documents from the .NET 
 The core interface to Couchbase Server is simple KV operations on full documents.
 Make sure you're familiar with the basics of authorization and connecting to a Cluster from the xref:hello-world:start-using-sdk.adoc[Start Using the SDK section].
 
-See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/retrieving.cc[code sample^] for use in context.
-////
-We're going to expand on the short _Upsert_ example we used there, adding options as we move through the various CRUD operations.
-Here is the _Insert_ operation at its simplest:
+See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/retrieving.cc[code sample^] for use in context.
 
-[source,csharp]
-----
-Insert
-var document = new {foo = "bar", bar = "foo"};
-var result = await collection.Insert("document-key", document);
-----
-
-Options may be added to operations:
-
-[source,csharp]
-----
-Insert (with options)
-var document = new {foo = "bar", bar = "foo"};
-var result = await collection.Insert("document-key", document,
-    new InsertOptions
-    {
-        Cas = 12345,
-        Timeout = TimeSpan.FromSeconds(5)
-    }
-);
-----
-////
-Setting a Compare and Swap (CAS) value is a form of optimistic locking - dealt with in depth in the xref:concurrent-document-mutations.adoc[CAS page].
-Here we just note that the CAS is a value representing the current state of an item; each time the item is modified, its CAS changes.
-The CAS value is returned as part of a document’s metadata whenever a document is accessed.
-Without explicitly setting it, a newly-created document would have a CAS value of _0_.
-////
-_Timeout_ is an optional parameter which in the .NET SDK has a type value of `TimeSpan`.
-Timeout sets the timeout value for the underlying network connection.
-We will add to these options for the _Replace_ example:
-
-[source,csharp]
-----
-var document = new {foo = "bar", bar = "foo"};
-var result = await collection.Replace("document-key", document,
-    new ReplaceOptions
-    {
-        Cas = 12345,
-        Expiration = TimeSpan.FromMinutes(1),
-        Timeout = TimeSpan.FromSeconds(5)
-    }
-);
-----
-
-Expiration sets an explicit time to live (TTL) for a document.
-We'll discuss modifying `Expiration` in more details xref:#expiration-ttl[below].
-For a discussion of item (Document) _vs_ Bucket expiration, see the
-xref:6.5@server:learn:buckets-memory-and-storage/expiration.adoc#expiration-bucket-versus-item[Expiration Overview page].
-
-[source,csharp]
-----
-var document = new {foo = "bar", bar = "foo"};
-var result = await collection.Upsert("document-key", document,
-    new UpsertOptions
-    {
-        Cas = 12345,
-        Expiration = TimeSpan.FromMinutes(1),
-        PersistTo = PersistTo.One,
-        ReplicateTo = ReplicateTo.One,
-        Timeout = TimeSpan.FromSeconds(5)
-    }
-);
-----
-
-Here, we have add _Durability_ options, namely `PersistTo` and `ReplicateTo`.
-////
-
-See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/cas.cc[code sample^] for use in context.
-////
-In Couchbase Server releases before 6.5, Durability was set with these two options -- see the xref:https://docs.couchbase.com/dotnet-sdk/2.7/durability.html[6.0 Durability documentation] -- covering  how many replicas the operation must be propagated to and how many persisted copies of the modified record must exist.
-Couchbase Data Platform 6.5 refines these two options, with xref:6.5@server:learn:data/durability.adoc[Synchronous Replication] -- although they remain essentially the same in use -- see xref:#durability[Durability, below].
-////
+== Upsert
 
 [TIP]
 .Sub-Document Operations
 ====
 All of these operations involve fetching the complete document from the Cluster.
-Where the number of operations or other circumstances make bandwidth a significant issue, the SDK can work on just a specific _path_ of the document with xref:subdocument-operations.adoc[Sub-Docunent Operations].
+Where the number of operations or other circumstances make bandwidth a significant issue, the SDK can work on just a specific _path_ of the document with xref:subdocument-operations.adoc[Sub-Document Operations].
 ====
+
 ////
 == Retrieving full documents
 
@@ -151,6 +78,101 @@ var result = await collection.Remove("document-key",
 ----
 ////
 
+Here is a simple upsert operation, which will insert the document if it does not exist, or replace it if it does.
+
+We use `lcb_cmdstore_create` for storing an item in Couchbase as it is only one operation with different set of
+attributes/constraints for storage modes.
+[source,c]
+----
+include::example$insert-upsert.cc[tag=upsert]
+----
+
+== Insert
+
+Insert works very similarly to upsert , but will fail if the document already exists.
+[source,c]
+----
+include::example$insert-upsert.cc[tag=insert]
+----
+
+== Retrieving documents
+
+We've tried upserting and inserting documents into the Couchbase Server, let's get them back:
+[source,c]
+----
+include::example$insert-upsert.cc[tag=retrieve]
+----
+== Replace
+
+A very common sequence  of operations is to `get` a document, modify its contents, and `replace` it.
+// Insert code sample here
+So what is CAS?
+
+CAS, or  Compare and  Swap, is a form of optimistic locking. Every  document is Couchbase has a CAS value,
+and it's changed on every mutation. When you get a document you also get the document's CAS, and then when it
+is time to write the document, you send the same CAS back. If another thread or program has  modified that document
+in the  meantime, the  Couchbase Server can detect you've provided a now-outdated CAS, and return an error. This provides
+cheap and safe concurrency. See this xref:concurrent-document-mutations.adoc[this detailed description of CAS] for further details.
+
+In general, you'll want to provide a CAS value whenever you `replace` a document, to prevent overwriting another agent's mutations.
+
+Setting a Compare and Swap (CAS) value is a form of optimistic locking - dealt with in depth in the xref:concurrent-document-mutations.adoc[CAS page].
+Here we just note that the CAS is a value representing the current state of an item; each time the item is modified, its CAS changes.
+The CAS value is returned as part of a document’s metadata whenever a document is accessed.
+Without explicitly setting it, a newly-created document would have a CAS value of _0_.
+////
+_Timeout_ is an optional parameter which in the .NET SDK has a type value of `TimeSpan`.
+Timeout sets the timeout value for the underlying network connection.
+We will add to these options for the _Replace_ example:
+
+[source,csharp]
+----
+var document = new {foo = "bar", bar = "foo"};
+var result = await collection.Replace("document-key", document,
+    new ReplaceOptions
+    {
+        Cas = 12345,
+        Expiration = TimeSpan.FromMinutes(1),
+        Timeout = TimeSpan.FromSeconds(5)
+    }
+);
+----
+
+Expiration sets an explicit time to live (TTL) for a document.
+We'll discuss modifying `Expiration` in more details xref:#expiration-ttl[below].
+For a discussion of item (Document) _vs_ Bucket expiration, see the
+xref:6.5@server:learn:buckets-memory-and-storage/expiration.adoc#expiration-bucket-versus-item[Expiration Overview page].
+
+[source,csharp]
+----
+var document = new {foo = "bar", bar = "foo"};
+var result = await collection.Upsert("document-key", document,
+    new UpsertOptions
+    {
+        Cas = 12345,
+        Expiration = TimeSpan.FromMinutes(1),
+        PersistTo = PersistTo.One,
+        ReplicateTo = ReplicateTo.One,
+        Timeout = TimeSpan.FromSeconds(5)
+    }
+);
+----
+
+Here, we have add _Durability_ options, namely `PersistTo` and `ReplicateTo`.
+////
+[source,c]
+----
+include::example$cas.cc[tag=cas]
+----
+
+See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/cas.cc[code sample^] for use in context.
+////
+In Couchbase Server releases before 6.5, Durability was set with these two options -- see the xref:https://docs.couchbase.com/dotnet-sdk/2.7/durability.html[6.0 Durability documentation] -- covering  how many replicas the operation must be propagated to and how many persisted copies of the modified record must exist.
+Couchbase Data Platform 6.5 refines these two options, with xref:6.5@server:learn:data/durability.adoc[Synchronous Replication] -- although they remain essentially the same in use -- see xref:#durability[Durability, below].
+////
+
+
+
 == Durability
 Writes in Couchbase are written to a single node, and from there the Couchbase Server will take care of sending that mutation to any configured replicas.
 
@@ -162,7 +184,6 @@ It can be used like this:
 ----
 // durability kv snippet
 ----
-////
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/durability.cc[code sample^] for use in context.
 
 If no argument is provided the application will report success back as soon as the primary node has acknowledged the mutation in its memory.
@@ -184,22 +205,25 @@ These trade offs, as well as which settings may be tuned, are discussed in the x
 
 If a version of Couchbase Server lower than 6.5 is being used then the application can fall-back to xref:concept-docs:durability-replication-failure-considerations.adoc#older-server-versions['client verified' durability.]
 Here the SDK will do a simple poll of the replicas and only return once the requested durability level is achieved.
-////
 This can be achieved like this:
 
 [source,c]
 ----
-// Durability observed snippet
+include::example$durability.cc[tag=durability]
 ----
-////
 To stress, durability is a useful feature but should not be the default for most applications, as there is a performance consideration,
 and the default level of safety provided by Couchbase will be reasonable for the majority of situations.
 
 == Expiration / TTL
 
-By default, Couchbase documents do not expire, but transient or temporary data may be needed for user sessions, caches, or other temporary documents.
-Using `Touch()`, you can set expiration values on documents to handle transient data.
-////
+Couchbase Server includes an option top have particular documents automatically expire after a set time. This can be useful is some use cases,
+such as user sessions, caches, or other temporary documents.
+
+You can set an expiry value to `lmd_cmdstore_expiry` when creating a document:
+[source,c]
+----
+include::example$expiration.cc[tag=expiration]
+----
 
 [source,csharp]
 ----
@@ -221,12 +245,18 @@ var result = await collection.Touch("document-key", TimeSpan.FromSeconds(30),
 
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/expiration.cc[code sample^] for use in context.
 
-include::6.5@sdk:shared:partial$documents.adoc[tag=exp-note]
+
 
 
 == Atomic Counters
 
-The value of a document can be increased or decreased atomically using `Binary.Increment()` and `.Binary.Decrement()`.
+The numeric content of a document can be manipulated using https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-counter.html[lcb_RESPCOUNTER^]. Counter opeations treat the document
+as a numeric value (the document must contain a parseable integer as its content). This value may then be incremented
+or decremented.
+[source,c]
+----
+include::example$atomic-counters.cc[tag=atomic-counter]
+----
 ////
 .Increment
 [source,csharp]
@@ -280,4 +310,3 @@ For working with metadata on a document, reference our xref:sdk-xattr-example.ad
 // As well as various xref:concept-docs:data-model.adoc[Formats] of JSON, Couchbase can work directly with xref:concept-docs:nonjson.adoc[arbitary bytes, or binary format].
 
 Our xref:n1ql-queries-with-sdk.adoc[Query Engine] enables retrieval of information using the SQL-like syntax of N1QL.
-

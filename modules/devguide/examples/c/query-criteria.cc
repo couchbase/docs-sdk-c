@@ -79,6 +79,7 @@ main(int, char**)
 
     Rows result{};
 
+    // tag::query[]
     std::string statement = "SELECT airportname, city, country FROM `" + bucket_name + R"(` WHERE type="airport" AND city="New York")";
 
     lcb_CMDQUERY* cmd = nullptr;
@@ -88,6 +89,7 @@ main(int, char**)
     check(lcb_query(instance, &result, cmd), "schedule QUERY command");
     check(lcb_cmdquery_destroy(cmd), "destroy QUERY command");
     lcb_wait(instance, LCB_WAIT_DEFAULT);
+    // end::query[]
 
     std::cout << "Query returned " << result.rows.size() << " rows\n";
     for (const auto& row : result.rows) {
