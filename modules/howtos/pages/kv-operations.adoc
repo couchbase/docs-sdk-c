@@ -162,7 +162,7 @@ Here, we have add _Durability_ options, namely `PersistTo` and `ReplicateTo`.
 ////
 [source,c]
 ----
-include::example$cas.cc[tag=cas]
+include::devguide:example$c/cas.cc[tag=cas]
 ----
 
 See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/cas.cc[code sample^] for use in context.
@@ -255,7 +255,7 @@ as a numeric value (the document must contain a parseable integer as its content
 or decremented.
 [source,c]
 ----
-include::example$atomic-counters.cc[tag=atomic-counter]
+include::devguide:example$c/counter.cc[tag=atomic-counter]
 ----
 ////
 .Increment
