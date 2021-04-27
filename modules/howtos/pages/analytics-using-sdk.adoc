@@ -18,8 +18,8 @@ try Couchbase Analytics using the Go SDK.
 Intentionally, the API for analytics is very similar to that of the query service.
 In these examples we will be using an `airports` dataset created on the `travel-sample` bucket.
 
-In Go SDK 1.x, Analytics was only available on the `Bucket` object;
-in Go SDK 2.0, Analytics queries are submitted using the Cluster reference, not a Bucket or Collection:
+In C SDK 2.x, Analytics was only available on the `Bucket` object;
+in C SDK 3.x, Analytics queries are submitted using the Cluster reference, not a Bucket or Collection:
 
 NOTE: When using a Couchbase version < 6.5 you must create a valid Bucket connection using `cluster.Bucket(name)` before you can use Analytics.
 
@@ -30,7 +30,9 @@ Here is an example of doing an analytics query :
 ----
 include::example$analytics.cc[tag=analytics,indent=0]
 ----
+
 For a full example, see the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2analytics_2analytics_8c-example.html[API documentation].
+
 
 == Analytics Result
 
@@ -40,6 +42,7 @@ When performing an analytics query, `lcb_RESPANALYTICS` is delivered in the `lcb
 ----
 include::example$analytics.cc[tag=result, indent=0]
 ----
+
 
 == Analytics Options
 
