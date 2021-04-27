@@ -48,5 +48,5 @@ The most simplistic bulk fetch looks like this:
 
 [source,c]
 ----
-include::example$bulk-get.cc[tag=batching,indent=0]
+include::devguide:example$c/bulk-get.cc[tag=batching,indent=0]
 ----
