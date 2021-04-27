@@ -16,7 +16,7 @@ When a primary index is defined you can issue non-covered queries on the bucket 
 
 [source,c]
 ----
-include::example$query-criteria.cc[tag=query]
+include::devguide:example$c/query-criteria.cc[tag=query]
 ----
 
 == Queries & Placeholders
@@ -28,7 +28,7 @@ Note that both parameters and options are optional.
 
 [source,c]
 ----
-include::example$query-placeholders.cc[tag=placeholder]
+include::devguide:example$c/query-placeholders.cc[tag=placeholder]
 ----
 
 
@@ -262,7 +262,7 @@ It takes the statement as a required argument, and then allows additional option
 CAUTION: This feature is marked xref:project-docs:compatibility.adoc#interface-stability[_Uncommitted_].
 Expect a promotion to _Committed_ API in a future release.
 
-usage details for this and `lcb_cmdquery_scope_qualifier()` can be found in the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-n1ql-api.html#gadcd89153027afd789e2d31e250424c48[API docs].
+Usage details for this and `lcb_cmdquery_scope_qualifier()` can be found in the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-n1ql-api.html#gadcd89153027afd789e2d31e250424c48[API docs].
 
 
 
