@@ -71,7 +71,7 @@ include::devguide:example$c/subdoc-retrieving.cc[tag=sub-doc-exists]
 .Retrieve Subdocument value
 [source,c]
 ----
-include::devguideexample$c/subdoc-retrieving.cc[tag=sub-doc-retrieve]
+include::devguide:example$c/subdoc-retrieving.cc[tag=sub-doc-retrieve]
 ----
 
 
