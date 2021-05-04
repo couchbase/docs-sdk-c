@@ -1,7 +1,7 @@
 = Handling Errors with the C SDK
 :navtitle: Handling Errors
 :page-topic-type: howto
-:page-aliases: ROOT:handling-error-conditions,handling-error-conditions,errors
+:page-aliases: ROOT:handling-error-conditions,handling-error-conditions,errors,handling-errors.adoc
 :source-language: csharp
 
 [abstract]
