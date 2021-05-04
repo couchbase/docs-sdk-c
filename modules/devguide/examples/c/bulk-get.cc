@@ -68,7 +68,7 @@ main()
 
     lcb_install_callback(instance, LCB_CALLBACK_GET, reinterpret_cast<lcb_RESPCALLBACK>(get_callback));
 
-    // tag::batching
+    // tag::batching[]
     // Make a list of keys to store initially
     std::vector<std::string> keys_to_get{ "foo", "bar", "baz" };
 
@@ -91,7 +91,7 @@ main()
     }
     lcb_sched_leave(instance);
     check(lcb_wait(instance, LCB_WAIT_DEFAULT), "wait for batch to complete");
-    // end::batching
+    // end::batching[]
 
     for (auto& result : results) {
         std::cout << result.key << ": ";
