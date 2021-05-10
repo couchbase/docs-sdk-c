@@ -14,6 +14,65 @@ include::hello-world:partial$installation.adoc[]
 
 
 [#latest-release]
+== Version 3.1.3 (10 May 2021)
+
+Version 3.1.3 is the fourth release of the 3.1 series.
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.3/index.html[API Reference]
+
+* https://issues.couchbase.com/browse/CCBC-1395[CCBC-1395]:
+  We no longer expose `LCB_ERR_BUCKET_NOT_FOUND` in operation callbacks.
+  Instead, the operation is automatically retried until timeout.
+
+* https://issues.couchbase.com/browse/CCBC-1398[CCBC-1398]:
+  Parse and use `revEpoch` from configuration in order to allow the server to handle special cases of failover
+  scenarios.
+
+* https://issues.couchbase.com/browse/CCBC-1399[CCBC-1399]:
+  Implement retry backoff for query requests. Instead of retrying requests immediately, use backoff period returned by
+  retry strategy.
+
+* https://issues.couchbase.com/browse/CCBC-1400[CCBC-1400]:
+  Fill collection name when retrying collection resolution to avoid misrouting requests to default collection.
+
+* https://issues.couchbase.com/browse/CCBC-1397[CCBC-1397]:
+  Reset list of "used" nodes when retrying query to allow reusing endpoints.
+
+* https://issues.couchbase.com/browse/CCBC-1401[CCBC-1401]:
+  Fix special error message detection for Query requests. In addition to reacting on the error codes from query service,
+  the library also scans error messages for particular sub-strings to decide whether retry is necessary.
+
+* https://issues.couchbase.com/browse/CCBC-861[CCBC-861]:
+  Purge pipelines on `lcb_destroy`. In order to avoid resource leaks, the library purges all pending (or waiting)
+  commands from the pipelines upon destruction.
+
+* Fix `cbc-proxy` tool.
+
+* Upgrade snappy to 1.1.8
+
+=== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3.sha256sum[libcouchbase-3.1.3.sha256sum]
+| Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3.tar.gz[libcouchbase-3.1.3.tar.gz]
+| Amazon Linux 2                | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_amzn2_x86_64.tar[libcouchbase-3.1.3_amzn2_x86_64.tar]
+| Enterprise Linux 7            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_centos7_x86_64.tar[libcouchbase-3.1.3_centos7_x86_64.tar]
+| Enterprise Linux 8            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_centos8_x86_64.tar[libcouchbase-3.1.3_centos8_x86_64.tar]
+| Ubuntu 16.04 (xenial)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_ubuntu1604_xenial_amd64.tar[libcouchbase-3.1.3_ubuntu1604_xenial_amd64.tar]
+| Ubuntu 18.04 (bionic)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_ubuntu1804_bionic_amd64.tar[libcouchbase-3.1.3_ubuntu1804_bionic_amd64.tar]
+| Ubuntu 20.04 (focal)          | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_ubuntu2004_focal_amd64.tar[libcouchbase-3.1.3_ubuntu2004_focal_amd64.tar]
+| Debian 9 (stretch)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_debian9_stretch_amd64.tar[libcouchbase-3.1.3_debian9_stretch_amd64.tar]
+| Debian 10 (buster)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_debian10_buster_amd64.tar[libcouchbase-3.1.3_debian10_buster_amd64.tar]
+| Visual Studio 2015 (VC14)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_vc14_amd64.zip[libcouchbase-3.1.3_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_vc15_amd64.zip[libcouchbase-3.1.3_vc15_amd64.zip]
+| Visual Studio 2019 (VC16)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_vc16_amd64.zip[libcouchbase-3.1.3_vc16_amd64.zip]
+| Visual Studio 2015 TLS (VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_vc14_amd64_openssl.zip[libcouchbase-3.1.3_vc14_amd64_openssl.zip]
+| Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_vc15_amd64_openssl.zip[libcouchbase-3.1.3_vc15_amd64_openssl.zip]
+| Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_vc16_amd64_openssl.zip[libcouchbase-3.1.3_vc16_amd64_openssl.zip]
+|===
+
 == Version 3.1.2 (26 April 2021)
 
 Version 3.1.2 is the third release of the 3.1 series.
@@ -21,11 +80,11 @@ Version 3.1.2 is the third release of the 3.1 series.
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.2/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1394[CCBC-1395]:
-  We no longer expose `LCB_ERR_BUCKET_NOT_FOUND` in operation callbacks. 
+  We no longer expose `LCB_ERR_BUCKET_NOT_FOUND` in operation callbacks.
   Instead, the operation is automatically retried until timeout.
 
 * https://issues.couchbase.com/browse/CCBC-1373[CCBC-1373]:
-  Do not send collection in the key. 
+  Do not send collection in the key.
   Sending collection specification in both key and body breaks protocol, and the server will close the socket.
 
 * https://issues.couchbase.com/browse/CCBC-1396[CCBC-1396]:
@@ -79,20 +138,20 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.1/index.html[API Refer
   Fixed default collection parsing.
 
 * https://issues.couchbase.com/browse/CCBC-1383[CCBC-1383]:
-  Fixed protocol magic for durable remove. 
+  Fixed protocol magic for durable remove.
   When durability level provided, the remove command should use "alternative request" as protocol magic byte.
 
 * https://issues.couchbase.com/browse/CCBC-1381[CCBC-1381]:
-  Protocol changes for `PROTOCOL_BINARY_CMD_COLLECTIONS_GET_CID` (`0xbb`). 
+  Protocol changes for `PROTOCOL_BINARY_CMD_COLLECTIONS_GET_CID` (`0xbb`).
   The server now expects collection specification passed as a command value during collection ID resolution.
 
 * https://issues.couchbase.com/browse/CCBC-1385[CCBC-1385]:
-  Restrict cases when Query error code `12009` is converted to `LCB_ERR_CAS_MISMATCH`. 
-  Now it returned only in cases where concurrency problem detected by query engine. 
+  Restrict cases when Query error code `12009` is converted to `LCB_ERR_CAS_MISMATCH`.
+  Now it returned only in cases where concurrency problem detected by query engine.
   Otherwise `LCB_ERR_DML_FAILURE` will be used.
 
 * https://issues.couchbase.com/browse/CCBC-1373[CCBC-1373]:
-  Return `LCB_ERR_TIMEOUT` if the library is not able to resolve collection identifier. 
+  Return `LCB_ERR_TIMEOUT` if the library is not able to resolve collection identifier.
   Previously either `LCB_ERR_COLLECTION_NOT_FOUND` or `LCB_ERR_SCOPE_NOT_FOUND` might be returned.
 
 * https://issues.couchbase.com/browse/CCBC-1109[CCBC-1109]:
@@ -105,8 +164,8 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.1/index.html[API Refer
   Error map could be disabled now using `LCB_CNTL_ENABLE_ERRMAP` or in the connection string with `enable_errmap=false`.
 
 * https://issues.couchbase.com/browse/CCBC-1269[CCBC-1269]:
-  Expose setting for N1QL grace period. 
-  This is a port of https://issues.couchbase.com/browse/CCBC-1122[CCBC-1122]. 
+  Expose setting for N1QL grace period.
+  This is a port of https://issues.couchbase.com/browse/CCBC-1122[CCBC-1122].
   The example below will add extra 100ms to each N1QL query:
 +
 [source,c]
