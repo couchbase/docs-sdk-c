@@ -25,12 +25,11 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.3/index.html[API Refer
   Instead, the operation is automatically retried until timeout.
 
 * https://issues.couchbase.com/browse/CCBC-1398[CCBC-1398]:
-  Parse and use `revEpoch` from configuration in order to allow the server to handle special cases of failover
-  scenarios.
+  Parse and use `revEpoch` from configuration in order to allow the server to handle special cases of failover scenarios.
 
 * https://issues.couchbase.com/browse/CCBC-1399[CCBC-1399]:
-  Implement retry backoff for query requests. Instead of retrying requests immediately, use backoff period returned by
-  retry strategy.
+  Implement retry backoff for query requests. 
+  Instead of retrying requests immediately, use backoff period returned by retry strategy.
 
 * https://issues.couchbase.com/browse/CCBC-1400[CCBC-1400]:
   Fill collection name when retrying collection resolution to avoid misrouting requests to default collection.
@@ -39,12 +38,13 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.3/index.html[API Refer
   Reset list of "used" nodes when retrying query to allow reusing endpoints.
 
 * https://issues.couchbase.com/browse/CCBC-1401[CCBC-1401]:
-  Fix special error message detection for Query requests. In addition to reacting on the error codes from query service,
+  Fix special error message detection for Query requests. 
+  In addition to reacting on the error codes from query service,
   the library also scans error messages for particular sub-strings to decide whether retry is necessary.
 
 * https://issues.couchbase.com/browse/CCBC-861[CCBC-861]:
-  Purge pipelines on `lcb_destroy`. In order to avoid resource leaks, the library purges all pending (or waiting)
-  commands from the pipelines upon destruction.
+  Purge pipelines on `lcb_destroy`. In order to avoid resource leaks, 
+  the library purges all pending (or waiting) commands from the pipelines upon destruction.
 
 * Fix `cbc-proxy` tool.
 
