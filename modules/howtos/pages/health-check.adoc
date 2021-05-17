@@ -3,15 +3,56 @@
 :page-topic-type: howto
 
 [abstract]
-In today's distributed and virtual environments, users will often not have full administrative control over their whole network. 
+In today's distributed and virtual environments, users will often not have full administrative control over their whole network.
 Health Check introduces _Ping_ to check nodes are still healthy, and to force idle connections to be kept alive in environments with eager shutdowns of unused resources.
 _Diagnostics_ requests a report from a node, giving instant health check information.
 
 
-Diagnosing problems in distributed environments is far from easy, so Couchbase provides a _Health Check API_ with `Ping()` for active monitoring. ans `Diagnostics()` for a look at what the client believes is the current state of the cluster. 
+Diagnosing problems in distributed environments is far from easy, so Couchbase provides a _Health Check API_ with `Ping()` for active monitoring. ans `Diagnostics()` for a look at what the client believes is the current state of the cluster.
 More extensive discussion of the uses of Health Check can be found in the xref:concept-docs:health-check.adoc[Health Check Concept Guide].
 
-For more information on `lcb_diag()` and `lcb_PING_SERVICE`, refer to the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-ping.html[API documentation].
+== Ping
+
+At the simplest `lcb_PING_SERVICE` is an enumeration used to indicate the type of service in PING responses.
+You can customise the type of services to ping through this service.
+Service types include :
+
+* `LCB_PING_SERVICE_KV`
+* `LCB_PING_SERVICE_VIEWS`
+* `LCB_PING_SERVICE_QUERY`
+* `LCB_PING_SERVICE_SEARCH`
+* `LCB_PING_SERVICE_ANALYTICS`
+
+`lcb_PING_STATUS` returns the current status of the service.
+
+== Diagnostics
+
+Diagnostics work in a similar fashion to `lcb_PING_SERVICE` in the sense that it returns a report of how all the sockets/end-points are doing, but the main difference is that it is passive.
+While `lcb_PING_SERVICE` proactively sends an operation across the network, a diagnostics report just returns whatever current state the client is in.
+This makes it much cheaper to call on a regular basis, but does not provide any live insight into network slowness,etc.
+
+[source,c]
+----
+lcb_install_callback(instance, LCB_CALLBACK_DIAG, diag_callback);
+void diag_callback(lcb_INSTANCE, int, const lcb_RESPBASE *rb)
+{
+    const lcb_RESPDIAG *resp = (const lcb_RESPDIAG *)rb;
+    char* json;
+    size_t json_len;
+    lcb_STATUS rc = lcb_respdiag_status(resp);
+    if (rc != LCB_SUCCESS) {
+        fprintf(stderr, "failed: %s\n", lcb_strerror_short(rc));
+    } else {
+        lcb_respdiag_value(resp, &json, &json_len);
+        if (json) {
+            fprintf(stderr, "\n%.*s", json_len, json);
+        }
+    }
+}
+----
+
+For  more information on `lcb_diag()`, refer to https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-ping.html[API Documentation].
+
 
 ////
 == Ping
