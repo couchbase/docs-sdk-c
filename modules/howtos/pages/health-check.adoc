@@ -25,6 +25,11 @@ Service types include :
 
 `lcb_PING_STATUS` returns the current status of the service.
 
+[source, c]
+----
+include::example$ping.cc[tag=ping]
+----
+
 == Diagnostics
 
 Diagnostics work in a similar fashion to `lcb_PING_SERVICE` in the sense that it returns a report of how all the sockets/end-points are doing, but the main difference is that it is passive.
