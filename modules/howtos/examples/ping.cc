@@ -63,6 +63,7 @@ main()
     lcb_cmdping_all(cmd);
 
     lcb_ping(instance, nullptr, cmd);
+    lcb_cmdping_destroy(cmd);
     lcb_wait(instance, LCB_WAIT_DEFAULT);
     lcb_destroy(instance);
 
