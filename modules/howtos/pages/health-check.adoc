@@ -1,9 +1,10 @@
 = Diagnosing and preventing Network Problems with Health Check
+:description: In today's distributed and virtual environments, users will often not have full administrative control over their whole network.
 :navtitle: Health Check
 :page-topic-type: howto
 
 [abstract]
-In today's distributed and virtual environments, users will often not have full administrative control over their whole network.
+{description}
 Health Check introduces _Ping_ to check nodes are still healthy, and to force idle connections to be kept alive in environments with eager shutdowns of unused resources.
 _Diagnostics_ requests a report from a node, giving instant health check information.
 
@@ -14,8 +15,8 @@ More extensive discussion of the uses of Health Check can be found in the xref:c
 == Ping
 
 At the simplest `lcb_PING_SERVICE` is an enumeration used to indicate the type of service in PING responses.
-You can customise the type of services to ping through this service.
-Service types include :
+You can customize the type of services to ping through this service.
+Service types include:
 
 * `LCB_PING_SERVICE_KV`
 * `LCB_PING_SERVICE_VIEWS`
@@ -30,11 +31,12 @@ Service types include :
 include::example$ping.cc[tag=ping]
 ----
 
+
 == Diagnostics
 
 Diagnostics work in a similar fashion to `lcb_PING_SERVICE` in the sense that it returns a report of how all the sockets/end-points are doing, but the main difference is that it is passive.
 While `lcb_PING_SERVICE` proactively sends an operation across the network, a diagnostics report just returns whatever current state the client is in.
-This makes it much cheaper to call on a regular basis, but does not provide any live insight into network slowness,etc.
+This makes it much cheaper to call on a regular basis, but does not provide any live insight into network slowness, _et al._.
 
 [source,c]
 ----
