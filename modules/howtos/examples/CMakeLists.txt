@@ -39,6 +39,7 @@ add_example(query-criteria)
 add_example(subdoc-retrieving)
 add_example(subdoc-updating)
 add_example(views)
+add_example(ping)
 
 if (Threads_FOUND)
     add_example(cas)
