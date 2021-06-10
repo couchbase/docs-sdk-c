@@ -36,7 +36,7 @@ lcb_createopts_credentials(create_options, argv[2], strlen(argv[2]), argv[3], st
 
 If you are connecting to Couchbase Cloud rather than a local Couchbase Server, see the <<cloud-connections, Cloud section>>, below.
 
-Couchbase uses xref:6.5@server:learn:security/roles.adoc[Role Based Access Control (RBAC)] to control access to resources.
+Couchbase uses xref:7.0@server:learn:security/roles.adoc[Role Based Access Control (RBAC)] to control access to resources.
 Here we will use the _Full Admin_ role created during installation of the Couchbase Data Platform.
 For production client code, you will want to use xref:howtos:managing-connections.adoc#rbac[more appropriate, restrictive settings], but here we want to get you up and running quickly.
 If you're developing client code on the same VM or machine as the Couchbase Server, your URI can be _localhost_.

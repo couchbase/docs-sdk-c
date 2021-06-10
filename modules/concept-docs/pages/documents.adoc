@@ -1,4 +1,4 @@
-= Document 
+= Document
 :nav-title: Documents & Doc Ops
 :page-topic-type: concept
 :page-aliases: ROOT:documents,ROOT:documents-basics,ROOT:documents-atomic
@@ -29,7 +29,7 @@ Although query and path-based (Sub-Document) services are available, the simplic
 
 
 
-include::6.5@sdk:shared:partial$documents.adoc[tag=document]
+include::7.0@sdk:shared:partial$documents.adoc[tag=document]
 
 == Primitive Key-Value Operations
 
@@ -42,9 +42,9 @@ get(docid)
 remove(docid)
 ----
 
-include::6.5@sdk:shared:partial$documents.adoc[tag=crud-overview]
+include::7.0@sdk:shared:partial$documents.adoc[tag=crud-overview]
 
-include::6.5@sdk:shared:partial$documents.adoc[tag=store-update]
+include::7.0@sdk:shared:partial$documents.adoc[tag=store-update]
 
 [NOTE]
 ====
@@ -55,7 +55,7 @@ If you wish to only modify certain parts of a document, you can use xref:subdocu
 collection.mutate_in("customer123", [SD.upsert("fax", "311-555-0151")])
 ----
 
-or xref:6.0@server:n1ql:n1ql-language-reference/update.adoc[N1QL UPDATE] to update documents based on specific query criteria:
+or xref:7.0@server:n1ql:n1ql-language-reference/update.adoc[N1QL UPDATE] to update documents based on specific query criteria:
 
 [source,sql]
 ----
@@ -63,7 +63,7 @@ update `default` SET sale_price = msrp * 0.75 WHERE msrp < 19.95;
 ----
 ====
 
-include::6.5@sdk:shared:partial$documents.adoc[tag=get_generic]
+include::7.0@sdk:shared:partial$documents.adoc[tag=get_generic]
 
 [source,sql]
 ----
@@ -86,7 +86,7 @@ name, email = cb.retrieve_in('user:kingarthur', 'contact.name', 'contact.email')
 
 // Counters
 
-include::6.5@sdk:shared:partial$documents.adoc[tag=counters1]
+include::7.0@sdk:shared:partial$documents.adoc[tag=counters1]
 
 [source,java]
 ----
@@ -101,7 +101,7 @@ collection.binary().decrement(counterDocId,
 DecrementOptions.decrementOptions().delta(5));
 ----
 
-include::6.5@sdk:shared:partial$documents.adoc[tag=counters2]
+include::7.0@sdk:shared:partial$documents.adoc[tag=counters2]
 
 [source,python]
 ----
@@ -112,32 +112,14 @@ if should_increment_value(value):
   cb.upsert('counter_id', value + increment_amount, cas=cas)
 ----
 
-include::6.5@sdk:shared:partial$documents.adoc[tag=counters3]
+include::7.0@sdk:shared:partial$documents.adoc[tag=counters3]
 
 
 === Use Cases
 
-The SDK provides a high-level abstraction over the simple `incr()`/`decr()` of Couchbase Server's memcached binary protocol, using `collections.binary()`. 
+The SDK provides a high-level abstraction over the simple `incr()`/`decr()` of Couchbase Server's memcached binary protocol, using `collections.binary()`.
 This enables you to work with counters using `get()` and `upsert()` operations -- allowing, _inter alia_, the use of durability options with the operations.
 You will find several ways of working with counters {link-with-underscores}[in the API docs].
 
 // Expiry
-include::6.5@sdk:shared:partial$documents.adoc[tag=expiration]
-
-
-////
-include::6.5@sdk:shared:partial$documents.adoc[tag=]
-
-
-include::6.5@sdk:shared:partial$documents.adoc[tag=]
-
-include::6.5@sdk:shared:partial$documents.adoc[tag=]
-
-include::6.5@sdk:shared:partial$documents.adoc[tag=]
-
-include::6.5@sdk:shared:partial$documents.adoc[tag=]
-
-include::6.5@sdk:shared:partial$documents.adoc[tag=]
-
-include::6.5@sdk:shared:partial$documents.adoc[tag=]
-////
+include::7.0@sdk:shared:partial$documents.adoc[tag=expiration]
