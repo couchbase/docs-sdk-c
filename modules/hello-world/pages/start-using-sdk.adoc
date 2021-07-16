@@ -72,9 +72,7 @@ rc = lcb_open(instance, name, strlen(name)),
 
 If you installed the travel sample data bucket, substitute _travel-sample_ for _bucket-name_.
 
-The 3.1 SDK is ready for the planned introduction of xref:concept-docs:collections.adoc[Collections] in Couchbase Server 7.0 -- the xref:7.0@server:introduction:whats-new.adoc#whats-new-server-700[beta release of this is available now].
-The latest release, 6.6, brings a limited _Developer Preview_ of Collections, allowing Documents to be grouped by purpose or theme, according to specified _Scope_.
-Here we will use `NULL` for default collection, which covers the whole Bucket.
+The 3.1 SDK supports full integration with the xref:concept-docs:collections.adoc[Collections] feature in the latest release of the Couchbase Data Platform, Couchbase Server 7.0. This includes complete support of Collections, allowing Documents to be grouped by purpose or theme, according to a specified _Scope_. Here we will use the `users` collection within the `tenant_agent_00` scope from `travel-sample` bucket as an example.
 
 [source,c]
 ----
@@ -93,12 +91,11 @@ lcb_install_callback3(instance, LCB_CALLBACK_STORE, (lcb_RESPCALLBACK)store_call
 
 lcb_STATUS rc;
 lcb_CMDSTORE *cmd;
-const char *collection = NULL, *scope = NULL;
-size_t collection_len = 0, scope_len = 0;
+const char *scope = "tenant_agent_00", *collection = "users";
 const char *key = "my-document";
 const char *value = "{\"name\": \"mike\"}";
 rc = lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT);
-rc = lcb_cmdstore_collection(cmd, scope, scope_len, collection, collection_len);
+rc = lcb_cmdstore_collection(cmd, scope, strlen(scope), collection, strlen(collection));
 rc = lcb_cmdstore_key(cmd, key, strlen(key));
 rc = lcb_cmdstore_value(cmd, value, strlen(value));
 rc = lcb_store(instance, NULL, cmd);
@@ -126,17 +123,17 @@ lcb_install_callback3(instance, LCB_CALLBACK_GET, (lcb_RESPCALLBACK)get_callback
 
 lcb_STATUS rc;
 lcb_CMDGET *cmd;
-const char *collection = NULL, *scope = NULL;
-size_t collection_len = 0, scope_len = 0;
+const char *scope = "tenant_agent_00", *collection = "users";
 const char *key = "my-document";
 rc = lcb_cmdget_create(&cmd);
-rc = lcb_cmdget_collection(cmd, scope, scope_len, collection, collection_len);
+rc = lcb_cmdget_collection(cmd, scope, strlen(scope), collection, strlen(collection));
 rc = lcb_cmdget_key(cmd, key, strlen(key));
 rc = lcb_get(instance, NULL, cmd);
 rc = lcb_cmdget_destroy(cmd);
 rc = lcb_wait(instance);
 ----
 
+This code shows how you would use a named collection and scope. A named or default collection will provide the same functionality as bucket-level operations did in previous versions of Couchbase Server.
 
 
 == Cloud Connections
