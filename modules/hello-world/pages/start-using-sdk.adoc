@@ -1,9 +1,10 @@
 = Install and Start Using the C SDK with Couchbase Server
 :page-aliases: ROOT:getting-started,ROOT:start-using,ROOT:hello-couchbase,ROOT:start-using-sdk
 :navtitle: Start Using the SDK
+:description: The Couchbase C SDK (libcouchbase - LCB) enables you to interact with a Couchbase Server cluster from the C language.
 
 [abstract]
-The Couchbase C SDK (libcouchbase - LCB) enables you to interact with a Couchbase Server cluster from the C language.
+{description}
 It is also used by the Node.js, PHP, and Python SDKs to communicate with the Couchbase Server.
 
 
@@ -72,7 +73,9 @@ rc = lcb_open(instance, name, strlen(name)),
 
 If you installed the travel sample data bucket, substitute _travel-sample_ for _bucket-name_.
 
-The 3.1 SDK supports full integration with the xref:concept-docs:collections.adoc[Collections] feature in the latest release of the Couchbase Data Platform, Couchbase Server 7.0. This includes complete support of Collections, allowing Documents to be grouped by purpose or theme, according to a specified _Scope_. Here we will use the `users` collection within the `tenant_agent_00` scope from `travel-sample` bucket as an example.
+The 3.x SDKs support full integration with the xref:concept-docs:collections.adoc[Collections] feature in the latest release of Couchbase Server, 7.0. 
+This includes complete support of Collections, allowing Documents to be grouped by purpose or theme, according to a specified _Scope_. 
+Here we will use the `users` collection within the `tenant_agent_00` scope from `travel-sample` bucket as an example.
 
 [source,c]
 ----
@@ -133,7 +136,8 @@ rc = lcb_cmdget_destroy(cmd);
 rc = lcb_wait(instance);
 ----
 
-This code shows how you would use a named collection and scope. A named or default collection will provide the same functionality as bucket-level operations did in previous versions of Couchbase Server.
+This code shows how you would use a named collection and scope. 
+A named or default xref:7.0@server:learn:data/scopes-and-collections.adoc[collection] will provide the same functionality as bucket-level operations did in previous versions of Couchbase Server.
 
 
 == Cloud Connections
