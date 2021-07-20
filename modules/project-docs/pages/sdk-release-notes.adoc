@@ -14,6 +14,108 @@ include::hello-world:partial$installation.adoc[]
 
 
 [#latest-release]
+== Version 3.2.0 (20 July 2021)
+
+Version 3.2.0 is the first release of the 3.2 series.
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.0/index.html[API Reference]
+
+* https://issues.couchbase.com/browse/CCBC-1395[CCBC-1395]:
+  We no longer expose `LCB_ERR_BUCKET_NOT_FOUND` in operation callbacks.
+  Instead, the operation is automatically retried until timeout.
+
+* https://issues.couchbase.com/browse/CCBC-1280[CBCC-1280]:
+  Support for OpenTelemetry tracing.
+
+  Tracing updated to allow for an external tracer that creates and finishes spans, adds tags, destroys spans.  Also,
+spans now have the notion of being the 'outer' span.  That is the span that has all the outer span tags, and is the one
+whose duration is used to determine whether or not the operation has exceeded the threshold if the
+ThresholdLoggingTracer is used.
+
+  If you pass in a parent that is an outer span, you must call `lcbtrace_span_finish` yourself. When an operation
+begins, if there is no parent span passed in, or if there is but it isn't an 'outer' span, then the operation creates
+the outer span itself.
+
+  See `/examples/tracing/otel_tracing.cc` for an example.
+
+* https://issues.couchbase.com/browse/CCBC-1362[CCBC-1362]:
+  Support for metrics.
+
+  When enabled, by default will output a histogram of latencies for various kv operations plus query, search, analytics
+and view queries.
+
+  If desired, an external metrics collector can be passed in when the instance is created, which will then be called
+with latencies for each operation.  This can be used to call into an opentelemetry meter for aggregation and export.
+
+  See `/examples/metrics/otel_metrics.cc` for an example.
+
+* https://issues.couchbase.com/browse/CCBC-1421[CCBC-1421]:
+  Allow empty path for subdocument array methods.
+
+* https://issues.couchbase.com/browse/CCBC-1417[CCBC-1417]:
+  Deprecate CAS usage with counter operation.
+
+* https://issues.couchbase.com/browse/CCBC-1418[CCBC-1418]:
+  Map query error 13014 to `LCB_ERR_AUTHENTICATION_FAILURE`.
+
+* https://issues.couchbase.com/browse/CCBC-1357[CCBC-1357]:
+  Allow to preserve expiration with Replace, Upsert and MutateIn operations.
+
+* https://issues.couchbase.com/browse/CCBC-1384[CCBC-1384]:
+  Allow the operations to be deferred until the instance will be connected to cluster.
+
+* https://issues.couchbase.com/browse/CCBC-1410[CCBC-1410]:
+  Refactor dynamic authenticator. NOTE: this API still volatile and might be changed in future.
+
+  In order to improve UX and allow caller to implement credential caching the API for authenticator was revised:
+
+    * instead of separate callbacks for username/password, now it uses single callback
+
+    * in the callback, the caller can figure out the reason of credentials request using `lcbauth_credentials_reason()`
+
+    * the caller can signal that it failed to retrieve credentials from external provider, and set result with
+      `lcbauth_credentials_result()`. In this case the SDK will not retry the operation.
+
+* https://issues.couchbase.com/browse/CCBC-1413[CCBC-1413]:
+  Skip `SELECT_BUCKET` packets waiting retry queue.
+
+* https://issues.couchbase.com/browse/CCBC-1169[CCBC-1169]:
+  Request copy from active vbucket for `get_all_replicas` operation.
+
+* https://issues.couchbase.com/browse/CCBC-1406[CCBC-1406]:
+  Fill in prepared statement handle on retry.
+
+* https://issues.couchbase.com/browse/CCBC-1405[CCBC-1405]:
+  Remove const from command cookie.
+
+* https://issues.couchbase.com/browse/CCBC-1402[CCBC-1402]:
+  Fix parsing JSON primitives as query rows.
+
+* Various improvements and fixes in test and build infrastructure
+
+=== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0.sha256sum[libcouchbase-3.2.0.sha256sum]
+| Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0.tar.gz[libcouchbase-3.2.0.tar.gz]
+| Amazon Linux 2                | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_amzn2_x86_64.tar[libcouchbase-3.2.0_amzn2_x86_64.tar]
+| Enterprise Linux 7            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_centos7_x86_64.tar[libcouchbase-3.2.0_centos7_x86_64.tar]
+| Enterprise Linux 8            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_centos8_x86_64.tar[libcouchbase-3.2.0_centos8_x86_64.tar]
+| Ubuntu 16.04 (xenial)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_ubuntu1604_xenial_amd64.tar[libcouchbase-3.2.0_ubuntu1604_xenial_amd64.tar]
+| Ubuntu 18.04 (bionic)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_ubuntu1804_bionic_amd64.tar[libcouchbase-3.2.0_ubuntu1804_bionic_amd64.tar]
+| Ubuntu 20.04 (focal)          | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_ubuntu2004_focal_amd64.tar[libcouchbase-3.2.0_ubuntu2004_focal_amd64.tar]
+| Debian 9 (stretch)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_debian9_stretch_amd64.tar[libcouchbase-3.2.0_debian9_stretch_amd64.tar]
+| Debian 10 (buster)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_debian10_buster_amd64.tar[libcouchbase-3.2.0_debian10_buster_amd64.tar]
+| Visual Studio 2015 (VC14)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_vc14_amd64.zip[libcouchbase-3.2.0_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_vc15_amd64.zip[libcouchbase-3.2.0_vc15_amd64.zip]
+| Visual Studio 2019 (VC16)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_vc16_amd64.zip[libcouchbase-3.2.0_vc16_amd64.zip]
+| Visual Studio 2015 TLS (VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_vc14_amd64_openssl.zip[libcouchbase-3.2.0_vc14_amd64_openssl.zip]
+| Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_vc15_amd64_openssl.zip[libcouchbase-3.2.0_vc15_amd64_openssl.zip]
+| Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_vc16_amd64_openssl.zip[libcouchbase-3.2.0_vc16_amd64_openssl.zip]
+|===
+
 == Version 3.1.3 (10 May 2021)
 
 Version 3.1.3 is the fourth release of the 3.1 series.
@@ -28,7 +130,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.3/index.html[API Refer
   Parse and use `revEpoch` from configuration in order to allow the server to handle special cases of failover scenarios.
 
 * https://issues.couchbase.com/browse/CCBC-1399[CCBC-1399]:
-  Implement retry backoff for query requests. 
+  Implement retry backoff for query requests.
   Instead of retrying requests immediately, use backoff period returned by retry strategy.
 
 * https://issues.couchbase.com/browse/CCBC-1400[CCBC-1400]:
@@ -38,12 +140,12 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.3/index.html[API Refer
   Reset list of "used" nodes when retrying query to allow reusing endpoints.
 
 * https://issues.couchbase.com/browse/CCBC-1401[CCBC-1401]:
-  Fix special error message detection for Query requests. 
+  Fix special error message detection for Query requests.
   In addition to reacting on the error codes from query service,
   the library also scans error messages for particular sub-strings to decide whether retry is necessary.
 
 * https://issues.couchbase.com/browse/CCBC-861[CCBC-861]:
-  Purge pipelines on `lcb_destroy`. In order to avoid resource leaks, 
+  Purge pipelines on `lcb_destroy`. In order to avoid resource leaks,
   the library purges all pending (or waiting) commands from the pipelines upon destruction.
 
 * Fix `cbc-proxy` tool.
