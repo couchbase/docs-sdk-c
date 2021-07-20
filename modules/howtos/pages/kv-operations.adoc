@@ -22,7 +22,7 @@ Or read on, for a hands-on introduction to working with documents from the .NET 
 The core interface to Couchbase Server is simple KV operations on full documents.
 Make sure you're familiar with the basics of authorization and connecting to a Cluster from the xref:hello-world:start-using-sdk.adoc[Start Using the SDK section].
 
-See the https://github.com/couchbase/docs-sdk-c/blob/release/3.0/modules/devguide/examples/c/retrieving.cc[code sample^] for use in context.
+See the https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/retrieving.cc[code sample^] for use in context.
 
 == Upsert
 
@@ -165,7 +165,7 @@ Here, we have add _Durability_ options, namely `PersistTo` and `ReplicateTo`.
 include::devguide:example$c/cas.cc[tag=cas]
 ----
 
-See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/cas.cc[code sample^] for use in context.
+See the https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/cas.cc[code sample^] for use in context.
 ////
 In Couchbase Server releases before 6.5, Durability was set with these two options -- see the xref:https://docs.couchbase.com/dotnet-sdk/2.7/durability.html[6.0 Durability documentation] -- covering  how many replicas the operation must be propagated to and how many persisted copies of the modified record must exist.
 Couchbase Data Platform 6.5 refines these two options, with xref:6.5@server:learn:data/durability.adoc[Synchronous Replication] -- although they remain essentially the same in use -- see xref:#durability[Durability, below].
@@ -184,7 +184,7 @@ It can be used like this:
 ----
 // durability kv snippet
 ----
-See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/durability.cc[code sample^] for use in context.
+See the https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/durability.cc[code sample^] for use in context.
 
 If no argument is provided the application will report success back as soon as the primary node has acknowledged the mutation in its memory.
 However, we recognize that there are times when the application needs that extra certainty that especially vital mutations have been successfully replicated,
@@ -243,7 +243,7 @@ var result = await collection.Touch("document-key", TimeSpan.FromSeconds(30),
 ----
 ////
 
-See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/expiration.cc[code sample^] for use in context.
+See the https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/expiration.cc[code sample^] for use in context.
 
 
 
@@ -296,7 +296,7 @@ await collection.Binary.Decrement("document-key", 1, 1000, TimeSpan.FromSeconds(
 ----
 ////
 
-See the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/counter.cc[code sample^] for use in context.
+See the https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/counter.cc[code sample^] for use in context.
 
 NOTE: Increment & Decrement are considered part of the ‘binary’ API and as such may still be subject to change
 

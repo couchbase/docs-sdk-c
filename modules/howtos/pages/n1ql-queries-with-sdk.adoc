@@ -246,10 +246,10 @@ A complete list of `QueryOptions` can be found in the https://docs.couchbase.com
 
 As well as the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-n1ql-api.html[API docs], there are examples in the GitHub repo for:
 
-* https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/query-criteria.cc[Query Example]
-* https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/query-placeholders.cc[Querying with Placeholders]
-* https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/query-consistency.cc[Scan Consistency]
-* https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/query-atplus.cc[AtPlus (Read Your Own Writes)]
+* https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/query-criteria.cc[Query Example]
+* https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/query-placeholders.cc[Querying with Placeholders]
+* https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/query-consistency.cc[Scan Consistency]
+* https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/query-atplus.cc[AtPlus (Read Your Own Writes)]
 
 
 == Querying at Scope Level

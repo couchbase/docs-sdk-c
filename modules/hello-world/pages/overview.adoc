@@ -1,4 +1,4 @@
-= Couchbase C SDK 3.1
+= Couchbase C SDK 3.2
 :page-type: landing-page
 :page-layout: landing-page-top-level-sdk
 :page-role: tiles
@@ -38,7 +38,7 @@ lcb_createopts_connstr(options, connection_string, strlen(connection_string));
 [.column]
 ====== {empty}
 
-== Couchbase C SDK 3.1
+== Couchbase C SDK 3.2
 
 ++++
 <div class="card-row three-column-row">

@@ -27,9 +27,9 @@ NOTE: When using a Couchbase version earlier than 6.5, you must create a valid B
 == Creating and Removing Buckets
 
 The `ClusterManager` interface may be used to create and delete buckets from the Couchbase cluster.
-It is instantiated through the `lcb_create()`  method -- see the bucket creation example https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/management-bucket-create.cc[here].
+It is instantiated through the `lcb_create()`  method -- see the bucket creation example https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/management-bucket-create.cc[here].
 
-And the https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/management-bucket-drop.cc[dropping bucket example].
+And the https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/management-bucket-drop.cc[dropping bucket example].
 
 
 ////
@@ -97,7 +97,7 @@ include::devguide:example$go/provisioning-resources-buckets.go[tag=flushBucket]
 
 The `lcb_cbflush3()` operation may fail if the bucket does not have flush enabled, in that case it will return an `ErrBucketNotFlushable`.
 
-See the example https://github.com/couchbase/docs-sdk-c/blob/release/3.1/modules/devguide/examples/c/management-bucket-flush.cc[here].
+See the example https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/management-bucket-flush.cc[here].
 
 
 
