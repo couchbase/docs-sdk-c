@@ -1,15 +1,10 @@
-= Working with Collections and Scopes
-:nav-title: Collections
-:content-type: howto
-:page-topic-type: howto
+include::project-docs:partial$attributes.adoc[]
 
-[abstract]
-Collections and Scopes are introduced in Couchbase Server 7.0.
-The 3.2 API SDKs all work with Collections and Scopes.
+include::{version-server}@sdk:shared:partial$working-with-collections.adoc[]
 
-The xref:7.0@server:learn:data/scopes-and-collections.adoc[Collections feature] in Couchbase Server 7.0 is fully implemented in the 2.3 API version of the Couchbase SDK.
-When working with other server versions, the `defaultcollection` is used from the SDK, by using `NULL` for the name --
-here we will use `NULL` for default collection, which covers the whole Bucket.
+== Example code
+
+In the following example, we will use `NULL` for default collection, which covers the whole Bucket.
 To use named Collections (and Scopes), just substitute the Collection (and Scope) name for `NULL`.
 
 [source,c]
