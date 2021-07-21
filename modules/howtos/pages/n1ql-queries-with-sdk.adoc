@@ -255,7 +255,7 @@ As well as the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-
 == Querying at Scope Level
 [.status]#Developer Preview#
 
-From version 3.0.4 of the C SDK, it is possible to query off the xref:7.0@server:learn:data/scopes-and-collections.adoc[`Scope` level] _with the beta version of the next Couchbase Server release, 7.0β_,
+From version 3.0.4 of the C SDK, it is possible to query off the xref:7.0@server:learn:data/scopes-and-collections.adoc[`Scope` level] _with Couchbase Server 7.0_,
 using the `lcb_cmdquery_scope_name()` method.
 It takes the statement as a required argument, and then allows additional options if needed.
 
