@@ -17,7 +17,7 @@
 * xref:howtos:concurrent-async-apis.adoc[Async & Batching APIs]
 * xref:howtos:concurrent-document-mutations.adoc[Concurrent Document Mutations]
 * xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc[{cpp} Distributed ACID Transactions]
-* xref:howtos:working-with-collections.adoc[Working with Collections DP]
+* xref:howtos:working-with-collections.adoc[Working with Collections]
 //* xref:howtos:durability.adoc[Durability]
 
 .Managing Couchbase
