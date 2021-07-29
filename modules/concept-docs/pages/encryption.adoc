@@ -7,9 +7,7 @@ include::partial$attributes.adoc[]
 [abstract]
 Fields within a document can be securely encrypted by the SDK, to support FIPS-140-2 compliance.
 
-Client-side implementation of Field Level Encryption is available in the xref:3.1@java-sdk:concept-docs:encryption.adoc[3.x Java version of the SDK]. 
-It will be enabled in a future release of the other third generation SDKs.
-
-NOTE: Field Level Encryption is normally carried out at a higher level than _libcouchbase_ (LCB).
-It will be available in a later release of the LCB 'wrapper' SDKs: Node.js, PHP, Python.
+Field Level Encryption is normally carried out at a higher level than _libcouchbase_ (LCB).
+It is available in the LCB 'wrapper' SDKs: Node.js and Python.
+It will be available in a later release of the other LCB 'wrapper' SDKs, PHP.
 It will not be available in LCB. 
