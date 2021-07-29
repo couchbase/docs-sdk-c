@@ -129,7 +129,7 @@ Although installable or compilable on many other platforms, we cannot provide su
 2+| Since SDK 3.0.2
 |===
 
-include::7.0@sdk:shared:partial$network-requirements.adoc[]
+include::{cb_server_version}@sdk:shared:partial$network-requirements.adoc[]
 
 
-include::7.0@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]
+include::{cb_server_version}@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]

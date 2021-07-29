@@ -1,1 +1,1 @@
-include::7.0@sdk:pages:partial$views.adoc[]
+include::{cb_server_version}@sdk:pages:partial$views.adoc[]

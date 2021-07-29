@@ -26,7 +26,7 @@ In older versions of Couchbase Server, even though executed at Cluster level, a 
 
 == Example
 
-For a full Search example, see the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2fts_2fts_8c-example.html[API documentation].
+For a full Search example, see the {lcb_api_link}/example_2fts_2fts_8c-example.html[API documentation].
 
 
 ////

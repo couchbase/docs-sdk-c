@@ -35,9 +35,9 @@ include::example$Auth.scala[tag=basic,indent=0]
 ----
 ////
 
-include::7.0@sdk:shared:partial$auth-overview.adoc[tag=rbac]
+include::{cb_server_version}@sdk:shared:partial$auth-overview.adoc[tag=rbac]
 
-include::7.0@sdk:shared:partial$auth-overview.adoc[tag=cert-auth]
+include::{cb_server_version}@sdk:shared:partial$auth-overview.adoc[tag=cert-auth]
 
 
 ////
@@ -53,4 +53,4 @@ include::example$Auth.scala[tag=auth,indent=0]
 ----
 ////
 
-include::7.0@sdk:shared:partial$auth-overview.adoc[tag=ldap]
+include::{cb_server_version}@sdk:shared:partial$auth-overview.adoc[tag=ldap]

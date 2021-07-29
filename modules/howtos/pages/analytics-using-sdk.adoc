@@ -31,7 +31,7 @@ Here is an example of doing an analytics query :
 include::example$analytics.cc[tag=analytics,indent=0]
 ----
 
-For a full example, see the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2analytics_2analytics_8c-example.html[API documentation].
+For a full example, see the {lcb_api_link}/example_2analytics_2analytics_8c-example.html[API documentation].
 
 
 == Analytics Result

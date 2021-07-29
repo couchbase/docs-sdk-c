@@ -1,7 +1,6 @@
 = Sub-Document Operations with the C SDK
 :navtitle: Sub-Doc Operations
 :page-topic-type: howto
-include::partial$attributes.adoc[]
 :page-aliases: ROOT:sdk-xattr-example.adoc
 
 [abstract]
@@ -91,7 +90,7 @@ Console.WriteLine("Path exists? {0}", result.ContentAs<bool>(1));
 ----
 ////
 
-See the https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
+See the {lcb_doc_src_link}/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
 
 
 == Choosing an API
@@ -112,7 +111,7 @@ During `lcb_wait` the library will block for I/O, and invoke your callbacks as t
 include::example$insert-upsert.cc[tag=async]
 ----
 
-See the https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2minimal_2minimal_8c-example.html#a5[code sample^] for use in context.
+See the {lcb_api_link}/example_2minimal_2minimal_8c-example.html#a5[code sample^] for use in context.
 
 
 == Mutating
@@ -124,7 +123,7 @@ The simplest of these operations is _subdoc-upsert_, which, similar to the fulld
 ----
 include::devguide:example$c/subdoc-updating.cc[tag=sub-doc-mutate]
 ----
-See the https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
+See the {lcb_doc_src_link}/modules/devguide/examples/c/subdoc-retrieving.cc[code sample^] for use in context.
 
 ////
 .Upserting a new sub-document

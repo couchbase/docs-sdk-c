@@ -1,6 +1,4 @@
-include::project-docs:partial$attributes.adoc[]
-
-include::{version-server}@sdk:shared:partial$working-with-collections.adoc[]
+include::{cb_server_version}@sdk:shared:partial$working-with-collections.adoc[]
 
 == Example code
 

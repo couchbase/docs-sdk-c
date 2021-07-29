@@ -58,7 +58,7 @@ void diag_callback(lcb_INSTANCE, int, const lcb_RESPBASE *rb)
 }
 ----
 
-For  more information on `lcb_diag()`, refer to https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-ping.html[API Documentation].
+For  more information on `lcb_diag()`, refer to {lcb_api_link}/group__lcb-ping.html#ga5229063d7be73f0231233a3c0dd1e3c4[API Documentation].
 
 
 ////
