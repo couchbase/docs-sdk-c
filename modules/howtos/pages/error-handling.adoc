@@ -32,7 +32,9 @@ If containment is not able to handle the error, then it needs to propagate up to
 
 === Logging
 
-It is always important to log errors, but even more so in the case of reactive or event driven applications. The specific context of an operation can be lost and stack traces get harder to look at. This SDK has several ways to obtain additional context from the errors that are reported which are helpful when logging.
+It is always important to log errors, but even more so in the case of reactive or event driven applications. 
+The specific context of an operation can be lost and stack traces get harder to look at. 
+This SDK has several ways to obtain additional context from the errors that are reported which are helpful when logging.
 
 We have also documented how to xref:howtos:collecting-information-and-logging.adoc[collect information and logging] that is useful when using this SDK.
 
@@ -52,7 +54,9 @@ Transient errors -- such as those caused by resource starvation -- are best addr
 // include::example$error-handling.c[tag=error_retry]
 // ----
 
-In addition to application specific retry logic, a *global retry strategy* can also be configured. See the {lcb_api_link}/group__lcb-error-codes.html#gae5e21e2fe95c1e8ef890719bbb582e89[lcb_retry_strategy()] function in the API reference.
+In addition to application specific retry logic, a *global retry strategy* can also be configured. 
+See the {lcb_api_link}/group__lcb-error-codes.html#gae5e21e2fe95c1e8ef890719bbb582e89[lcb_retry_strategy()] function in the API reference.
+
 
 == Error Handling Constructs
 
@@ -60,17 +64,25 @@ There are several error handling constructs to be aware of when working with the
 
 === Error Codes & Metadata
 
-The `lcb_STATUS` enum is returned by most functions in this SDK and it contains all of the error codes that could be returned (e.g., `LCB_SUCCESS`, `LCB_ERR_TIMEOUT`, `LCB_ERR_DOCUMENT_NOT_FOUND`). Each error code has an associated text description and a specific `lcb_ERROR_TYPE` and some also have additional `lcb_ERROR_FLAGS` that can be used with macros (e.g., `lcb_error_flags()` and `LCB_ERROR_IS_TRANSIENT`). The response callbacks also have error codes that indicate the result of the scheduled command.
+The `lcb_STATUS` enum is returned by most functions in this SDK and it contains all of the error codes that could be returned (e.g., `LCB_SUCCESS`, `LCB_ERR_TIMEOUT`, `LCB_ERR_DOCUMENT_NOT_FOUND`). 
+Each error code has an associated text description and a specific `lcb_ERROR_TYPE` and some also have additional `lcb_ERROR_FLAGS` that can be used with macros (e.g., `lcb_error_flags()` and `LCB_ERROR_IS_TRANSIENT`). 
+The response callbacks also have error codes that indicate the result of the scheduled command.
 
 === Utility Functions and Macros
 
-In addition to the error codes themselves, there are several utility functions and macros that can be useful when handling errors. The most obvious are `lcb_strerror_short()` and `lcb_strerror_long()` which provide a textual description of the error that can be used for logging and similar purposes. There are also a series of macros (e.g, `LCB_ERROR_IS_TRANSIENT`, `LCB_ERROR_IS_FATAL`) that can test for special flags that indicate special cases.
+In addition to the error codes themselves, there are several utility functions and macros that can be useful when handling errors. 
+The most obvious are `lcb_strerror_short()` and `lcb_strerror_long()` which provide a textual description of the error that can be used for logging and similar purposes. 
+There are also a series of macros (e.g, `LCB_ERROR_IS_TRANSIENT`, `LCB_ERROR_IS_FATAL`) that can test for special flags that indicate special cases.
 
 === Additional Error Context
 
-As previously stated, response callbacks have error codes that indicate the result of the scheduled command. However, when an error is present, they also have additional error context that can may be useful for error handling or logging. The general form of those functions are `lcb_XXXX_error_context()` and then their associated helpers are in the form of `lcb_errctx_XXXX_DATA()`. Some examples are shown below, but review the references in <<Error Code API Reference>> for more.
+As previously stated, response callbacks have error codes that indicate the result of the scheduled command. 
+However, when an error is present, they also have additional error context that can may be useful for error handling or logging. 
+The general form of those functions are `lcb_XXXX_error_context()` and then their associated helpers are in the form of `lcb_errctx_XXXX_DATA()`. 
+Some examples are shown below, but review the references in <<Error Code API Reference>> for more.
 
 .A few examples:
+
 * *KV Store Response Error Context:* `lcb_respstore_error_context()` returns a `lcb_KEY_VALUE_ERROR_CONTEXT` that can be passed to the `lcb_errctx_kv_` series of functions for more info (e.g., `lcb_errctx_kv_key()` gets the key).
 * *Query Response Error Context:* `lcb_respquery_error_context()` returns a `lcb_QUERY_ERROR_CONTEXT` that can be passed to the `lcb_errctx_query_` series of functions for more info (e.g., `lcb_errctx_query_first_error_message()` gets the first error message).
 * *Search Response Error Context:* `lcb_respsearch_error_context()` returns a `lcb_SEARCH_ERROR_CONTEXT` that can be passed to the `lcb_errctx_search_` series of functions for more info (e.g., `lcb_errctx_search_http_response_body()` gets the underlying HTTP response body).
@@ -86,8 +98,10 @@ As previously stated, response callbacks have error codes that indicate the resu
 
 
 == Additional Resources
+
 Error handling can be an expansive topic.
-We have provided some general guidance and references that can be useful for error handling, but each application must carefully consider strategies that are most appropriate for their requirements. More fundamentally, you should also review the related topics and references listed below.
+We have provided some general guidance and references that can be useful for error handling, but each application must carefully consider strategies that are most appropriate for their requirements. 
+More fundamentally, you should also review the related topics and references listed below.
 
 === Related Topics
 
@@ -99,6 +113,7 @@ Logging methods are dependent upon the platform and SDK used.
 We offer xref:howtos:collecting-information-and-logging.adoc[recommendations and practical examples].
 
 === Error Code API Reference
+
 The {lcb_api_link}/group__lcb-error-codes.html[Error Codes] section of the API reference documentation is a good starting point to read about the various error codes and related functions.
 
 However, the {lcb_src_link}/include/libcouchbase/error.h[libcouchbase error header file] is the definitive source which declares all error codes that can be returned and all related utility functions that can be used to obtain additional context.
