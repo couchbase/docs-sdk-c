@@ -8,9 +8,9 @@ Async & batching
 
 
 Libcouchbase is an asynchronous client that may also be used in blocking mode.
-The library contains I/O plugins for common libraries such as _libevent_, _libev_, and _libuv_, and a libevent-based example can be found https://docs.couchbase.com/sdk-api/couchbase-c-client/example_2libeventdirect_2main_8c-example.html[here].
+The library contains I/O plugins for common libraries such as _libevent_, _libev_, and _libuv_, and a libevent-based example can be found {lcb_api_link}/example_2libeventdirect_2main_8c-example.html[here].
 
-Batching examples are given for https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/bulk-store.cc[bulk store] and for https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/bulk-get.cc[bulk get].
+Batching examples are given for {lcb_doc_src_link}/modules/devguide/examples/c/bulk-store.cc[bulk store] and for {lcb_doc_src_link}/modules/devguide/examples/c/bulk-get.cc[bulk get].
 
 == Usage Differences in Non-Blocking Mode
 

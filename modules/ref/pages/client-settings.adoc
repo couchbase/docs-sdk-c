@@ -6,8 +6,8 @@
 [abstract]
 Client settings
 
-Refer to the https://docs.couchbase.com/sdk-api/couchbase-c-client/group\__lcb-cntl.html[API doc on `lcb_cntl()`]
-and the https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-cntl-settings.html[settings list].
+Refer to the {lcb_api_link}/group\__lcb-cntl.html[API doc on `lcb_cntl()`]
+and the {lcb_api_link}/group__lcb-cntl-settings.html[settings list].
 // == Timeout Options
 
 

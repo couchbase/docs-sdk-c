@@ -1,51 +1,46 @@
 = Handling Errors with the C SDK
 :navtitle: Handling Errors
+:description: How to handle errors when programming with the C SDK.
 :page-topic-type: howto
 :page-aliases: ROOT:handling-error-conditions,handling-error-conditions,errors,handling-errors.adoc
-:source-language: csharp
+:source-language: c
 
 [abstract]
-Common errors and exceptions, and how to handle them.
-
-include::partial$alpha-warning.adoc[]
+{description}
 
 Errors are inevitable.
 The developer’s job is to be prepared for whatever is likely to come up -- and to try and be prepared for anything that conceivably could come up.
 Couchbase gives you a lot of flexibility, but it is recommended that you equip yourself with an understanding of the possibilities.
 
-
 == How the SDK Handles Errors
 
-Couchbase-specific exceptions are all derived from `CouchbaseException`.
+Couchbase-specific errors in the C SDK have a common underlying implementation.
 Errors that cannot be recovered by the SDK will be returned to the application.
-These unrecoverable errors are left to the application developer to handle -- this section covers handling many of the common error scenarios.
+These unrecoverable errors are left to the application developer to handle.
 
+== Error Handling Strategies
 
-== Handling Errors
-
-The approach will depend upon the type of error thrown.
+The specific error handling strategy required will depend upon the type of error thrown and how it affects the application.
 Is it transient?
 Is it even recoverable?
-// Below we examine error handling strategies in relation to the Couchbase SDKs, then take a practical walk through some common error scenarios you are likely to have to handle when working with a Couchbase cluster.
+Below we examine some general error handling strategies in relation to the Couchbase SDKs.
 
+=== Failing
+While most of the time you want more sophisticated error handling strategies, sometimes you just need to fail gracefully.
+It makes no sense for some errors to be retried, either because they are not transient, or because you already tried everything to make it work and it still keeps failing.
+If containment is not able to handle the error, then it needs to propagate up to a parent component that can handle it, or perhaps made visible via monitoring or alerting systems.
 
-Error codes are https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-error-codes.html[listed in the API docs].
-
-
-////
 === Logging
 
-It is always important to log errors, but even more so with highly concurrent asynchronous applications.
+It is always important to log errors, but even more so in the case of reactive or event driven applications. 
+The specific context of an operation can be lost and stack traces get harder to look at. 
+This SDK has several ways to obtain additional context from the errors that are reported which are helpful when logging.
 
-// Note that Logging has its own page.
+We have also documented how to xref:howtos:collecting-information-and-logging.adoc[collect information and logging] that is useful when using this SDK.
 
-// recommendation of good practice ADMONITION link
-
-
-[#retry]
 === Retry
 
-Transient errors -- such as those caused by resource starvation -- are best tackled with one of the following retry strategies:
+Transient errors -- such as those caused by resource starvation -- are best addressed with application logic that implements one of the following retry strategies:
 
 * Retry immediately.
 * Retry with a fixed delay.
@@ -53,103 +48,72 @@ Transient errors -- such as those caused by resource starvation -- are best tack
 * Retry with an exponentially increasing delay.
 * Retry with a random delay.
 
-[source,csharp]
-----
+// TODO: Provide a C SDK code example
+// [source,c]
+// ----
+// include::example$error-handling.c[tag=error_retry]
+// ----
 
-async Task changeEmail()
-{
-		var attempts = MaxRetries; // eg 5
-		while (attempts-- > 0)
-		{
-			  // will throw KeyNotfoundException if key doesn't exist
-	  		var document = await collection.GetAsync("doc_id");
-				var user = document.ContentAs<User>();
-				user.Email = "john.smith@couchbase.com";
-
-				try
-				{
-						await collection.ReplaceAsync("doc_id", user);
-
-						// replace succeeded, break from loop
-						break;
-				}
-				catch (CouchbaseException exception)
-				{
-						if (!exception.IsRetryable())
-						{
-								// unrecoverable error (network failure, etc)
-								throw;
-						}
-				}
-
-				// wait 100 milliseconds before trying again
-				Task.Delay(100);
-		}
-}
-----
+In addition to application specific retry logic, a *global retry strategy* can also be configured. 
+See the {lcb_api_link}/group__lcb-error-codes.html#gae5e21e2fe95c1e8ef890719bbb582e89[lcb_retry_strategy()] function in the API reference.
 
 
-== KV
+== Error Handling Constructs
 
-The KV Service exposes several common errors that can be encountered - both during development, and to be handled by the production app. Here we will cover some of the most common errors.
+There are several error handling constructs to be aware of when working with the C SDK.
 
+=== Error Codes & Metadata
 
-=== Key does not exist
+The `lcb_STATUS` enum is returned by most functions in this SDK and it contains all of the error codes that could be returned (e.g., `LCB_SUCCESS`, `LCB_ERR_TIMEOUT`, `LCB_ERR_DOCUMENT_NOT_FOUND`). 
+Each error code has an associated text description and a specific `lcb_ERROR_TYPE` and some also have additional `lcb_ERROR_FLAGS` that can be used with macros (e.g., `lcb_error_flags()` and `LCB_ERROR_IS_TRANSIENT`). 
+The response callbacks also have error codes that indicate the result of the scheduled command.
 
-[source,csharp]
-----
-try
-{
-    await collection.Replace("my-key", new { });
-}
-catch (KeyNotFoundException)
-{
-    // key does not exist
-}
-----
+=== Utility Functions and Macros
 
+In addition to the error codes themselves, there are several utility functions and macros that can be useful when handling errors. 
+The most obvious are `lcb_strerror_short()` and `lcb_strerror_long()` which provide a textual description of the error that can be used for logging and similar purposes. 
+There are also a series of macros (e.g, `LCB_ERROR_IS_TRANSIENT`, `LCB_ERROR_IS_FATAL`) that can test for special flags that indicate special cases.
 
-=== Key already exists
+=== Additional Error Context
 
-[source,csharp]
-----
-try
-{
-    await collection.Insert("my-key", new { });
-}
-catch (KeyExistsException)
-{
-    // key already exists
-}
-----
+As previously stated, response callbacks have error codes that indicate the result of the scheduled command. 
+However, when an error is present, they also have additional error context that can may be useful for error handling or logging. 
+The general form of those functions are `lcb_XXXX_error_context()` and then their associated helpers are in the form of `lcb_errctx_XXXX_DATA()`. 
+Some examples are shown below, but review the references in <<Error Code API Reference>> for more.
+
+.A few examples:
+
+* *KV Store Response Error Context:* `lcb_respstore_error_context()` returns a `lcb_KEY_VALUE_ERROR_CONTEXT` that can be passed to the `lcb_errctx_kv_` series of functions for more info (e.g., `lcb_errctx_kv_key()` gets the key).
+* *Query Response Error Context:* `lcb_respquery_error_context()` returns a `lcb_QUERY_ERROR_CONTEXT` that can be passed to the `lcb_errctx_query_` series of functions for more info (e.g., `lcb_errctx_query_first_error_message()` gets the first error message).
+* *Search Response Error Context:* `lcb_respsearch_error_context()` returns a `lcb_SEARCH_ERROR_CONTEXT` that can be passed to the `lcb_errctx_search_` series of functions for more info (e.g., `lcb_errctx_search_http_response_body()` gets the underlying HTTP response body).
 
 
-=== Document body too large
+// == Common Error Handling Scenarios
 
-[source,csharp]
-----
-try
-{
-	  await collection.Insert("my-key", myReallyLargeObject);
-}
-catch (RequestTooBigException)
-{
-	  // document body is too large
-}
-----
+// Here, we take a practical walk through some common error scenarios you are likely to have to handle when working with a Couchbase cluster.
 
-=== CAS Mismatch
+//
+// TBD provide a run-through of the most common scenarios with source code examples - similar to what is documented in Python, Go, and the other SDK error handling sections.
+//
 
-[source,csharp]
-----
-try
-{
-    var result = await collection.Get("my-key");
-    await collection.Replace("my-key", new { }, options => options.WithCas(result.Cas));
-}
-catch (CasMismatchException)
-{
-    // the CAS value has changed
-}
-----
-////
+
+== Additional Resources
+
+Error handling can be an expansive topic.
+We have provided some general guidance and references that can be useful for error handling, but each application must carefully consider strategies that are most appropriate for their requirements. 
+More fundamentally, you should also review the related topics and references listed below.
+
+=== Related Topics
+
+Consider the xref:concept-docs:durability-replication-failure-considerations.adoc[concepts of durability] that may have a role in your overall error handling strategy as well as any {lcb_api_link}/group__lcb-cntl-settings.html[client settings] that can control timeouts and retry logic.
+
+Diagnostic methods are available to check on the xref:health-check.adoc[health of the cluster], and the xref:tracing-from-the-sdk.adoc[health of the network].
+
+Logging methods are dependent upon the platform and SDK used.
+We offer xref:howtos:collecting-information-and-logging.adoc[recommendations and practical examples].
+
+=== Error Code API Reference
+
+The {lcb_api_link}/group__lcb-error-codes.html[Error Codes] section of the API reference documentation is a good starting point to read about the various error codes and related functions.
+
+However, the {lcb_src_link}/include/libcouchbase/error.h[libcouchbase error header file] is the definitive source which declares all error codes that can be returned and all related utility functions that can be used to obtain additional context.

@@ -1,6 +1,5 @@
 = Concurrent Document Mutations
 :page-topic-type: howto
-include::partial$attributes.adoc[]
 :page-aliases: ROOT:concurrent-document-mutations.adoc
 
 include::6.6@sdk:shared:partial$cas.adoc[tag=intro]
@@ -37,7 +36,7 @@ If the item has already been locked, the server will respond with CasMismatch wh
 
 == APIs and Additional Information
 
-API information for working with CAS can be found https://docs.couchbase.com/sdk-api/couchbase-c-client/group__lcb-kv-api.html[in our API docs].
+API information for working with CAS can be found {lcb_api_link}/group__lcb-kv-api.html[in our API docs].
 
-A fully worked example can be found https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/cas.cc[here^] and
-https://github.com/couchbase/docs-sdk-c/blob/release/3.2/modules/devguide/examples/c/pessimistic-lock.cc[here^].
+A fully worked example can be found {lcb_doc_src_link}/modules/devguide/examples/c/cas.cc[here^] and
+{lcb_doc_src_link}/modules/devguide/examples/c/pessimistic-lock.cc[here^].
