@@ -85,13 +85,10 @@ The documentation supplements the practical Howto docs with references and xref:
 .What's Hot?
 
 [.content]
-Libcouchbase 3.x is a complete rewrite, with a streamlined API.
+Leverage the new Couchbase Server Scopes and Collection features to build multi-tenant micro-service application.
 
 * xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc[{cpp} Distributed ACID Transactions from the C SDK]
 * xref:cbc.adoc[LCB includes our command line tools]
-* xref:concept-docs:collections.adoc[Works with our Collections Developer Preview]
-* xref:concept-docs:durability-replication-failure-considerations.adoc[New Synchronous Write Durability]
-
 
 
 [.column]
