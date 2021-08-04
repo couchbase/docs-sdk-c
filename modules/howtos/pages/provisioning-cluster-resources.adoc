@@ -4,7 +4,7 @@
 
 [abstract]
 Provisioning cluster resources is managed at the collection or bucket level, depending upon the service affected.
-Common use cases are outlined here, more recherché use cases are covered in the {lcb_api_link}/[API docs].
+Common use cases are outlined here, less common use cases are covered in the {lcb_api_link}/[API docs].
 
 include::{cb_server_version}@sdk:shared:partial$flush-info-pars.adoc[tag=management-intro]
 
