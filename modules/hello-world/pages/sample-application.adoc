@@ -1,10 +1,51 @@
 = Sample Application
+:description: Discover how to program interactions with the Couchbase Server via the data, query, and search services -- using the Travel Sample Application with the built-in Travel Sample data Bucket.
 :nav-title: Travel Sample App
 :content-type: tutorial
 :page-topic-type: tutorial
 :page-aliases: ROOT:sample-application,ROOT:tutorial4,ROOT:sample-app-backend
 
-[abstract]
-The Travel Sample Application is currently available in 6 of our SDKs.
+:travel-sample-git-project: try-cb-lcb
+:travel-sample-entrypoint: src/try-cb-lcb.c
 
-The Travel Sample application is available for the xref:3.0@dotnet-sdk:hello-world:sample-application.adoc[.NET]; xref:2.1@go-sdk:hello-world:sample-application.adoc[Go]; xref:3.0@java-sdk:hello-world:sample-application.adoc[Java]; xref:3.0@nodejs-sdk:hello-world:sample-application.adoc[Node.js]; xref:3.0@php-sdk:hello-world:sample-application.adoc[PHP]; and xref:3.0@python-sdk:hello-world:sample-application.adoc[Python] SDKs.
+include::{version-server}@sdk:shared:partial$sample-application.adoc[tag=abstract]
+
+include::{version-server}@sdk:shared:partial$sample-application.adoc[tag=quick-start]
+
+include::{version-server}@sdk:shared:partial$sample-application.adoc[tag=bring-your-own]
+
+include::{version-server}@sdk:shared:partial$sample-application.adoc[tag=using]
+
+
+== Sample App Backend
+
+The backend code shows `libcouchbase` in action with Query and Search,
+but also how to plug together all of the elements and build an application with Couchbase Server and the C SDK.
+
+////
+Here's the airport search code, which checks to see whether the search term for the query string is a three or four letter FAA or ICAO abbreviation,
+and if not searches for it as an airport name:
+////
+
+To start exploring the codebase, look at the https://github.com/couchbaselabs/try-cb-lcb/blob/master/conf/try-cb-lcb.conf[try-cb-lcb.conf] configuration for the route mappings,
+and try finding the definitions in the C sources in the https://github.com/couchbaselabs/try-cb-lcb/tree/master/src[src/] directory.
+
+For example, this snippet of config:
+
+----
+route  /api/airports  tcblcb_api_airports
+----
+
+is defined in https://github.com/couchbaselabs/try-cb-lcb/blob/master/src/api-airports.c#L74[api-airports.c]
+
+Other files contain the functions for handling users, registration, and N1QL queries.
+
+
+include::{version-server}@sdk:shared:partial$sample-application.adoc[tag=data-model]
+
+// include::{version-server}@sdk:shared:partial$sample-application.adoc[tag=rest-api]
+== REST API
+
+You can explore the REST API here in read-only mode.
+
+swagger_ui::https://raw.githubusercontent.com/couchbaselabs/{travel-sample-git-project}/HEAD/assets/swagger.json[]
