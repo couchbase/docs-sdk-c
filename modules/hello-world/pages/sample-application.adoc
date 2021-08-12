@@ -30,7 +30,7 @@ and if not searches for it as an airport name:
 To start exploring the codebase, look at the https://github.com/couchbaselabs/try-cb-lcb/blob/master/conf/try-cb-lcb.conf[try-cb-lcb.conf] configuration for the route mappings,
 and try finding the definitions in the C sources in the https://github.com/couchbaselabs/try-cb-lcb/tree/master/src[src/] directory.
 
-For example, this snippet of config:
+For example, this snippet of the config:
 
 ----
 route  /api/airports  tcblcb_api_airports
