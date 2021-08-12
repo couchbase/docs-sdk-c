@@ -1,10 +1,11 @@
 = Client Settings
+:description: Client settings
 :nav-title: Client Settings
 :page-topic-type: reference
 :page-aliases: ROOT:client-settings
 
 [abstract]
-Client settings
+{description}
 
 Refer to the {lcb_api_link}/group\__lcb-cntl.html[API doc on `lcb_cntl()`]
 and the {lcb_api_link}/group__lcb-cntl-settings.html[settings list].

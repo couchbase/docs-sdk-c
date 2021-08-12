@@ -1,9 +1,10 @@
 = User Management
+:description: User Management
 :navtitle: Provisioning Cluster Resources
 :page-aliases: ROOT:sdk-user-management-example.adoc
 
 [abstract]
-User Management
+{description}
 //The C SDK lets you create _users_, assign them _roles_ and associated _privileges_, and remove them from the system.
 
 == User-Management APIs

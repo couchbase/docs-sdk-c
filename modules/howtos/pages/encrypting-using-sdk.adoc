@@ -1,11 +1,12 @@
 = Field Level Encryption from the SDK
+:description: Fields within a document can be securely encrypted by the SDK, to support FIPS-140-2 compliance.
 :page-topic-type: howto
 :page-edition: Enterprise Edition
 :page-status: Developer Preview
 :page-aliases: ROOT:encrypting-using-sdk.adoc
 
 [abstract]
-Fields within a document can be securely encrypted by the SDK, to support FIPS-140-2 compliance.
+{description}
 
 Field Level Encryption is normally carried out at a higher level than _libcouchbase_ (LCB).
 It is available in all of the LCB 'wrapper' SDKs: Node.js, PHP, Python.
