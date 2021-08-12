@@ -1,7 +1,7 @@
 .Getting Started
 * xref:hello-world:start-using-sdk.adoc[Start Using the SDK]
 //* xref:hello-world:start-using-sdk.adoc[Start Using the SDK]
-// * xref:hello-world:sample-application.adoc[Sample Application]
+* xref:hello-world:sample-application.adoc[Sample Application]
 * xref:hello-world:cbc.adoc[Browser and CLI Access]
 
 .Working with Data
@@ -61,7 +61,7 @@
 * xref:ref:client-settings.adoc[Client Settings]
 * xref:ref:error-codes.adoc[Error Messages]
 * xref:ref:glossary.adoc[Glossary]
-// * xref:ref:travel-app-data-model.adoc[Travel Sample Data Model]
+* xref:ref:travel-app-data-model.adoc[Travel Sample Data Model]
 
 .Project Docs
 * xref:project-docs:sdk-release-notes.adoc[Release Notes]
