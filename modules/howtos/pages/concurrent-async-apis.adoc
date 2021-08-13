@@ -1,10 +1,11 @@
 = Choosing an API
+:description: Async & batching
 :navtitle: Choosing an API
 :page-topic-type: howto
 :page-aliases: ROOT:async-programming,ROOT:batching-operations
 
 [abstract]
-Async & batching
+{description}
 
 
 Libcouchbase is an asynchronous client that may also be used in blocking mode.

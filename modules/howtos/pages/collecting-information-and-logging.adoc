@@ -1,9 +1,10 @@
 = Collecting Information and Logging in the C (libcouchbase) SDK
+:description: This page describes how to enable debug logging in the C SDK and debug application crashes and potential bugs.
 :navtitle: Collecting Information
 :page-aliases: ROOT:collecting-information-and-logging.adoc,ROOT:event-bus-metrics.adoc,ROOT:logging.adoc
 
 [abstract]
-This page describes how to enable debug logging in the C SDK and debug application crashes and potential bugs.
+{description}
 Basic C SDK logging can be enabled using environment variables, and may also be controlled from the SDK API itself.
 
 == Library logging
