@@ -20,7 +20,7 @@
 
 #include <libcouchbase/couchbase.h>
 
-extern char * common_aes256_key_id;
+extern char *common_aes256_key_id;
 
 #define AES256_KEY_SIZE 32
 #define AES256_IV_SIZE 16

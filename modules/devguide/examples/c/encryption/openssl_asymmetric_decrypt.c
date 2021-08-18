@@ -20,29 +20,34 @@
 #include <libcouchbase/crypto.h>
 #include <stdlib.h>
 #include <string.h> /* strlen */
+
 #ifdef _WIN32
 #define PRIx64 "I64x"
 #else
+
 #include <inttypes.h>
+
 #endif
 
 #include "openssl_asymmetric_provider.h"
 
-static void die(lcb_t instance, const char *msg, lcb_error_t err)
+static void
+die(lcb_INSTANCE instance, const char *msg, lcb_error_t err)
 {
     fprintf(stderr, "%s. Received code 0x%X (%s)\n", msg, err, lcb_strerror(instance, err));
     exit(EXIT_FAILURE);
 }
 
-static void op_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+static void
+op_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
 {
     if (rb->rc == LCB_SUCCESS) {
-        const lcb_RESPGET *rg = (const lcb_RESPGET *)rb;
+        const lcb_RESPGET *rg = (const lcb_RESPGET *) rb;
         lcbcrypto_CMDDECRYPT dcmd = {};
         lcbcrypto_FIELDSPEC field = {};
         lcb_error_t err;
 
-        printf("VALUE:  %.*s\n", (int)rg->nvalue, rg->value);
+        printf("VALUE:  %.*s\n", (int) rg->nvalue, rg->value);
         dcmd.version = 0;
         dcmd.prefix = NULL;
         dcmd.doc = rg->value;
@@ -64,15 +69,18 @@ static void op_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
         if (dcmd.out[dcmd.nout - 1] == '\n') {
             dcmd.out[dcmd.nout - 1] = ' ';
         }
-        printf("PLAIN:  %.*s\n", (int)dcmd.nout, dcmd.out);
+        printf("PLAIN:  %.*s\n", (int) dcmd.nout, dcmd.out);
         free(dcmd.out); // NOTE: it should be compatible with what providers use to allocate memory
-        printf("CAS:    0x%" PRIx64 "\n", rb->cas);
+        printf("CAS:    0x%"
+        PRIx64
+        "\n", rb->cas);
     } else {
         die(instance, lcb_strcbtype(cbtype), rb->rc);
     }
 }
 
-static void get_encrypted(lcb_t instance, const char *key)
+static void
+get_encrypted(lcb_INSTANCE instance, const char *key)
 {
     lcb_CMDGET cmd = {};
     lcb_error_t err;
@@ -85,17 +93,18 @@ static void get_encrypted(lcb_t instance, const char *key)
     lcb_wait(instance);
 }
 
-int main(int argc, char *argv[])
+int
+main(int argc, char *argv[])
 {
     lcb_error_t err;
-    lcb_t instance;
+    lcb_INSTANCE instance;
 
     {
         struct lcb_create_st create_options = {};
         create_options.version = 3;
         create_options.v.v3.connstr = "couchbase://localhost/default";
-        create_options.v.v3.username = "Administrator";
-        create_options.v.v3.passwd = "password";
+        create_options.v.v3.username = "some-user";
+        create_options.v.v3.passwd = "some-password";
 
         err = lcb_create(&instance, &create_options);
         if (err != LCB_SUCCESS) {

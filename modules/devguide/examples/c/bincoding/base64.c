@@ -3,7 +3,8 @@
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 
-char *base64(const char *in, int in_len, int *out_len)
+char *
+base64(const char *in, int in_len, int *out_len)
 {
     BIO *buf, *b64;
     char *ptr, *out;
@@ -29,7 +30,8 @@ char *base64(const char *in, int in_len, int *out_len)
     return out;
 }
 
-char *unbase64(const char *in, int in_len, int *out_len)
+char *
+unbase64(const char *in, int in_len, int *out_len)
 {
     BIO *buf, *b64;
     char *out;

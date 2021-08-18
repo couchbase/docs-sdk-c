@@ -2,15 +2,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-static void die(lcb_error_t rc, const char *msg)
+static void
+die(lcb_error_t rc, const char *msg)
 {
     fprintf(stderr, "%s failed. (0x%x, %s)\n", msg, rc, lcb_strerror(NULL, rc));
     exit(EXIT_FAILURE);
 }
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
-    lcb_t instance;
+    lcb_INSTANCE instance;
     struct lcb_create_st cropts;
     lcb_error_t rc;
 

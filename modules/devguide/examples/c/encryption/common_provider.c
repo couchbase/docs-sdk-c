@@ -32,7 +32,7 @@ uint8_t *common_hmac_sha256_key = "myauthpassword";
 
 uint8_t common_aes256_key[AES256_KEY_SIZE] = "!mysecretkey#9^5usdk39d&dlf)03sL";
 uint8_t common_aes256_iv[AES256_IV_SIZE] = {0x65, 0xe7, 0x66, 0xbe, 0x35, 0xb2, 0xd2, 0x52,
-                                            0x2b, 0x2e, 0x7e, 0x8e, 0x99, 0x9,  0x8d, 0xa9};
+        0x2b, 0x2e, 0x7e, 0x8e, 0x99, 0x9, 0x8d, 0xa9};
 
 char *common_rsa_private_key_id = "MyPrivateKeyName";
 char *common_rsa_public_key_id = "MyPublicKeyName";

@@ -23,7 +23,10 @@
 
 #include "common_provider.h"
 
-void oap_initialize();
-lcbcrypto_PROVIDER *oap_create();
+void
+oap_initialize();
+
+lcbcrypto_PROVIDER *
+oap_create();
 
 #endif

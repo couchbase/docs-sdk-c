@@ -20,30 +20,38 @@
 #include <libcouchbase/crypto.h>
 #include <stdlib.h>
 #include <string.h> /* strlen */
+
 #ifdef _WIN32
 #define PRIx64 "I64x"
 #else
+
 #include <inttypes.h>
+
 #endif
 
 #include "openssl_asymmetric_provider.h"
 
-static void die(lcb_t instance, const char *msg, lcb_error_t err)
+static void
+die(lcb_INSTANCE instance, const char *msg, lcb_error_t err)
 {
     fprintf(stderr, "%s. Received code 0x%X (%s)\n", msg, err, lcb_strerror(instance, err));
     exit(EXIT_FAILURE);
 }
 
-static void op_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+static void
+op_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
 {
     if (rb->rc == LCB_SUCCESS) {
-        fprintf(stderr, "CAS:    0x%" PRIx64 "\n", rb->cas);
+        fprintf(stderr, "CAS:    0x%"
+        PRIx64
+        "\n", rb->cas);
     } else {
         die(instance, lcb_strcbtype(cbtype), rb->rc);
     }
 }
 
-static void store_encrypted(lcb_t instance, const char *key, const char *val)
+static void
+store_encrypted(lcb_INSTANCE instance, const char *key, const char *val)
 {
     lcb_error_t err;
     lcb_CMDSTORE cmd = {};
@@ -87,17 +95,18 @@ static void store_encrypted(lcb_t instance, const char *key, const char *val)
     lcb_wait(instance);
 }
 
-int main(int argc, char *argv[])
+int
+main(int argc, char *argv[])
 {
     lcb_error_t err;
-    lcb_t instance;
+    lcb_INSTANCE instance;
 
     {
         struct lcb_create_st create_options = {};
         create_options.version = 3;
         create_options.v.v3.connstr = "couchbase://localhost/default";
-        create_options.v.v3.username = "Administrator";
-        create_options.v.v3.passwd = "password";
+        create_options.v.v3.username = "some-user";
+        create_options.v.v3.passwd = "some-password";
 
         err = lcb_create(&instance, &create_options);
         if (err != LCB_SUCCESS) {
@@ -121,15 +130,19 @@ int main(int argc, char *argv[])
 
     lcbcrypto_register(instance, "RSA-2048-OAEP-SHA1", oap_create());
 
-    store_encrypted(instance, "secret-1", "{\"message\":\"The old grey goose jumped over the wrickety gate.\"}");
+    store_encrypted(instance, "secret-1",
+            "{\"message\":\"The old grey goose jumped over the wrickety gate.\"}");
     printf("\n");
     store_encrypted(instance, "secret-2", "{\"message\":10}");
     printf("\n");
     store_encrypted(instance, "secret-3", "{\"message\":\"10\"}");
     printf("\n");
-    store_encrypted(instance, "secret-4", "{\"message\":[\"The\",\"Old\",\"Grey\",\"Goose\",\"Jumped\",\"over\",\"the\",\"wrickety\",\"gate\"]}");
+    store_encrypted(instance,
+            "secret-4",
+            "{\"message\":[\"The\",\"Old\",\"Grey\",\"Goose\",\"Jumped\",\"over\",\"the\",\"wrickety\",\"gate\"]}");
     printf("\n");
-    store_encrypted(instance, "secret-5", "{\"message\":{\"myValue\":\"The old grey goose jumped over the wrickety gate.\",\"myInt\":10}}");
+    store_encrypted(instance, "secret-5",
+            "{\"message\":{\"myValue\":\"The old grey goose jumped over the wrickety gate.\",\"myInt\":10}}");
 
     lcb_destroy(instance);
     return 0;
