@@ -1,3 +1,12 @@
+/*
+ * REQUIREMENTS
+ *   Running couchbase server on localhost with:
+ *   user: some-user/some-password
+ *         with some RBAC (just used Full Admin for now)
+ *   bucket "default"
+ *   CREATE PRIMARY INDEX ON `default`:`default`
+ */
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -65,15 +74,20 @@ query_city(lcb_INSTANCE *instance, const std::string &bucket_name, const std::st
     // tag::placeholder[]
     std::string statement =
             "SELECT airportname, city, country FROM `" + bucket_name
-                    + R"(` WHERE type="airport" AND city=$1)";
+                    + R"(` WHERE type=$1 AND city=$2)";
 
     lcb_CMDQUERY *cmd = nullptr;
     check(lcb_cmdquery_create(&cmd), "create QUERY command");
     check(lcb_cmdquery_statement(cmd, statement.c_str(), statement.size()),
             "assign statement for QUERY command");
-    std::string city_json = "\"" + city + "\""; // production code should use JSON encoding library
-    check(lcb_cmdquery_positional_param(cmd, city_json.c_str(), city_json.size()),
-            "add positional parameter for QUERY comand");
+    
+    std::string parameters_json = "[\"airport\", \"" + city + "\"]"; // production code should use JSON encoding library
+    
+    check(lcb_cmdquery_positional_params(
+                cmd,
+                parameters_json.c_str(),
+                parameters_json.length()),
+            "add positional parameters for QUERY comand");
     // Enable using prepared (optimized) statements
     check(lcb_cmdquery_adhoc(cmd, false), "enable prepared statements for QUERY command");
     check(lcb_cmdquery_callback(cmd, query_callback), "assign callback for QUERY command");

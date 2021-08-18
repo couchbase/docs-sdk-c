@@ -50,7 +50,8 @@ Nevertheless, the result format recieved using an SDK may be different than that
 | `lcb_cmdquery_statement(command, statement, statement length )` | Sets the actual statement to be executed.
 | `lcb_cmdquery_scope_name(command, scope name, scope length)` | Associate scope name with the query.
 | `lcb_cmdquery_named_param(command, argument name, name length, argument value, value length)` | Sets a named argument for the query.
-| `lcb_cmdquery_positional_param(command, argument value, argument length)` | Adds a positional argument for the query.
+| `lcb_cmdquery_positional_params(command, arguments as JSON string, argument string length)` | Adds positional arguments for the query. _(From C SDK 3.2.1)_
+| `lcb_cmdquery_positional_param(command, argument value, argument length)` | Adds a positional argument for the query. _(Will be deprecated from C SDK 3.3.0)_
 | `lcb_cmdquery_readonly(command, readonly)` | Marks query as read-only ( set readonly value to non zero ).
 | `lcb_cmdquery_scan_cap(command, value)` | Sets maximum buffered channel size between the indexer client and the query service for index scans.
 | `lcb_cmdquery_flex_index(command, value)` | Tells the query engine to use a flex index (utilizing the search service).
