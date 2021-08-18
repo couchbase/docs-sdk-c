@@ -1,3 +1,12 @@
+/*
+ * REQUIREMENTS
+ *   Running couchbase server on localhost with:
+ *   user: some-user/some-password
+ *         with some RBAC (just used Full Admin for now)
+ *   bucket "default"
+ *   CREATE PRIMARY INDEX ON `default`:`default`
+ */
+
 #include <string>
 #include <vector>
 #include <iostream>
