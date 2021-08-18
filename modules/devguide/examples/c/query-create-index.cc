@@ -1,45 +1,71 @@
 #include <libcouchbase/couchbase.h>
-#include <libcouchbase/n1ql.h>
+#include <iostream>
+#include <cstring>
 
 extern "C" {
-static void query_callback(lcb_t, int, const lcb_RESPN1QL *resp)
+static void
+query_callback(__unused lcb_INSTANCE *instance, __unused int cbtype, const lcb_RESPN1QL *resp)
 {
     // This might also fail if the index is already created!
     if (resp->rc != LCB_SUCCESS) {
         fprintf(stderr, "N1QL query failed (%s)\n", lcb_strerror(NULL, resp->rc));
     }
-    printf("Result text: %.*s\n", (int)resp->nrow, resp->row);
+    printf("Result text: %.*s\n", (int) resp->nrow, resp->row);
 }
 }
 
-int main(int, char **)
+static void
+die(const char *msg, lcb_STATUS err)
 {
-    lcb_t instance;
-    struct lcb_create_st crst = {};
-    lcb_error_t rc;
-    lcb_CMDN1QL cmd = {};
-    lcb_N1QLPARAMS *params;
+    std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << std::endl;
+    exit(EXIT_FAILURE);
+}
 
-    crst.version = 3;
-    crst.v.v3.connstr = "couchbase://127.0.0.1/travel-sample";
-    crst.v.v3.username = "testuser";
-    crst.v.v3.passwd = "password";
-    rc = lcb_create(&instance, &crst); // Check rc
-    rc = lcb_connect(instance);        // Check rc
-    lcb_wait(instance);
-    rc = lcb_get_bootstrap_status(instance);
+int
+main(int, char **)
+{
+    lcb_STATUS rc;
+    std::string connection_string = "couchbase://localhost/travel-sample";
+    std::string username = "some-user";
+    std::string password = "some-password";
+
+    lcb_CREATEOPTS *create_options = nullptr;
+    lcb_createopts_create(&create_options, LCB_TYPE_BUCKET);
+    lcb_createopts_connstr(create_options, connection_string.data(), connection_string.size());
+    lcb_createopts_credentials(create_options, username.data(), username.size(), password.data(),
+            password.size());
+
+    lcb_INSTANCE *instance;
+    rc = lcb_create(&instance, create_options);
+    lcb_createopts_destroy(create_options);
     if (rc != LCB_SUCCESS) {
-        printf("Unable to bootstrap cluster: %s\n", lcb_strerror_short(rc));
-        exit(1);
+        die("Couldn't create couchbase instance", rc);
     }
 
-    params = lcb_n1p_new();
+    rc = lcb_connect(instance);
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't schedule connection", rc);
+    }
+
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
+
+    rc = lcb_get_bootstrap_status(instance);
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't bootstrap from cluster", rc);
+    }
+
+    lcb_N1QLPARAMS *params = lcb_n1p_new();
     rc = lcb_n1p_setstmtz(params, "CREATE PRIMARY INDEX ON `travel-sample`");
 
+    lcb_CMDN1QL cmd;
     cmd.callback = query_callback;
     lcb_n1p_mkcmd(params, &cmd);
-    rc = lcb_n1ql_query(instance, NULL, &cmd); // Check RC
-    lcb_wait(instance);
+    rc = lcb_n1ql_query(instance, nullptr, &cmd); // Check RC
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't schedule N1QL query command", rc);
+    }
+
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
 
     lcb_n1p_free(params);
     lcb_destroy(instance);

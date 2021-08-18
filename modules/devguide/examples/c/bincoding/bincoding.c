@@ -28,17 +28,21 @@
 #include <libcouchbase/api3.h>
 #include <stdlib.h>
 #include <string.h> /* strlen */
+
 #ifdef _WIN32
 #define PRIx64 "I64x"
 #else
+
 #include <inttypes.h>
+
 #endif
 
 #include "base64.h"
 #include "avatar.h"
 #include "cJSON.h"
 
-static void die(lcb_t instance, const char *msg, lcb_error_t err)
+static void
+die(lcb_INSTANCE instance, const char *msg, lcb_error_t err)
 {
     fprintf(stderr, "%s. Received code 0x%X (%s)\n", msg, err, lcb_strerror(instance, err));
     exit(EXIT_FAILURE);
@@ -51,12 +55,14 @@ typedef struct {
     int avatar_len;
 } Profile;
 
-static Profile *new_profile()
+static Profile *
+new_profile()
 {
     return calloc(1, sizeof(Profile));
 }
 
-static void free_profile(Profile *profile)
+static void
+free_profile(Profile *profile)
 {
     if (profile) {
         free(profile->name);
@@ -65,7 +71,8 @@ static void free_profile(Profile *profile)
     free(profile);
 }
 
-static Profile *decode_profile(const char *data)
+static Profile *
+decode_profile(const char *data)
 {
     Profile *profile = NULL;
     cJSON *json = cJSON_Parse(data);
@@ -84,14 +91,16 @@ static Profile *decode_profile(const char *data)
         }
         val = cJSON_GetObjectItem(json, "avatar");
         if (val && val->type == cJSON_String) {
-            profile->avatar = unbase64(val->valuestring, strlen(val->valuestring), &profile->avatar_len);
+            profile->avatar = unbase64(val->valuestring, strlen(val->valuestring),
+                    &profile->avatar_len);
         }
         cJSON_Delete(json);
     }
     return profile;
 }
 
-static char *encode_profile(Profile *profile)
+static char *
+encode_profile(Profile *profile)
 {
     cJSON *json = cJSON_CreateObject();
     if (profile->name) {
@@ -113,23 +122,27 @@ static char *encode_profile(Profile *profile)
     return cJSON_PrintUnformatted(json);
 }
 
-static void store_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+static void
+store_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
 {
     if (rb->rc == LCB_SUCCESS) {
-        fprintf(stderr, "The profile has been persisted in Couchbase successfully (CAS: 0x%" PRIx64 ")\n", rb->cas);
+        fprintf(stderr, "The profile has been persisted in Couchbase successfully (CAS: 0x%"
+        PRIx64
+        ")\n", rb->cas);
     } else {
         die(instance, lcb_strcbtype(cbtype), rb->rc);
     }
 }
 
-static void get_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
+static void
+get_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
 {
     char *filename = rb->cookie;
     if (rb->rc == LCB_SUCCESS) {
         /* generate HTML profile with embedded avatar */
         FILE *html = fopen(filename, "w+");
         if (html) {
-            const lcb_RESPGET *rg = (const lcb_RESPGET *)rb;
+            const lcb_RESPGET *rg = (const lcb_RESPGET *) rb;
             Profile *profile = decode_profile(rg->value);
             char *b64_val;
             int b64_len = 0;
@@ -138,7 +151,9 @@ static void get_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
             fprintf(html, "<b>NAME:</b> %s<br>", profile->name);
             fprintf(html, "<b>AGE:</b> %d<br>", profile->age);
             fclose(html);
-            fprintf(stderr, "The profile has been retrieved from Couchbase and stored as HTML in \"%s\"\n", filename);
+            fprintf(stderr,
+                    "The profile has been retrieved from Couchbase and stored as HTML in \"%s\"\n",
+                    filename);
             free_profile(profile);
         } else {
             perror("failed to open output file for writing");
@@ -148,10 +163,11 @@ static void get_callback(lcb_t instance, int cbtype, const lcb_RESPBASE *rb)
     }
 }
 
-int main(int argc, char *argv[])
+int
+main(int argc, char *argv[])
 {
     lcb_error_t err;
-    lcb_t instance;
+    lcb_INSTANCE instance;
     struct lcb_create_st create_options = {0};
     lcb_CMDSTORE scmd = {0};
     lcb_CMDGET gcmd = {0};
@@ -160,7 +176,9 @@ int main(int argc, char *argv[])
     create_options.version = 3;
 
     if (argc < 2) {
-        fprintf(stderr, "Usage: %s couchbase://host/bucket [ password [ username [ filename ] ] ]\n", argv[0]);
+        fprintf(stderr,
+                "Usage: %s couchbase://host/bucket [ password [ username [ filename ] ] ]\n",
+                argv[0]);
         exit(EXIT_FAILURE);
     }
 
@@ -198,8 +216,8 @@ int main(int argc, char *argv[])
 
     char *id = "profile-0001";
     Profile profile = {"Griet", 16,
-                       /* the avatar could have been received via network, or loaded from file system */
-                       avatar_jpg, avatar_jpg_len};
+            /* the avatar could have been received via network, or loaded from file system */
+            avatar_jpg, avatar_jpg_len};
 
     /* encoding user data to be stored in Couchbase as JSON */
     char *json = encode_profile(&profile);

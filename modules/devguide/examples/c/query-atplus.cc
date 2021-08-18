@@ -6,7 +6,7 @@
 #include <libcouchbase/couchbase.h>
 
 static void
-check(lcb_STATUS err, const char* msg)
+check(lcb_STATUS err, const char *msg)
 {
     if (err != LCB_SUCCESS) {
         std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
@@ -15,17 +15,17 @@ check(lcb_STATUS err, const char* msg)
 }
 
 static void
-query_callback(lcb_INSTANCE*, int, const lcb_RESPQUERY* resp)
+query_callback(lcb_INSTANCE *, int, const lcb_RESPQUERY *resp)
 {
     lcb_STATUS status = lcb_respquery_status(resp);
     if (status != LCB_SUCCESS) {
-        const lcb_QUERY_ERROR_CONTEXT* ctx;
+        const lcb_QUERY_ERROR_CONTEXT *ctx;
         lcb_respquery_error_context(resp, &ctx);
 
         uint32_t err_code = 0;
         lcb_errctx_query_first_error_code(ctx, &err_code);
 
-        const char* err_msg = nullptr;
+        const char *err_msg = nullptr;
         size_t err_msg_len = 0;
         lcb_errctx_query_first_error_message(ctx, &err_msg, &err_msg_len);
         std::string error_message{};
@@ -33,7 +33,8 @@ query_callback(lcb_INSTANCE*, int, const lcb_RESPQUERY* resp)
             error_message.assign(err_msg, err_msg_len);
         }
 
-        std::cerr << "[ERROR] failed to execute query. " << error_message << " (" << err_code << ")\n";
+        std::cerr << "[ERROR] failed to execute query. " << error_message << " (" << err_code
+                  << ")\n";
         return;
     }
 
@@ -44,42 +45,49 @@ query_callback(lcb_INSTANCE*, int, const lcb_RESPQUERY* resp)
     }
 
     // Add rows to the vector, we'll process the results in the calling code.
-    const char* buf = nullptr;
+    const char *buf = nullptr;
     std::size_t buf_len = 0;
     lcb_respquery_row(resp, &buf, &buf_len);
     if (buf_len > 0) {
-        std::vector<std::string>* rows = nullptr;
-        lcb_respquery_cookie(resp, reinterpret_cast<void**>(&rows));
+        std::vector<std::string> *rows = nullptr;
+        lcb_respquery_cookie(resp, reinterpret_cast<void **>(&rows));
         rows->emplace_back(std::string(buf, buf_len));
     }
 }
 
 static void
-storage_callback(lcb_INSTANCE*, int, const lcb_RESPSTORE* resp)
+storage_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp)
 {
     check(lcb_respstore_status(resp), "get status of STORE operation in callback");
 
-    lcb_MUTATION_TOKEN* mutation_token = nullptr;
-    lcb_respstore_cookie(resp, reinterpret_cast<void**>(&mutation_token));
-    check(lcb_respstore_mutation_token(resp, mutation_token), "extract mutation token from STORE operation response");
+    lcb_MUTATION_TOKEN *mutation_token = nullptr;
+    lcb_respstore_cookie(resp, reinterpret_cast<void **>(&mutation_token));
+    check(lcb_respstore_mutation_token(resp, mutation_token),
+            "extract mutation token from STORE operation response");
 }
 
 int
-main(int, char**)
+main(int, char **)
 {
-    std::string username{ "Administrator" };
-    std::string password{ "password" };
-    std::string connection_string{ "couchbase://localhost" };
-    std::string bucket_name{ "default" };
+    std::string username{"some-user"};
+    std::string password{"some-password"};
+    std::string connection_string{"couchbase://localhost"};
+    std::string bucket_name{"default"};
 
-    lcb_CREATEOPTS* create_options = nullptr;
-    check(lcb_createopts_create(&create_options, LCB_TYPE_BUCKET), "build options object for lcb_create");
-    check(lcb_createopts_credentials(create_options, username.c_str(), username.size(), password.c_str(), password.size()),
-          "assign credentials");
-    check(lcb_createopts_connstr(create_options, connection_string.c_str(), connection_string.size()), "assign connection string");
-    check(lcb_createopts_bucket(create_options, bucket_name.c_str(), bucket_name.size()), "assign bucket name");
+    lcb_CREATEOPTS *create_options = nullptr;
+    check(lcb_createopts_create(&create_options, LCB_TYPE_BUCKET),
+            "build options object for lcb_create");
+    check(lcb_createopts_credentials(create_options, username.c_str(), username.size(),
+                    password.c_str(),
+                    password.size()),
+            "assign credentials");
+    check(lcb_createopts_connstr(create_options, connection_string.c_str(),
+                    connection_string.size()),
+            "assign connection string");
+    check(lcb_createopts_bucket(create_options, bucket_name.c_str(), bucket_name.size()),
+            "assign bucket name");
 
-    lcb_INSTANCE* instance = nullptr;
+    lcb_INSTANCE *instance = nullptr;
     check(lcb_create(&instance, create_options), "create lcb_INSTANCE");
     check(lcb_createopts_destroy(create_options), "destroy options object");
     check(lcb_connect(instance), "schedule connection");
@@ -93,19 +101,25 @@ main(int, char**)
     long random_number = distrib(gen);
 
     // Install the storage callback which will be used to retrieve the mutation token
-    lcb_install_callback(instance, LCB_CALLBACK_STORE, reinterpret_cast<lcb_RESPCALLBACK>(storage_callback));
+    lcb_install_callback(instance, LCB_CALLBACK_STORE,
+            reinterpret_cast<lcb_RESPCALLBACK>(storage_callback));
 
     lcb_MUTATION_TOKEN mutation_token{};
 
     {
-        std::string key{ "user:" + std::to_string(random_number) };
-        std::string value{ R"({"name": ["Brass", "Doorknob"], "email": "b@email.com", "random":)" + std::to_string(random_number) + "}" };
+        std::string key{"user:" + std::to_string(random_number)};
+        std::string value{
+                R"({"name": ["Brass", "Doorknob"], "email": "b@email.com", "random":)"
+                        + std::to_string(random_number) +
+                        "}"};
 
-        lcb_CMDSTORE* cmd = nullptr;
-        std::cout << "Will insert new document with random number " << random_number << "\n" << value << "\n";
+        lcb_CMDSTORE *cmd = nullptr;
+        std::cout << "Will insert new document with random number " << random_number << "\n"
+                  << value << "\n";
         check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
         check(lcb_cmdstore_key(cmd, key.c_str(), key.size()), "assign ID for UPSERT command");
-        check(lcb_cmdstore_value(cmd, value.c_str(), value.size()), "assign value for UPSERT command");
+        check(lcb_cmdstore_value(cmd, value.c_str(), value.size()),
+                "assign value for UPSERT command");
         check(lcb_store(instance, &mutation_token, cmd), "schedule UPSERT command");
         check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
         lcb_wait(instance, LCB_WAIT_DEFAULT);
@@ -113,15 +127,20 @@ main(int, char**)
 
     std::vector<std::string> rows{};
     {
-        std::string statement = "SELECT name, email, random FROM `" + bucket_name + "` WHERE $1 IN name LIMIT 100";
+        std::string statement =
+                "SELECT name, email, random FROM `" + bucket_name + "` WHERE $1 IN name LIMIT 100";
         std::string param = R"("Brass")";
 
-        lcb_CMDQUERY* cmd = nullptr;
+        lcb_CMDQUERY *cmd = nullptr;
         check(lcb_cmdquery_create(&cmd), "create QUERY command");
-        check(lcb_cmdquery_statement(cmd, statement.c_str(), statement.size()), "assign statement for QUERY command");
-        check(lcb_cmdquery_positional_param(cmd, param.c_str(), param.size()), "add positional parameter for QUERY command");
-        check(lcb_cmdquery_consistency_token_for_keyspace(cmd, bucket_name.c_str(), bucket_name.size(), &mutation_token),
-              "add consistency token for QUERY command");
+        check(lcb_cmdquery_statement(cmd, statement.c_str(), statement.size()),
+                "assign statement for QUERY command");
+        check(lcb_cmdquery_positional_param(cmd, param.c_str(), param.size()),
+                "add positional parameter for QUERY command");
+        check(lcb_cmdquery_consistency_token_for_keyspace(cmd, bucket_name.c_str(),
+                        bucket_name.size(),
+                        &mutation_token),
+                "add consistency token for QUERY command");
         check(lcb_cmdquery_callback(cmd, query_callback), "assign callback for QUERY command");
         check(lcb_query(instance, &rows, cmd), "schedule QUERY command");
         check(lcb_cmdquery_destroy(cmd), "destroy QUERY command");
@@ -135,12 +154,13 @@ main(int, char**)
     // the newest random number (the value of random_number). When disabled, the row may or may not appear.
     size_t idx = 0;
     std::string prop_name = R"("random":)";
-    for (auto& row : rows) {
+    for (auto &row : rows) {
         size_t begin_pos = row.find(prop_name);
         size_t end_pos = row.find_first_of("},", begin_pos);
         std::string field = row.substr(begin_pos + prop_name.size(), end_pos - begin_pos);
         long row_random_number = std::stol(field);
-        std::cout << idx++ << " row has random number: " << row_random_number << (row_random_number == random_number ? " <---\n" : "\n");
+        std::cout << idx++ << " row has random number: " << row_random_number
+                  << (row_random_number == random_number ? " <---\n" : "\n");
     }
 
     lcb_destroy(instance);

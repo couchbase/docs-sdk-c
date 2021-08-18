@@ -3,27 +3,29 @@
 #include <cstdlib>
 #include <string>
 
-static void http_callback(lcb_t, int, const lcb_RESPHTTP *resp)
+static void
+http_callback(lcb_t, int, const lcb_RESPHTTP *resp)
 {
     printf("Operation completed with HTTP code: %d\n", resp->htstatus);
-    printf("Payload: %.*s\n", (int)resp->nbody, (char *)resp->body);
+    printf("Payload: %.*s\n", (int) resp->nbody, (char *) resp->body);
 }
 
-int main(int, char **)
+int
+main(int, char **)
 {
     lcb_create_st crst = {};
-    lcb_t instance;
+    lcb_INSTANCE instance;
 
     crst.version = 3;
     crst.v.v3.connstr = "couchbase://127.0.0.1/default";
-    crst.v.v3.username = "testuser";
-    crst.v.v3.passwd = "password";
+    crst.v.v3.username = "some-user";
+    crst.v.v3.passwd = "some-password";
 
     lcb_create(&instance, &crst);
     lcb_connect(instance);
     lcb_wait(instance);
     assert(lcb_get_bootstrap_status(instance) == LCB_SUCCESS);
-    lcb_install_callback3(instance, LCB_CALLBACK_HTTP, (lcb_RESPCALLBACK)http_callback);
+    lcb_install_callback3(instance, LCB_CALLBACK_HTTP, (lcb_RESPCALLBACK) http_callback);
 
     // Create the required parameters according to the Couchbase REST API
     std::string path("/pools/default/buckets");
@@ -45,8 +47,8 @@ int main(int, char **)
     htcmd.content_type = "application/x-www-form-urlencoded";
     htcmd.method = LCB_HTTP_METHOD_POST;
     htcmd.type = LCB_HTTP_TYPE_MANAGEMENT;
-    htcmd.username = "Administrator";
-    htcmd.password = "password";
+    htcmd.username = "some-user";
+    htcmd.password = "some-password";
     lcb_http3(instance, NULL, &htcmd);
     lcb_wait(instance);
 
@@ -56,8 +58,8 @@ int main(int, char **)
     LCB_CMD_SET_KEY(&htcmd, path.c_str(), path.size());
     htcmd.method = LCB_HTTP_METHOD_DELETE;
     htcmd.type = LCB_HTTP_TYPE_MANAGEMENT;
-    htcmd.username = "Administrator";
-    htcmd.password = "password";
+    htcmd.username = "some-user";
+    htcmd.password = "some-password";
     lcb_http3(instance, NULL, &htcmd);
     lcb_wait(instance);
 

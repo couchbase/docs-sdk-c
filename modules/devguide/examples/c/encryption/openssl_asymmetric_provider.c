@@ -30,26 +30,30 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 
-static void oap_free(lcbcrypto_PROVIDER *provider)
+static void
+oap_free(lcbcrypto_PROVIDER *provider)
 {
     free(provider);
 }
 
-static void oap_release_bytes(lcbcrypto_PROVIDER *provider, void *bytes)
+static void
+oap_release_bytes(lcbcrypto_PROVIDER *provider, void *bytes)
 {
     free(bytes);
-    (void)provider;
+    (void) provider;
 }
 
-static const char *oap_get_key_id(lcbcrypto_PROVIDER *provider)
+static const char *
+oap_get_key_id(lcbcrypto_PROVIDER *provider)
 {
     return common_rsa_public_key_id;
 }
 
-static lcb_error_t oap_encrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t input_len,
-                               const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len)
+static lcb_error_t
+oap_encrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t input_len,
+        const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len)
 {
-    BIO *bio = BIO_new_mem_buf((void *)common_rsa_public_key, -1);
+    BIO *bio = BIO_new_mem_buf((void *) common_rsa_public_key, -1);
     RSA *rsa_pub_key = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);
     BIO_free(bio);
     if (!rsa_pub_key) {
@@ -61,18 +65,21 @@ static lcb_error_t oap_encrypt(struct lcbcrypto_PROVIDER *provider, const uint8_
      * In production application, the data have to be processed in blocks
      */
     *output = malloc(RSA_size(rsa_pub_key));
-    *output_len = RSA_public_encrypt(input_len, input, *output, rsa_pub_key, RSA_PKCS1_OAEP_PADDING);
+    *output_len = RSA_public_encrypt(input_len, input, *output, rsa_pub_key,
+            RSA_PKCS1_OAEP_PADDING);
     return LCB_SUCCESS;
 }
 
-static lcb_error_t oap_decrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t input_len,
-                               const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len)
+static lcb_error_t
+oap_decrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t input_len,
+        const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len)
 {
-    BIO *bio = BIO_new_mem_buf((void *)common_rsa_private_key, -1);
+    BIO *bio = BIO_new_mem_buf((void *) common_rsa_private_key, -1);
     RSA *rsa_priv_key = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL);
     BIO_free(bio);
     if (!rsa_priv_key) {
-        fprintf(stderr, "Failed to read private key: %s\n", ERR_error_string(ERR_get_error(), NULL));
+        fprintf(stderr, "Failed to read private key: %s\n",
+                ERR_error_string(ERR_get_error(), NULL));
         return LCB_EINVAL;
     }
     /**
@@ -80,11 +87,13 @@ static lcb_error_t oap_decrypt(struct lcbcrypto_PROVIDER *provider, const uint8_
      * In production application, the data have to be processed in blocks
      */
     *output = malloc(RSA_size(rsa_priv_key));
-    *output_len = RSA_private_decrypt(input_len, input, *output, rsa_priv_key, RSA_PKCS1_OAEP_PADDING);
+    *output_len = RSA_private_decrypt(input_len, input, *output, rsa_priv_key,
+            RSA_PKCS1_OAEP_PADDING);
     return LCB_SUCCESS;
 }
 
-lcbcrypto_PROVIDER *oap_create()
+lcbcrypto_PROVIDER *
+oap_create()
 {
     lcbcrypto_PROVIDER *provider = calloc(1, sizeof(lcbcrypto_PROVIDER));
     provider->version = 1;
@@ -96,7 +105,8 @@ lcbcrypto_PROVIDER *oap_create()
     return provider;
 }
 
-void oap_initialize()
+void
+oap_initialize()
 {
     SSL_library_init();
     SSL_load_error_strings();

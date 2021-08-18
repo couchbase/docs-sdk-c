@@ -1,2 +1,10 @@
+*.dSYM/
+*.a
+*.dylib
+*.o
+*.log
+
+.DS_Store
+/build
 /cmake-build-*
 /.idea

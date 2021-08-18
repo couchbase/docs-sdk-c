@@ -1,33 +1,59 @@
 #include <libcouchbase/couchbase.h>
 #include <libcouchbase/ixmgmt.h>
+#include <iostream>
+#include <cstring>
 
-static void ixmgmt_callback(lcb_t, int, const lcb_RESPN1XMGMT *resp)
+static void
+die(const char *msg, lcb_STATUS err)
+{
+    std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << std::endl;
+    exit(EXIT_FAILURE);
+}
+
+static void
+ixmgmt_callback(__unused lcb_INSTANCE *instance, __unused int cbtype,
+        const struct lcb_RESPN1XMGMT_st *resp)
 {
     if (resp->rc == LCB_SUCCESS) {
-        printf("Operation successful!\n");
-    } else if (resp->rc == LCB_KEY_EEXISTS) {
-        printf("Index already exists!\n");
+        std::cout << "Index was successfully created!" << std::endl;
+    } else if (resp->rc == LCB_ERR_INDEX_EXISTS) {
+        std::cout << "Index already exists!" << std::endl;
     } else {
-        printf("Operation failed: %s\n", lcb_strerror(NULL, resp->rc));
+        std::cout << "Operation failed: " << lcb_strerror_long(resp->rc) << std::endl;
     }
 }
 
-int main(int, char **)
+int
+main(int, char **)
 {
-    lcb_t instance;
-    lcb_create_st crst = {};
-    crst.version = 3;
-    crst.v.v3.connstr = "couchbase://127.0.0.1/default";
-    crst.v.v3.username = "testuser";
-    crst.v.v3.passwd = "password";
+    lcb_STATUS rc;
+    std::string connection_string = "couchbase://localhost/beer-sample";
+    std::string username = "some-user";
+    std::string password = "some-password";
 
-    lcb_create(&instance, &crst);
-    lcb_connect(instance);
-    lcb_wait(instance);
+    lcb_CREATEOPTS *create_options = nullptr;
+    lcb_createopts_create(&create_options, LCB_TYPE_BUCKET);
+    lcb_createopts_connstr(create_options, connection_string.data(), connection_string.size());
+    lcb_createopts_credentials(create_options, username.data(), username.size(), password.data(),
+            password.size());
 
-    if (lcb_get_bootstrap_status(instance) != LCB_SUCCESS) {
-        printf("Couldn't bootstrap: %s\n", lcb_strerror(NULL, lcb_get_bootstrap_status(instance)));
-        exit(EXIT_FAILURE);
+    lcb_INSTANCE *instance;
+    rc = lcb_create(&instance, create_options);
+    lcb_createopts_destroy(create_options);
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't create couchbase instance", rc);
+    }
+
+    rc = lcb_connect(instance);
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't schedule connection", rc);
+    }
+
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
+
+    rc = lcb_get_bootstrap_status(instance);
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't bootstrap from cluster", rc);
     }
 
     const char *bktname;
@@ -38,7 +64,7 @@ int main(int, char **)
     cmd.spec.keyspace = bktname;
     cmd.spec.nkeyspace = strlen(bktname);
     cmd.callback = ixmgmt_callback;
-    lcb_n1x_create(instance, NULL, &cmd);
-    lcb_wait(instance);
+    lcb_n1x_create(instance, nullptr, &cmd);
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
     lcb_destroy(instance);
 }

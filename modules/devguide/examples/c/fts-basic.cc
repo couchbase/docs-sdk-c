@@ -1,48 +1,95 @@
 #include <libcouchbase/couchbase.h>
-#include <libcouchbase/cbft.h>
-#include <cassert>
+#include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <string>
 
-static void rowCallback(lcb_t, int, const lcb_RESPFTS *resp)
+static void
+die(const char *msg, lcb_STATUS err)
 {
-    if (resp->rflags & LCB_RESP_F_FINAL) {
-        printf("Status: %d\n", resp->rc);
-        printf("Meta: %.*s\n", (int)resp->nrow, resp->row);
-        if (resp->htresp && resp->htresp->nbody) {
-            printf("HTTP Response: %.*s\n", (int)resp->htresp->nbody, (char *)resp->htresp->body);
+    std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << std::endl;
+    exit(EXIT_FAILURE);
+}
+
+static void
+row_callback(__unused lcb_INSTANCE *instance, int __unused type, const lcb_RESPSEARCH *resp)
+{
+    if (lcb_respsearch_is_final(resp)) {
+        std::cout << "Status: " << lcb_respsearch_status(resp) << std::endl;
+
+        const char *row;
+        size_t nrow;
+        lcb_respsearch_row(resp, &row, &nrow);
+        std::cout << "Meta: " << std::string(row, nrow) << std::endl;
+
+        const lcb_RESPHTTP *http_resp;
+        lcb_respsearch_http_response(resp, &http_resp);
+        if (http_resp) {
+            const char *body;
+            size_t nbody;
+            if (lcb_resphttp_body(http_resp, &body, &nbody) == LCB_SUCCESS) {
+                std::cout << "HTTP Response: " << std::string(body, nbody) << std::endl;
+            }
         }
     } else {
-        printf("Row: %.*s\n", (int)resp->nrow, resp->row);
+        const char *row;
+        size_t nrow;
+        lcb_respsearch_row(resp, &row, &nrow);
+        std::cout << "Row: " << std::string(row, nrow) << std::endl;
     }
 }
 
-int main(int, char **)
+int
+main(int, char **)
 {
-    lcb_t instance;
-    lcb_create_st crst = {};
-    crst.version = 3;
-    crst.v.v3.connstr = "couchbase://127.0.0.1/beer-sample";
-    crst.v.v3.username = "testuser";
-    crst.v.v3.passwd = "password";
+    lcb_STATUS rc;
+    std::string connection_string = "couchbase://localhost/beer-sample";
+    std::string username = "some-user";
+    std::string password = "some-password";
 
-    lcb_error_t rc = lcb_create(&instance, &crst);
-    assert(rc == LCB_SUCCESS);
+    lcb_CREATEOPTS *create_options = nullptr;
+    lcb_createopts_create(&create_options, LCB_TYPE_BUCKET);
+    lcb_createopts_connstr(create_options, connection_string.data(), connection_string.size());
+    lcb_createopts_credentials(create_options, username.data(), username.size(), password.data(),
+            password.size());
+
+    lcb_INSTANCE *instance;
+    rc = lcb_create(&instance, create_options);
+    lcb_createopts_destroy(create_options);
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't create couchbase instance", rc);
+    }
+
     lcb_cntl_string(instance, "detailed_errcodes", "true");
-    lcb_connect(instance);
-    lcb_wait(instance);
-    assert(lcb_get_bootstrap_status(instance) == LCB_SUCCESS);
+    rc = lcb_connect(instance);
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't schedule connection", rc);
+    }
 
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
+
+    rc = lcb_get_bootstrap_status(instance);
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't bootstrap from cluster", rc);
+    }
+
+    // This example requires an FTS Search Index named `beer-search` created for the `beer-sample` bucket
     // Be sure to include the indexName within the request payload
-    std::string encodedQuery("{\"query\":{\"match\":\"hoppy\"},\"indexName\":\"beer-search\",\"size\":10}");
-    lcb_CMDFTS cmd = {};
-    cmd.callback = rowCallback;
-    cmd.query = encodedQuery.c_str();
-    cmd.nquery = encodedQuery.size();
-    rc = lcb_fts_query(instance, NULL, &cmd);
-    assert(rc == LCB_SUCCESS);
+    std::string encodedQuery(
+            "{\"query\":{\"match\":\"hoppy\"},\"indexName\":\"beer-search\",\"size\":10}");
 
-    lcb_wait(instance);
+    lcb_CMDSEARCH *cmd;
+    lcb_cmdsearch_create(&cmd);
+    lcb_cmdsearch_callback(cmd, row_callback);
+    lcb_cmdsearch_payload(cmd, encodedQuery.c_str(), encodedQuery.size());
+    rc = lcb_search(instance, NULL, cmd);
+    if (rc != LCB_SUCCESS) {
+        die("Couldn't schedule FTS query", rc);
+    }
+    lcb_cmdsearch_destroy(cmd);
+
+    std::cout << "----> " << encodedQuery << std::endl;
+
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
     lcb_destroy(instance);
 }
