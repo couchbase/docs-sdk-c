@@ -19,12 +19,13 @@ Metrics broadly fall into the following categories:
 
 Right now only the first category is implemented by the SDK, more are planned.
 
+
 == The Default Metrics Reporting
 
 The default implementation aggregates and logs request and response metrics.
 
 By default the metrics will be emitted every 10 minutes, but you can customize the emit interval.
-See xref:ref:client-settings.adoc#metrics_reporting-options[metrics reporting options] for details.
+See the <<metrics_reporting-options, metrics reporting options>> for details.
 
 Once enabled, there is no further configuration needed. The request statistics will be collected and logged.
 A possible report looks like this (prettified for better readability):
@@ -67,6 +68,7 @@ Each report contains one object for each service that got used, with each operat
 For each operation, a total amount of recorded requests is reported, as well as percentiles from a histogram in microseconds.
 The meta section on top contains information such as the emit interval in seconds so tooling can later calculate numbers like requests per second.
 
+
 == Custom Metrics Reporting
 
 The SDK supports integrating custom metrics reporting, such as OpenTelemetry, rather than using the default aggregation and logging.
@@ -77,9 +79,11 @@ This corresponds to the role that OpenTelemetry uses for `opentelemetry::metrics
 
 === Using OpenTelemetry Metrics reporting
 
-There is a full example for using OpenTelemetry https://github.com/couchbase/libcouchbase/blob/master/example/metrics/otel_metrics.cc[here].  Lets go through the steps involved.
+There is a full example for using OpenTelemetry https://github.com/couchbase/libcouchbase/blob/master/example/metrics/otel_metrics.cc[here].  
+Let's go through the steps involved.
 
-We will want to use an `opentelemetry::metrics::Meter`.  To do that, we will need a provider and a controller, which will also require an exporter and processor.
+We will want to use an `opentelemetry::metrics::Meter`.  
+To do that, we will need a provider and a controller, which will also require an exporter and processor.
 
 [source,cpp]
 ----
