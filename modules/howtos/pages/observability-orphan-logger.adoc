@@ -77,7 +77,7 @@ If a field is not available, it will not be included in the output.
 == Configuration
 
 The orphan logger can be configured through the connection string, or using `lcb_cntl` calls.  
-See the <<tracing-orphaned-logging-options, tracing orphaned logging options>> for details.
+See the xref:ref:client-settings.adoc#tracing-orphaned-logging-options[tracing orphaned logging options] for details.
 
 The following properties can be configured:
 
