@@ -21,9 +21,11 @@ The deployment situation itself is similar to the tracer: either applications al
 The difference is that exposing some kind of metrics is much more common than request based tracing,
 because most production deployments at least monitor CPU usage etc.
 
+
 == Configuring Metrics Logging
 
-The metrics logging can be enabled/disabled, and the emit interval can be configured, in the connection string or via `lcb_cntl` calls.  See xref:ref:client-settings.adoc#metrics_reporting-options[metrics reporting options]
+The metrics logging can be enabled/disabled, and the emit interval can be configured, in the connection string or via `lcb_cntl` calls.  
+See the <<metrics_reporting-options, metrics reporting options>>.
 
 At each emit/log interval, libcouchbase logs a JSON structure with the per-operation latencies in a simple histogram.
 The default value for the `emitInterval` is 600 seconds (10 minutes).
@@ -54,7 +56,7 @@ The overall structure looks like this (here prettified for readability):
 
 For each service and each node, the total count and the latency percentiles are reported.
 This will help during debugging to get a decent idea of the latency distribution across services and nodes.
-For more sophisticated grouping and aggregations, users can use custom implementations, such as OpenTelemetry.
+For more sophisticated grouping and aggregations, users can use custom implementations, such as `OpenTelemetry`.
 
 The `emit_interval_s` is reported in the meta section of the JSON output since to calculate the ops/s the `total_count` needs to be divided by the `emit_interval_s`.
 Since the configuration property is not always available when debugging logs it is included to make it simple.
@@ -67,7 +69,7 @@ Threshold logging is the recording of slow operations -- useful for diagnosing w
 
 === Configuring Threshold Logging
 
-To configure threshold logging, adjust the xref:ref:client-settings.adoc#tracing-threshold-logging-options[tracing threshold logging options].
+To configure threshold logging, adjust the <<tracing-threshold-logging-options, tracing threshold logging options>>.
 You should expect to see output in JSON format in the logs for the services encountering problems:
 
 [source,json]
@@ -125,11 +127,11 @@ For example, if a single node is slow but the rest of the cluster is responsive,
 === Configuring Orphaned Response Reporting
 
 The orphaned response reporting is very similar in principle to the tracing threshold logging,
-but instead of tracking responses which are over a specific threshold it tracks those responses which are “orphaned”.
+but instead of tracking responses which are over a specific threshold it tracks those responses which are "orphaned".
 
-The `emitInterval` and `sampleSize` can be adjusted, see xref:ref:client-settings.adoc#tracing-orphaned-logging-options[tracing orphaned logging options]
-for details.  They default to 10s and 128 samples per service, respectively.
-The overall structure looks like this (here prettified for readability): +
+The `emitInterval` and `sampleSize` can be adjusted, see the <<tracing-orphaned-logging-options, tracing orphaned logging options>> for details.
+They default to 10s and 128 samples per service, respectively.
+The overall structure looks like this (here prettified for readability): 
 
 [source,json]
 ----
