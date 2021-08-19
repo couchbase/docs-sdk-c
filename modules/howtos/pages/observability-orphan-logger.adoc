@@ -5,7 +5,7 @@
 [abstract]
 {description}
 
-While tracing and metrics can also be consumed through external interfaces, getting information about orphaned requests only works through the built-in mechanisms.
+While tracing and metrics can also be consumed through external interfaces, getting information about orphaned requests only works through the built-in mechanism.
 
 The way it works is that every time a response is in the process of being completed, when the SDK detects that the original caller is not listening anymore (likely because of a timeout), it will send this "orphaned" response to a reporting utility which aggregates all responses and in regular intervals logs them in a specific format.
 
@@ -13,77 +13,13 @@ When you spot a `TimeoutException` in your log file, you can look for the output
 
 == Output Format
 
-The `OrphanReporter` raises an `OrphansRecordedEvent` which in turn is going to be logged alongside all other SDK logs. 
-Since orphans usually indicate a state that is not desirable, the log level for those events is `WARN`. 
-By default they will be aggregated and logged every 10 seconds, but the event will be skipped if there are no orphans to report. 
-This makes sure that the log line will appear close to the corresponding `TimeoutException` in the logs, while not spamming the log file if there is nothing to report. 
+Since orphans usually indicate a state that is not desirable, the log level for those events is `WARN`.
+By default they will be aggregated and logged every 10 seconds, if there are orphans to report.
+This makes sure that the log line will appear close to the corresponding `LCB_ERR_TIMEOUT` in the logs, while not spamming the log file if there is nothing to report.
 See the next section on how to customize this behavior.
 
-The actual body of the message consists of the text `Orphaned requests found`, followed by a compact JSON representation of the aggregated orphans. 
+The actual body of the message consists of the text `Orphaned requests found`, followed by a compact JSON representation of the aggregated orphans.
 The following code snippet shows a prettified version of such a JSON blob:
-
-[source,json]
-----
-[
-   {
-      "top":[
-         {
-            "b":"travel-sample",
-            "r":"127.0.0.1:11210",
-            "s":"get",
-            "c":"9DACF45F00000001/0000000077CB4DAA",
-            "d":8,
-            "t":2500,
-            "i":"0x6af7",
-            "l":"127.0.0.1:62836"
-         },
-         {
-            "b":"travel-sample",
-            "r":"127.0.0.1:11210",
-            "s":"get",
-            "c":"9DACF45F00000001/0000000077CB4DAA",
-            "d":8,
-            "t":2500,
-            "i":"0x5dcf",
-            "l":"127.0.0.1:62836"
-         },
-         {
-            "b":"travel-sample",
-            "r":"127.0.0.1:11210",
-            "s":"get",
-            "c":"9DACF45F00000001/0000000077CB4DAA",
-            "d":15,
-            "t":2500,
-            "i":"0x38f",
-            "l":"127.0.0.1:62836"
-         }
-      ],
-      "service":"kv",
-      "count":3
-   }
-]
-----
-
-The fields are kept compact so that the logs don't get too big, but since they are abbreviations it is handy to have the following table available for reference:
-
-.JSON Output Format Descriptions 
-[options="header"]
-|====
-| Property       | Description
-| `b` | Name of the bucket
-| `r` | Remote hostname if dispatched
-| `l` | Local hostnamr if dispatched
-| `s` | The name/type of the request
-| `c` | The Channel ID to correlate with the server logs
-| `d` | The server duration if present
-| `t` | The configured timeout in milliseconds
-| `i` | The operation ID (i.e. opaque for Key/Value)
-|====
-
-Please note that in future releases this format is planned to change for easier readability, so we do not provide any stability guarantees on the logging output format and it might change between minor versions.
-
-If you want to enable the new output format, for now you have to set the `com.couchbase.orphanReporterNewOutputFormat` system property to `true`. 
-Once enabled, the overall new structure looks like this:
 
 [source,json]
 ----
@@ -119,7 +55,7 @@ Each individual request has the following format:
 }
 ----
 
-.Experimental JSON Output Format Descriptions 
+.Experimental JSON Output Format Descriptions
 [options="header"]
 |====
 | Property       | Description
@@ -140,17 +76,15 @@ If a field is not available, it will not be included in the output.
 
 == Configuration
 
-The orphan logger can be configured through the `OrphanReporterConfig`.
+The orphan logger can be configured through the connection string, or using `lcb_cntl` calls.  
+See the <<tracing-orphaned-logging-options, tracing orphaned logging options>> for details.
 
 The following properties can be configured:
 
-.OrphanReporterConfig Properties 
+.OrphanReporterConfig Properties
 [options="header"]
 |====
 | Property       | Default | Description
 | `emitInterval` | 10 seconds | The interval where found orphans are emitted.
-| `sampleSize`   | 10 | The number of samples to store per service.
-| `queueLength`  | 1024 | Maximum buffer size of orphans to store to pick up for the reporter.
+| `sampleSize`   | 128 | The number of samples to store per service.
 |====
-
-In addition to those properties, if you want to try out the new logging format you can set the `com.couchbase.orphanReporterNewOutputFormat` system property to `true`.
