@@ -14,7 +14,8 @@ To give insight into a request/response flow, the SDK provides a `RequestTracer`
 By default, the SDK will log information about requests that are over a configurable threshold every 10 seconds.
 Note that if no requests are over the threshold no event / log will be emitted.
 
-It is possible to customize this behavior by modifying the connection string, or using `lcb_cntl`.  See ref:ref:client-settings.adoc#tracing-threshold-logging-options[tracing threshold logging options] for details.
+It is possible to customize this behavior by modifying the connection string, or using `lcb_cntl`.  
+See the <<tracing-threshold-logging-options, tracing threshold logging options>> for details.
 
 
 In this case the emit interval is one minute and Key/Value requests will only be considered if their latency is greater or equal than two seconds.
@@ -60,6 +61,7 @@ This promotes quick visibility of the "worst offenders" and more efficient troub
 Please note that in future releases this format is planned to change for easier readability,
 so we do not provide any stability guarantees on the logging output format and it might change between minor versions.
 
+
 == Using an External Tracer
 
 The built-in tracer is great if you do not have a centralized monitoring system, but if you already use some external tracing mechanism, like OpenTelemetry, you can use it with libcouchbase.
@@ -89,12 +91,16 @@ typedef struct lcbtrace_TRACER {
 };
 ----
 
-The tracer holds on to a pointer to your external tracer, and will callback to your code when spans need to be created, destroyed, or have tags added to them.  You will want to define the v1 callbacks to call into the external tracer, then pass this into the options when creating a connection to libcouchbase.
+The tracer holds on to a pointer to your external tracer, and will callback to your code when spans need to be created, destroyed, or have tags added to them.
+You will want to define the v1 callbacks to call into the external tracer, then pass this into the options when creating a connection to libcouchbase.
 
 === Using OpenTelemetry tracing
 
-There is a full example for using OpenTelemetry https://github.com/couchbase/libcouchbase/blob/master/example/tracing/otel_tracing.cc[here].  Lets go through the steps involved.
-We will want to use an `opentelemetry::trace::Tracer`.  To do that, we will need an exporter, a processor and a provider.  Since the provider will return an `opentelemetry::nostd::shared_ptr<opentelemetry::trace::Tracer>`, we will need to wrap that in a simple struct so we can pass that struct into the lcb tracer as a void pointer.
+There is a full example for using OpenTelemetry https://github.com/couchbase/libcouchbase/blob/master/example/tracing/otel_tracing.cc[here].  
+Let's go through the steps involved.
+We will want to use an `opentelemetry::trace::Tracer`.  
+To do that, we will need an exporter, a processor and a provider. 
+Since the provider will return an `opentelemetry::nostd::shared_ptr<opentelemetry::trace::Tracer>`, we will need to wrap that in a simple struct so we can pass that struct into the lcb tracer as a void pointer.
 
 [source,cpp]
 ----
@@ -116,6 +122,7 @@ auto provider =
 ----
 
 Lets define the callback functions needed:
+
 [source,cpp]
 ----
 static void *start_span(lcbtrace_TRACER *tracer, const char *name, void *parent)
@@ -157,6 +164,7 @@ static void add_tag_uint64(void *span, const char *name, uint64_t value)
 ----
 
 Now, we can create the tracer, and make the connection to lcb:
+
 [source,cpp]
 ----
 // ask lcb for a new tracer struct
