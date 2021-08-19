@@ -25,7 +25,7 @@ Right now only the first category is implemented by the SDK, more are planned.
 The default implementation aggregates and logs request and response metrics.
 
 By default the metrics will be emitted every 10 minutes, but you can customize the emit interval.
-See the xref:ref:client-settings.adoc#metrics_reporting-options[metrics reporting options] for details.
+See the xref:ref:client-settings.adoc#metrics-reporting-options[metrics reporting options] for details.
 
 Once enabled, there is no further configuration needed. The request statistics will be collected and logged.
 A possible report looks like this (prettified for better readability):
