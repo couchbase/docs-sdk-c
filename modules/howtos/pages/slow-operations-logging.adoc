@@ -25,7 +25,7 @@ because most production deployments at least monitor CPU usage etc.
 == Configuring Metrics Logging
 
 The metrics logging can be enabled/disabled, and the emit interval can be configured, in the connection string or via `lcb_cntl` calls.  
-See the <<metrics_reporting-options, metrics reporting options>>.
+See the xref:ref:client-settings.adoc#metrics_reporting-options[metrics reporting options].
 
 At each emit/log interval, libcouchbase logs a JSON structure with the per-operation latencies in a simple histogram.
 The default value for the `emitInterval` is 600 seconds (10 minutes).
@@ -69,7 +69,7 @@ Threshold logging is the recording of slow operations -- useful for diagnosing w
 
 === Configuring Threshold Logging
 
-To configure threshold logging, adjust the <<tracing-threshold-logging-options, tracing threshold logging options>>.
+To configure threshold logging, adjust the xref:ref:client-settings.adoc#tracing-threshold-logging-options[tracing threshold logging options].
 You should expect to see output in JSON format in the logs for the services encountering problems:
 
 [source,json]
@@ -129,7 +129,7 @@ For example, if a single node is slow but the rest of the cluster is responsive,
 The orphaned response reporting is very similar in principle to the tracing threshold logging,
 but instead of tracking responses which are over a specific threshold it tracks those responses which are "orphaned".
 
-The `emitInterval` and `sampleSize` can be adjusted, see the <<tracing-orphaned-logging-options, tracing orphaned logging options>> for details.
+The `emitInterval` and `sampleSize` can be adjusted, see the xref:ref:client-settings.adoc#tracing-orphaned-logging-options[tracing orphaned logging options] for details.
 They default to 10s and 128 samples per service, respectively.
 The overall structure looks like this (here prettified for readability): 
 
