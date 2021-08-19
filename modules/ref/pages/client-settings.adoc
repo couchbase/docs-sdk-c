@@ -352,13 +352,16 @@ lcb_cntl_set32(instance, LCB_CNTL_HTTP_TIMEOUT, timeout);
 lcb_cmdhttp_timeout(cmd, timeout);
 ----
 
-== Tracing Threshold and Orphaned Logging options
+
+== Tracing Threshold and Orphaned Logging Options
 
 Both threshold tracing and orphaned request logging can be enabled/disabled using:
 
 Name: *Enable Tracing*::
-Connection String Option: `enable_tracing` +
-Enumeration Symbol: `LCB_CNTL_ENABLE_TRACING` +
+Connection String Option: `enable_tracing` 
++
+Enumeration Symbol: `LCB_CNTL_ENABLE_TRACING`
++
 Default: `true`
 
 [source,cpp]
@@ -380,44 +383,60 @@ lcb_cntl_string(instance, "tracing_enabled", "1");
 
 === Tracing Threshold Logging Options
 
-Any operations that take longer than the threshold for that service are logged at regular intervals. To keep memory usage in check, we only store the the first N slow operation traces (per service), and then flush that data to the log. The thresholds for the services can be set with:
+Any operations that take longer than the threshold for that service are logged at regular intervals. 
+To keep memory usage in check, we only store the the first N slow operation traces (per service), and then flush that data to the log. 
+The thresholds for the services can be set with:
 
 Name: *Tracing Threshold KV*::
-Connection String Option: `tracing_threshold_kv` +
-Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_KV` +
+Connection String Option: `tracing_threshold_kv` 
++
+Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_KV` 
++
 Default: `0.5` (500 milliseconds)
 
 Name: *Tracing Threshold Query*::
-Connection String Option: `tracing_threshold_query` +
-Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_QUERY` +
+Connection String Option: `tracing_threshold_query` 
++
+Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_QUERY`
++
 Default: `1.0` (1000 milliseconds)
 
 Name: *Tracing Threshold Search*::
-Connection String Option: `tracing_threshold_search` +
-Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_SEARCH` +
+Connection String Option: `tracing_threshold_search` 
++
+Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_SEARCH` 
++
 Default: `1.0` (1000 milliseconds)
 
 Name: *Tracing Threshold Analytics*::
-Connection String Option: `tracing_threshold_analytics` +
-Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_ANALYTICS` +
+Connection String Option: `tracing_threshold_analytics` 
++
+Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_ANALYTICS` 
++
 Default: `1.0` (1000 milliseconds)
 
 Name: *Tracing Threshold View*::
-Connection String Option: `tracing_threshold_view` +
-Enumeration Symbol: LCB_CNTL_TRACING_THRESHOLD_VIEW` +
+Connection String Option: `tracing_threshold_view` 
++
+Enumeration Symbol: LCB_CNTL_TRACING_THRESHOLD_VIEW` 
++
 Default: 1.0 (1000 milliseconds)
 
 Name: *Tracing Threshold Queue Size*::
-Connection String Option: `tracing_threshold_queue_size` +
-Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_QUEUE_SIZE` +
+Connection String Option: `tracing_threshold_queue_size` 
++
+Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_QUEUE_SIZE` 
++
 Default: `128`
 
 Name: *Tracing Threshold Queue Flush Interval*::
-Connection String Option: `tracing_threshold_queue_flush_interval` +
-Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_QUEUE_FLUSH_INTERVAL` +
+Connection String Option: `tracing_threshold_queue_flush_interval` 
++
+Enumeration Symbol: `LCB_CNTL_TRACING_THRESHOLD_QUEUE_FLUSH_INTERVAL`
++
 Default: `10.0` (10000 milliseconds) +
 
-+
+
 [source,c++]
 ----
 // all the thresholds/intervals can be set similarly.  These all set the kv threshold to 300ms
@@ -448,28 +467,36 @@ lcb_cntl_set32(instance, LCB_CNTL_TRACING_THRESHOLD_KV, size);
 
 === Tracing Orphaned Logging Options
 
-Orphans responses are KV operations which have timed out after dispatch, and the callback is never called.  These are stored in a queue, and logged at regular intervals.
+Orphans responses are KV operations which have timed out after dispatch, and the callback is never called.  
+These are stored in a queue, and logged at regular intervals.
 The size of the queue and the logging interval can be set with:
 
 Name: *Tracing Orphaned Queue Size*::
-Connection String Option: `tracing_orphaned_queue_size` +
-Enumeration Symbol: `LCB_CNTL_TRACING_ORPHANED_QUEUE_SIZE` +
+Connection String Option: `tracing_orphaned_queue_size` 
++
+Enumeration Symbol: `LCB_CNTL_TRACING_ORPHANED_QUEUE_SIZE` 
++
 Default: `128`
 
 Name: *Tracing Orphaned Queue Flush Interval*::
-Connection String Option: `tracing_orphaned_queue_flush_interval` +
-Enumeration Symbol: `LCB_CNTL_TRACING_ORPHANED_QUEUE_FLUSH_INTERVAL` +
+Connection String Option: `tracing_orphaned_queue_flush_interval` 
++
+Enumeration Symbol: `LCB_CNTL_TRACING_ORPHANED_QUEUE_FLUSH_INTERVAL` 
++
 Default: `10.0` (10000 milliseconds)
+
 
 == Metrics Reporting Options
 
 Metrics Reporting can be enabled/disabled using:
 
 Name: *Enable Operation Metrics*::
-Connection String Option: `enable_operation_metrics` +
-Enumeration Symbol: `LCB_CNTL_ENABLE_OP_METRICS` +
+Connection String Option: `enable_operation_metrics` 
++
+Enumeration Symbol: `LCB_CNTL_ENABLE_OP_METRICS` 
++
 Default: `true`
-
++
 [source,cpp]
 ----
 // boolean values can be represented in the connection string with 'on|off'
@@ -490,11 +517,12 @@ lcb_cntl_string(instance, "operation_metrics_enabled", "1");
 Similarly, the interval over which the metrics are collected and logged can be configured using:
 
 Name: *Operation Metrics Flush Interval*::
-Connection String Option: `operation_metrics_flush_interval` +
-Enumeration Symbol: `LCB_CNTL_OP_METRICS_FLUSH_INTERVAL` +
+Connection String Option: `operation_metrics_flush_interval` 
++
+Enumeration Symbol: `LCB_CNTL_OP_METRICS_FLUSH_INTERVAL` 
++
 Default: `600` (600 seconds)
-
-
++
 [source,cpp]
 ----
 std::string connection_string { "couchbase://localhost?operation_metrics_flush_interval=60.0" };
@@ -511,6 +539,7 @@ std::uint32_t timeout = 60000000; // 60 seconds in microseconds
 lcb_cntl_set32(instance, LCB_CNTL_OP_METRICS_FLUSH_INTERVAL, timeout);
 ----
 
+
 == General Options
 
 Name: *Unordered Execution*::
@@ -521,8 +550,10 @@ Default: `true`
 From Couchbase 7.0, Out-of-Order execution allows the server to concurrently handle multiple requests on the same connection, potentially improving performance for durable writes and multi-document ACID transactions.
 This means that tuning the number of connections (KV endpoints) is no longer necessary as a workaround where data not available in the cache is causing timeouts.
 +
-This is set to true by default. Note, changing the setting will only affect Server versions 7.0 onwards.
+This is set to true by default. 
+Note, changing the setting will only affect Server versions 7.0 onwards.
+
 
 // section on wide area network support
 
-include::6.5@sdk:shared:partial$client-settings-wide-network.adoc[]
+include::7.0@sdk:shared:partial$client-settings-wide-network.adoc[]
