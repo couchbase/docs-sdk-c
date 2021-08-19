@@ -15,7 +15,7 @@ By default, the SDK will log information about requests that are over a configur
 Note that if no requests are over the threshold no event / log will be emitted.
 
 It is possible to customize this behavior by modifying the connection string, or using `lcb_cntl`.  
-See the <<tracing-threshold-logging-options, tracing threshold logging options>> for details.
+See the xref:ref:client-settings.adoc#tracing-threshold-logging-options[tracing threshold logging options] for details.
 
 
 In this case the emit interval is one minute and Key/Value requests will only be considered if their latency is greater or equal than two seconds.
