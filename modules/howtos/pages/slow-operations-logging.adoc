@@ -25,7 +25,7 @@ because most production deployments at least monitor CPU usage etc.
 == Configuring Metrics Logging
 
 The metrics logging can be enabled/disabled, and the emit interval can be configured, in the connection string or via `lcb_cntl` calls.  
-See the xref:ref:client-settings.adoc#metrics_reporting-options[metrics reporting options].
+See the xref:ref:client-settings.adoc#metrics-reporting-options[metrics reporting options].
 
 At each emit/log interval, libcouchbase logs a JSON structure with the per-operation latencies in a simple histogram.
 The default value for the `emitInterval` is 600 seconds (10 minutes).
