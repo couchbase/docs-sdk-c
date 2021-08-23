@@ -124,14 +124,14 @@ See `/examples/metrics/otel_metrics.cc` for an example.
 
 * https://issues.couchbase.com/browse/CCBC-1410[CCBC-1410]:
   Refactor dynamic authenticator. NOTE: this API still volatile and might be changed in future.
++
+In order to improve UX and allow caller to implement credential caching the API for authenticator was revised:
 
-  In order to improve UX and allow caller to implement credential caching the API for authenticator was revised:
+    ** instead of separate callbacks for username/password, now it uses single callback
 
-    * instead of separate callbacks for username/password, now it uses single callback
+    ** in the callback, the caller can figure out the reason of credentials request using `lcbauth_credentials_reason()`
 
-    * in the callback, the caller can figure out the reason of credentials request using `lcbauth_credentials_reason()`
-
-    * the caller can signal that it failed to retrieve credentials from external provider, and set result with
+    ** the caller can signal that it failed to retrieve credentials from external provider, and set result with
       `lcbauth_credentials_result()`. In this case the SDK will not retry the operation.
 
 * https://issues.couchbase.com/browse/CCBC-1413[CCBC-1413]:
