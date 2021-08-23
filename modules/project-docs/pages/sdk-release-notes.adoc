@@ -86,28 +86,26 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.0/index.html[API Refer
 
 * https://issues.couchbase.com/browse/CCBC-1280[CBCC-1280]:
   Support for OpenTelemetry tracing.
-
-  Tracing updated to allow for an external tracer that creates and finishes spans, adds tags, destroys spans.  Also,
-spans now have the notion of being the 'outer' span.  That is the span that has all the outer span tags, and is the one
-whose duration is used to determine whether or not the operation has exceeded the threshold if the
-ThresholdLoggingTracer is used.
-
-  If you pass in a parent that is an outer span, you must call `lcbtrace_span_finish` yourself. When an operation
-begins, if there is no parent span passed in, or if there is but it isn't an 'outer' span, then the operation creates
-the outer span itself.
-
-  See `/examples/tracing/otel_tracing.cc` for an example.
++
+Tracing updated to allow for an external tracer that creates and finishes spans, adds tags, destroys spans.  
+Also, spans now have the notion of being the 'outer' span.  
+That is the span that has all the outer span tags, 
+and is the one whose duration is used to determine whether or not the operation has exceeded the threshold if the `ThresholdLoggingTracer` is used.
++
+If you pass in a parent that is an outer span, you must call `lcbtrace_span_finish` yourself. 
+When an operation begins, if there is no parent span passed in, or if there is but it isn't an 'outer' span, then the operation creates the outer span itself.
++
+See `/examples/tracing/otel_tracing.cc` for an example.
 
 * https://issues.couchbase.com/browse/CCBC-1362[CCBC-1362]:
   Support for metrics.
-
-  When enabled, by default will output a histogram of latencies for various kv operations plus query, search, analytics
-and view queries.
-
-  If desired, an external metrics collector can be passed in when the instance is created, which will then be called
-with latencies for each operation.  This can be used to call into an opentelemetry meter for aggregation and export.
-
-  See `/examples/metrics/otel_metrics.cc` for an example.
++
+When enabled, by default will output a histogram of latencies for various kv operations plus Query, Search, Analytics, and View queries.
++
+If desired, an external metrics collector can be passed in when the instance is created, which will then be called with latencies for each operation.  
+This can be used to call into an `opentelemetry` meter for aggregation and export.
++
+See `/examples/metrics/otel_metrics.cc` for an example.
 
 * https://issues.couchbase.com/browse/CCBC-1421[CCBC-1421]:
   Allow empty path for subdocument array methods.
