@@ -1,3 +1,12 @@
+/*
+ * REQUIREMENTS
+ *   Running couchbase server on localhost with:
+ *   user: some-user/some-password
+ *         with some RBAC (just used Full Admin for now)
+ *   bucket "default"
+ *   CREATE PRIMARY INDEX ON `default`:`default`
+ */
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -129,14 +138,18 @@ main(int, char **)
     {
         std::string statement =
                 "SELECT name, email, random FROM `" + bucket_name + "` WHERE $1 IN name LIMIT 100";
-        std::string param = R"("Brass")";
 
+        std::string parameters_json = "[\"Brass\"]";
+        
         lcb_CMDQUERY *cmd = nullptr;
         check(lcb_cmdquery_create(&cmd), "create QUERY command");
         check(lcb_cmdquery_statement(cmd, statement.c_str(), statement.size()),
                 "assign statement for QUERY command");
-        check(lcb_cmdquery_positional_param(cmd, param.c_str(), param.size()),
-                "add positional parameter for QUERY command");
+        check(lcb_cmdquery_positional_params
+                        (cmd,
+                        parameters_json.c_str(),
+                        parameters_json.length()),
+                "set QUERY positional parameters");
         check(lcb_cmdquery_consistency_token_for_keyspace(cmd, bucket_name.c_str(),
                         bucket_name.size(),
                         &mutation_token),

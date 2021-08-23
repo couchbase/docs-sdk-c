@@ -59,7 +59,8 @@ The analytics service provides an array of options to customize your query. The 
 | `lcb_cmdanalytics_statement(command, statement, statement length )` | Sets the actual statement to be executed.
 | `lcb_cmdanalytics_scope_name(command, scope name, scope length)` | Associate scope name with the analytics query.
 | `lcb_cmdanalytics_named_param(command, argument name, name length, argument value, value length)` | Sets a named argument for the analytics query.
-| `lcb_cmdanalytics_positional_param(command, argument value, argument length)` | Adds a positional argument for the analytics query.
+| `lcb_cmdanalytics_positional_params(command, arguments as JSON string, argument string length)` | Adds positional arguments for the analytics query. _(From C SDK 3.2.1)_
+| `lcb_cmdanalytics_positional_param(command, argument value, argument length)` | Adds a positional argument for the analytics query. _(Will be deprecated from C SDK 3.3.0)_
 | `lcb_cmdanalytics_readonly(command, readonly)` | Marks analytics query as read-only ( set readonly value to non zero ).
 |====
 
