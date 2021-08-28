@@ -1,19 +1,16 @@
+#include <libcouchbase/couchbase.h>
 #include <string>
 #include <iostream>
 #include <cstdlib>
 
-#include <libcouchbase/couchbase.h>
-
 static void
-die(const char *msg, lcb_STATUS err)
-{
+die(const char *msg, lcb_STATUS err) {
     std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
     exit(EXIT_FAILURE);
 }
 
 static void
-store_with_observe_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp)
-{
+store_with_observe_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp) {
     lcb_STATUS rc = lcb_respstore_status(resp);
     int store_ok, exists_master, persisted_master;
     uint16_t num_responses, num_replicated, num_persisted;
@@ -35,10 +32,9 @@ store_with_observe_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp)
 }
 
 static void
-do_store_with_observe_durability(lcb_INSTANCE *instance)
-{
+do_store_with_observe_durability(lcb_INSTANCE *instance) {
     lcb_install_callback(instance, LCB_CALLBACK_STORE,
-            reinterpret_cast<lcb_RESPCALLBACK>(store_with_observe_callback));
+                         reinterpret_cast<lcb_RESPCALLBACK>(store_with_observe_callback));
 
     std::string key = "docid";
     std::string value = "[1,2,3]";
@@ -64,17 +60,15 @@ do_store_with_observe_durability(lcb_INSTANCE *instance)
 }
 
 static void
-store_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp)
-{
+store_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp) {
     lcb_STATUS rc = lcb_respstore_status(resp);
     std::cout << "Got status of operation: " << lcb_strerror_short(rc) << "\n";
 }
 
 static void
-do_store_with_server_durability(lcb_INSTANCE *instance)
-{
+do_store_with_server_durability(lcb_INSTANCE *instance) {
     lcb_install_callback(instance, LCB_CALLBACK_STORE,
-            reinterpret_cast<lcb_RESPCALLBACK>(store_callback));
+                         reinterpret_cast<lcb_RESPCALLBACK>(store_callback));
 
     std::string key = "docid";
     std::string value = "[1,2,3]";
@@ -98,18 +92,17 @@ do_store_with_server_durability(lcb_INSTANCE *instance)
 }
 
 int
-main(int, char **)
-{
+main(int, char **) {
     lcb_STATUS rc;
-    std::string connection_string = "couchbase://localhost";
     std::string username = "some-user";
     std::string password = "some-password";
+    std::string connection_string = "couchbase://localhost";
 
     lcb_CREATEOPTS *create_options = nullptr;
     lcb_createopts_create(&create_options, LCB_TYPE_BUCKET);
     lcb_createopts_connstr(create_options, connection_string.data(), connection_string.size());
     lcb_createopts_credentials(create_options, username.data(), username.size(), password.data(),
-            password.size());
+                               password.size());
 
     lcb_INSTANCE *instance;
     rc = lcb_create(&instance, create_options);

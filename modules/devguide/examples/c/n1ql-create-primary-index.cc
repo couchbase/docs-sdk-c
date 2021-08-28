@@ -4,16 +4,13 @@
 #include <cstring>
 
 static void
-die(const char *msg, lcb_STATUS err)
-{
+die(const char *msg, lcb_STATUS err) {
     std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << std::endl;
     exit(EXIT_FAILURE);
 }
 
 static void
-ixmgmt_callback(__unused lcb_INSTANCE *instance, __unused int cbtype,
-        const struct lcb_RESPN1XMGMT_st *resp)
-{
+ixmgmt_callback(lcb_INSTANCE *, int, const struct lcb_RESPN1XMGMT_st *resp) {
     if (resp->rc == LCB_SUCCESS) {
         std::cout << "Index was successfully created!" << std::endl;
     } else if (resp->rc == LCB_ERR_INDEX_EXISTS) {
@@ -24,18 +21,17 @@ ixmgmt_callback(__unused lcb_INSTANCE *instance, __unused int cbtype,
 }
 
 int
-main(int, char **)
-{
+main(int, char **) {
     lcb_STATUS rc;
-    std::string connection_string = "couchbase://localhost/beer-sample";
     std::string username = "some-user";
     std::string password = "some-password";
+    std::string connection_string = "couchbase://localhost/beer-sample";
 
     lcb_CREATEOPTS *create_options = nullptr;
     lcb_createopts_create(&create_options, LCB_TYPE_BUCKET);
     lcb_createopts_connstr(create_options, connection_string.data(), connection_string.size());
     lcb_createopts_credentials(create_options, username.data(), username.size(), password.data(),
-            password.size());
+                               password.size());
 
     lcb_INSTANCE *instance;
     rc = lcb_create(&instance, create_options);

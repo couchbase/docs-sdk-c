@@ -13,6 +13,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wshadow")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
+# these are developer debug examples and some use asserts for simple error handling and exit
+set(CMAKE_BUILD_TYPE Debug Force)
+
 include(PreventInSourceBuilds)
 include(StandardProjectSettings)
 
@@ -56,16 +59,16 @@ macro(add_thread_example name)
     endif()
 endmacro()
 
-# All examples in alphabetical order (group
+# All examples by alphabetical order
 add_example(bulk-get)
 add_example(bulk-store)
 add_thread_example(cas)
 add_example(client-settings)
 add_example(connecting)
-#add_example(connecting-cert-auth) # TODO: Refactor connecting-cert-auth
-#add_example(connecting-ssl) # TODO: Refactor connecting-ssl
+add_example(connecting-cert-auth)
+add_example(connecting-ssl)
 add_example(counter)
-#add_example(create-remove-bucket) # TODO: Refactor create-remove-bucket
+add_example(create-remove-bucket)
 add_example(durability)
 add_example(expiration)
 add_example(fts-basic)
@@ -76,7 +79,7 @@ add_example(n1ql-create-primary-index)
 add_thread_example(pessimistic-lock)
 add_example(query-atplus)
 add_example(query-consistency)
-#add_example(query-create-index) # TODO: Refactor query-create-index
+add_example(query-create-index)
 add_example(query-criteria)
 add_example(query-placeholders)
 add_example(retrieving)
