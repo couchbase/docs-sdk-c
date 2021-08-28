@@ -1,11 +1,9 @@
+#include <libcouchbase/couchbase.h>
 #include <string>
 #include <iostream>
 
-#include <libcouchbase/couchbase.h>
-
 static void
-check(lcb_STATUS err, const char *msg)
-{
+check(lcb_STATUS err, const char *msg) {
     if (err != LCB_SUCCESS) {
         std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
         exit(EXIT_FAILURE);
@@ -13,8 +11,7 @@ check(lcb_STATUS err, const char *msg)
 }
 
 void
-http_callback(lcb_INSTANCE *, int, const lcb_RESPHTTP *resp)
-{
+http_callback(lcb_INSTANCE *, int, const lcb_RESPHTTP *resp) {
     check(lcb_resphttp_status(resp), "HTTP operation status in the callback");
 
     uint16_t status;
@@ -30,22 +27,21 @@ http_callback(lcb_INSTANCE *, int, const lcb_RESPHTTP *resp)
 }
 
 int
-main()
-{
+main() {
     std::string username{"some-user"};
     std::string password{"some-password"};
     std::string connection_string{"couchbase://localhost"};
 
     lcb_CREATEOPTS *create_options = nullptr;
     check(lcb_createopts_create(&create_options, LCB_TYPE_CLUSTER),
-            "build options object for lcb_create in CLUSTER mode");
-    check(lcb_createopts_credentials(create_options, username.c_str(), username.size(),
-                    password.c_str(),
-                    password.size()),
-            "assign credentials");
-    check(lcb_createopts_connstr(create_options, connection_string.c_str(),
-                    connection_string.size()),
-            "assign connection string");
+          "build options object for lcb_create in CLUSTER mode");
+    check(lcb_createopts_credentials(create_options, username.data(), username.size(),
+                                     password.data(),
+                                     password.size()),
+          "assign credentials");
+    check(lcb_createopts_connstr(create_options, connection_string.data(),
+                                 connection_string.size()),
+          "assign connection string");
 
     lcb_INSTANCE *instance = nullptr;
     check(lcb_create(&instance, create_options), "create lcb_INSTANCE");
@@ -62,13 +58,13 @@ main()
 
     std::string drop_path{"/pools/default/buckets/" + bucket_name};
     lcb_install_callback(instance, LCB_CALLBACK_HTTP,
-            reinterpret_cast<lcb_RESPCALLBACK>(http_callback));
+                         reinterpret_cast<lcb_RESPCALLBACK>(http_callback));
 
     lcb_CMDHTTP *cmd = nullptr;
     check(lcb_cmdhttp_create(&cmd, LCB_HTTP_TYPE_MANAGEMENT),
-            "create HTTP command object of MANAGEMENT type");
+          "create HTTP command object of MANAGEMENT type");
     check(lcb_cmdhttp_method(cmd, LCB_HTTP_METHOD_DELETE), "set HTTP method");
-    check(lcb_cmdhttp_path(cmd, drop_path.c_str(), drop_path.size()), "set HTTP path");
+    check(lcb_cmdhttp_path(cmd, drop_path.data(), drop_path.size()), "set HTTP path");
     check(lcb_http(instance, nullptr, cmd), "schedule HTTP command");
     check(lcb_cmdhttp_destroy(cmd), "destroy command object");
 

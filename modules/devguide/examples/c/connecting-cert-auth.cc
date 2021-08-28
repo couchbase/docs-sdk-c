@@ -1,53 +1,57 @@
 #include <libcouchbase/couchbase.h>
-#include <string.h>
-#include <stdlib.h>
+#include <libcouchbase/utils.h>
+#include <iostream>
 
 static void
-die(lcb_error_t rc, const char *msg)
-{
-    fprintf(stderr, "%s failed. (0x%x, %s)\n", msg, rc, lcb_strerror(NULL, rc));
+die(lcb_STATUS rc, const char *msg) {
+    std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(rc) << std::endl;
     exit(EXIT_FAILURE);
 }
 
 int
-main(int argc, char **argv)
-{
-    lcb_INSTANCE instance;
-    struct lcb_create_st cropts;
-    lcb_error_t rc;
+main(int, char **) {
+    lcb_STATUS rc;
+    std::string username = "some-user";
+    std::string password = "some-password";
+    std::string connection_string =
+            "couchbases://127.0.0.1/default"
+            "?truststorepath=../etc/x509-cert/SSLCA/clientdir/trust.pem"
+            "&certpath=../etc/x509-cert/SSLCA/clientdir/client.pem"
+            "&keypath=../etc/x509-cert/SSLCA/clientdir/client.key";
 
-    memset(&cropts, 0, sizeof cropts);
-    cropts.version = 3;
-    cropts.v.v3.connstr = "couchbases://127.0.0.1/default"
-                          "?truststorepath=../etc/x509-cert/SSLCA/clientdir/trust.pem"
-                          "&certpath=../etc/x509-cert/SSLCA/clientdir/client.pem"
-                          "&keypath=../etc/x509-cert/SSLCA/clientdir/client.key";
+    lcb_CREATEOPTS *create_options = nullptr;
+    lcb_createopts_create(&create_options, LCB_TYPE_BUCKET);
+    lcb_createopts_connstr(create_options, connection_string.data(), connection_string.size());
+    lcb_createopts_credentials(create_options, username.data(), username.size(), password.data(),
+                               password.size());
 
-    rc = lcb_create(&instance, &cropts);
+    lcb_INSTANCE *instance;
+    rc = lcb_create(&instance, create_options);
+    lcb_createopts_destroy(create_options);
     if (rc != LCB_SUCCESS) {
-        die(rc, "Creating instance");
+        die(rc, "Couldn't create couchbase instance");
     }
 
     rc = lcb_connect(instance);
     if (rc != LCB_SUCCESS) {
-        die(rc, "Connection scheduling");
+        die(rc, "Couldn't schedule connection");
     }
 
     /* This function required to actually schedule the operations on the network */
-    lcb_wait(instance);
+    lcb_wait(instance, LCB_WAIT_DEFAULT);
 
     /* Determines if the bootstrap/connection succeeded */
     rc = lcb_get_bootstrap_status(instance);
     if (rc != LCB_SUCCESS) {
-        die(rc, "Connection bootstraping");
+        die(rc, "Couldn't bootstrap from cluster");
     } else {
-        printf("Connection succeeded. Cluster has %d nodes\n", lcb_get_num_nodes(instance));
+        std::cout << "Connection succeeded. Cluster has " << lcb_get_num_nodes(instance) << " nodes" << std::endl;
     }
 
     /* SSL connections use different ports. For example, the REST API
      * connection will use port 18091 rather than 8091 when using SSL */
     const char *node = lcb_get_node(instance, LCB_NODE_HTCONFIG, 0);
-    printf("First node address for REST API: %s\n", node);
+    std::cout << "First node address for REST API: " << node << std::endl;
 
     lcb_destroy(instance);
     return 0;

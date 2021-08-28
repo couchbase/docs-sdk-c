@@ -1,19 +1,16 @@
 #include <libcouchbase/couchbase.h>
 #include <iostream>
-#include <cstdio>
 #include <cstdlib>
 #include <string>
 
 static void
-die(const char *msg, lcb_STATUS err)
-{
+die(const char *msg, lcb_STATUS err) {
     std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << std::endl;
     exit(EXIT_FAILURE);
 }
 
 static void
-row_callback(__unused lcb_INSTANCE *instance, int __unused type, const lcb_RESPSEARCH *resp)
-{
+row_callback(lcb_INSTANCE *, int, const lcb_RESPSEARCH *resp) {
     if (lcb_respsearch_is_final(resp)) {
         std::cout << "Status: " << lcb_respsearch_status(resp) << std::endl;
 
@@ -26,9 +23,9 @@ row_callback(__unused lcb_INSTANCE *instance, int __unused type, const lcb_RESPS
         lcb_respsearch_http_response(resp, &http_resp);
         if (http_resp) {
             const char *body;
-            size_t nbody;
-            if (lcb_resphttp_body(http_resp, &body, &nbody) == LCB_SUCCESS) {
-                std::cout << "HTTP Response: " << std::string(body, nbody) << std::endl;
+            size_t bodyLen;
+            if (lcb_resphttp_body(http_resp, &body, &bodyLen) == LCB_SUCCESS) {
+                std::cout << "HTTP Response: " << std::string(body, bodyLen) << std::endl;
             }
         }
     } else {
@@ -40,18 +37,17 @@ row_callback(__unused lcb_INSTANCE *instance, int __unused type, const lcb_RESPS
 }
 
 int
-main(int, char **)
-{
+main(int, char **) {
     lcb_STATUS rc;
-    std::string connection_string = "couchbase://localhost/beer-sample";
     std::string username = "some-user";
     std::string password = "some-password";
+    std::string connection_string = "couchbase://localhost/beer-sample";
 
     lcb_CREATEOPTS *create_options = nullptr;
     lcb_createopts_create(&create_options, LCB_TYPE_BUCKET);
     lcb_createopts_connstr(create_options, connection_string.data(), connection_string.size());
     lcb_createopts_credentials(create_options, username.data(), username.size(), password.data(),
-            password.size());
+                               password.size());
 
     lcb_INSTANCE *instance;
     rc = lcb_create(&instance, create_options);
@@ -81,7 +77,7 @@ main(int, char **)
     lcb_CMDSEARCH *cmd;
     lcb_cmdsearch_create(&cmd);
     lcb_cmdsearch_callback(cmd, row_callback);
-    lcb_cmdsearch_payload(cmd, encodedQuery.c_str(), encodedQuery.size());
+    lcb_cmdsearch_payload(cmd, encodedQuery.data(), encodedQuery.size());
     rc = lcb_search(instance, NULL, cmd);
     if (rc != LCB_SUCCESS) {
         die("Couldn't schedule FTS query", rc);
