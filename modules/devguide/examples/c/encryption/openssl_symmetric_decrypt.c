@@ -32,15 +32,13 @@
 #include "openssl_symmetric_provider.h"
 
 static void
-die(lcb_INSTANCE instance, const char *msg, lcb_error_t err)
-{
+die(lcb_INSTANCE instance, const char *msg, lcb_error_t err) {
     fprintf(stderr, "%s. Received code 0x%X (%s)\n", msg, err, lcb_strerror(instance, err));
     exit(EXIT_FAILURE);
 }
 
 static void
-op_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
-{
+op_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb) {
     if (rb->rc == LCB_SUCCESS) {
         const lcb_RESPGET *rg = (const lcb_RESPGET *) rb;
         lcbcrypto_CMDDECRYPT dcmd = {};
@@ -80,8 +78,7 @@ op_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
 }
 
 static void
-get_encrypted(lcb_INSTANCE instance, const char *key)
-{
+get_encrypted(lcb_INSTANCE instance, const char *key) {
     lcb_CMDGET cmd = {};
     lcb_error_t err;
     LCB_CMD_SET_KEY(&cmd, key, strlen(key));
@@ -94,8 +91,7 @@ get_encrypted(lcb_INSTANCE instance, const char *key)
 }
 
 int
-main(int argc, char *argv[])
-{
+main(int argc, char *argv[]) {
     lcb_error_t err;
     lcb_INSTANCE instance;
 

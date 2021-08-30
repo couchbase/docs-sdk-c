@@ -1,39 +1,45 @@
 #include <libcouchbase/couchbase.h>
 #include <iostream>
-#include <cstring>
 
 extern "C" {
 static void
-query_callback(__unused lcb_INSTANCE *instance, __unused int cbtype, const lcb_RESPN1QL *resp)
-{
+query_callback(lcb_INSTANCE *, int, const lcb_RESPQUERY *resp) {
     // This might also fail if the index is already created!
-    if (resp->rc != LCB_SUCCESS) {
-        fprintf(stderr, "N1QL query failed (%s)\n", lcb_strerror(NULL, resp->rc));
+    lcb_STATUS rc = lcb_respquery_status(resp);
+    if (rc != LCB_SUCCESS) {
+        std::cerr << "N1QL query failed: " << lcb_strerror_short(rc) << std::endl;
     }
-    printf("Result text: %.*s\n", (int) resp->nrow, resp->row);
+
+    const char *row = nullptr;
+    size_t rowLen = 0;
+    lcb_respquery_row(resp, &row, &rowLen);
+    if (rowLen > 0) {
+        std::cout << "Query callback response: " << std::string(row, rowLen);
+    } else {
+        std::cout << "(Query callback response was EMPTY)";
+    }
+    std::cout << std::endl;
 }
 }
 
 static void
-die(const char *msg, lcb_STATUS err)
-{
+die(const char *msg, lcb_STATUS err) {
     std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << std::endl;
     exit(EXIT_FAILURE);
 }
 
 int
-main(int, char **)
-{
+main(int, char **) {
     lcb_STATUS rc;
-    std::string connection_string = "couchbase://localhost/travel-sample";
     std::string username = "some-user";
     std::string password = "some-password";
+    std::string connection_string = "couchbase://localhost/travel-sample";
 
     lcb_CREATEOPTS *create_options = nullptr;
     lcb_createopts_create(&create_options, LCB_TYPE_BUCKET);
     lcb_createopts_connstr(create_options, connection_string.data(), connection_string.size());
     lcb_createopts_credentials(create_options, username.data(), username.size(), password.data(),
-            password.size());
+                               password.size());
 
     lcb_INSTANCE *instance;
     rc = lcb_create(&instance, create_options);
@@ -54,19 +60,20 @@ main(int, char **)
         die("Couldn't bootstrap from cluster", rc);
     }
 
-    lcb_N1QLPARAMS *params = lcb_n1p_new();
-    rc = lcb_n1p_setstmtz(params, "CREATE PRIMARY INDEX ON `travel-sample`");
+    lcb_CMDQUERY *cmdQuery = nullptr;
+    lcb_cmdquery_create(&cmdQuery);
 
-    lcb_CMDN1QL cmd;
-    cmd.callback = query_callback;
-    lcb_n1p_mkcmd(params, &cmd);
-    rc = lcb_n1ql_query(instance, nullptr, &cmd); // Check RC
+    std::string queryStatement = "CREATE PRIMARY INDEX ON `travel-sample`";
+    lcb_cmdquery_statement(cmdQuery, queryStatement.data(), queryStatement.size());
+    lcb_cmdquery_callback(cmdQuery, query_callback);
+
+    rc = lcb_query(instance, nullptr, cmdQuery);
     if (rc != LCB_SUCCESS) {
-        die("Couldn't schedule N1QL query command", rc);
+        die("Couldn't schedule query command", rc);
     }
+    lcb_cmdquery_destroy(cmdQuery);
 
     lcb_wait(instance, LCB_WAIT_DEFAULT);
 
-    lcb_n1p_free(params);
     lcb_destroy(instance);
 }

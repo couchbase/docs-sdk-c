@@ -42,8 +42,7 @@
 #include "cJSON.h"
 
 static void
-die(lcb_INSTANCE instance, const char *msg, lcb_error_t err)
-{
+die(lcb_INSTANCE instance, const char *msg, lcb_error_t err) {
     fprintf(stderr, "%s. Received code 0x%X (%s)\n", msg, err, lcb_strerror(instance, err));
     exit(EXIT_FAILURE);
 }
@@ -56,14 +55,12 @@ typedef struct {
 } Profile;
 
 static Profile *
-new_profile()
-{
+new_profile() {
     return calloc(1, sizeof(Profile));
 }
 
 static void
-free_profile(Profile *profile)
-{
+free_profile(Profile *profile) {
     if (profile) {
         free(profile->name);
         free(profile->avatar);
@@ -72,8 +69,7 @@ free_profile(Profile *profile)
 }
 
 static Profile *
-decode_profile(const char *data)
-{
+decode_profile(const char *data) {
     Profile *profile = NULL;
     cJSON *json = cJSON_Parse(data);
 
@@ -92,7 +88,7 @@ decode_profile(const char *data)
         val = cJSON_GetObjectItem(json, "avatar");
         if (val && val->type == cJSON_String) {
             profile->avatar = unbase64(val->valuestring, strlen(val->valuestring),
-                    &profile->avatar_len);
+                                       &profile->avatar_len);
         }
         cJSON_Delete(json);
     }
@@ -100,8 +96,7 @@ decode_profile(const char *data)
 }
 
 static char *
-encode_profile(Profile *profile)
-{
+encode_profile(Profile *profile) {
     cJSON *json = cJSON_CreateObject();
     if (profile->name) {
         cJSON *val = cJSON_CreateString(profile->name);
@@ -123,8 +118,7 @@ encode_profile(Profile *profile)
 }
 
 static void
-store_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
-{
+store_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb) {
     if (rb->rc == LCB_SUCCESS) {
         fprintf(stderr, "The profile has been persisted in Couchbase successfully (CAS: 0x%"
         PRIx64
@@ -135,8 +129,7 @@ store_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
 }
 
 static void
-get_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
-{
+get_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb) {
     char *filename = rb->cookie;
     if (rb->rc == LCB_SUCCESS) {
         /* generate HTML profile with embedded avatar */
@@ -164,8 +157,7 @@ get_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
 }
 
 int
-main(int argc, char *argv[])
-{
+main(int argc, char *argv[]) {
     lcb_error_t err;
     lcb_INSTANCE instance;
     struct lcb_create_st create_options = {0};
@@ -217,7 +209,7 @@ main(int argc, char *argv[])
     char *id = "profile-0001";
     Profile profile = {"Griet", 16,
             /* the avatar could have been received via network, or loaded from file system */
-            avatar_jpg, avatar_jpg_len};
+                       avatar_jpg, avatar_jpg_len};
 
     /* encoding user data to be stored in Couchbase as JSON */
     char *json = encode_profile(&profile);

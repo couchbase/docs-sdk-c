@@ -4,8 +4,7 @@
 #include <openssl/evp.h>
 
 char *
-base64(const char *in, int in_len, int *out_len)
-{
+base64(const char *in, int in_len, int *out_len) {
     BIO *buf, *b64;
     char *ptr, *out;
     long len;
@@ -31,8 +30,7 @@ base64(const char *in, int in_len, int *out_len)
 }
 
 char *
-unbase64(const char *in, int in_len, int *out_len)
-{
+unbase64(const char *in, int in_len, int *out_len) {
     BIO *buf, *b64;
     char *out;
     long len;

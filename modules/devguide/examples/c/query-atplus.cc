@@ -7,16 +7,14 @@
  *   CREATE PRIMARY INDEX ON `default`:`default`
  */
 
+#include <libcouchbase/couchbase.h>
 #include <string>
 #include <vector>
 #include <iostream>
 #include <random>
 
-#include <libcouchbase/couchbase.h>
-
 static void
-check(lcb_STATUS err, const char *msg)
-{
+check(lcb_STATUS err, const char *msg) {
     if (err != LCB_SUCCESS) {
         std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
         exit(EXIT_FAILURE);
@@ -24,8 +22,7 @@ check(lcb_STATUS err, const char *msg)
 }
 
 static void
-query_callback(lcb_INSTANCE *, int, const lcb_RESPQUERY *resp)
-{
+query_callback(lcb_INSTANCE *, int, const lcb_RESPQUERY *resp) {
     lcb_STATUS status = lcb_respquery_status(resp);
     if (status != LCB_SUCCESS) {
         const lcb_QUERY_ERROR_CONTEXT *ctx;
@@ -65,36 +62,34 @@ query_callback(lcb_INSTANCE *, int, const lcb_RESPQUERY *resp)
 }
 
 static void
-storage_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp)
-{
+storage_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp) {
     check(lcb_respstore_status(resp), "get status of STORE operation in callback");
 
     lcb_MUTATION_TOKEN *mutation_token = nullptr;
     lcb_respstore_cookie(resp, reinterpret_cast<void **>(&mutation_token));
     check(lcb_respstore_mutation_token(resp, mutation_token),
-            "extract mutation token from STORE operation response");
+          "extract mutation token from STORE operation response");
 }
 
 int
-main(int, char **)
-{
+main(int, char **) {
     std::string username{"some-user"};
     std::string password{"some-password"};
-    std::string connection_string{"couchbase://localhost"};
     std::string bucket_name{"default"};
+    std::string connection_string{"couchbase://localhost"};
 
     lcb_CREATEOPTS *create_options = nullptr;
     check(lcb_createopts_create(&create_options, LCB_TYPE_BUCKET),
-            "build options object for lcb_create");
-    check(lcb_createopts_credentials(create_options, username.c_str(), username.size(),
-                    password.c_str(),
-                    password.size()),
-            "assign credentials");
-    check(lcb_createopts_connstr(create_options, connection_string.c_str(),
-                    connection_string.size()),
-            "assign connection string");
-    check(lcb_createopts_bucket(create_options, bucket_name.c_str(), bucket_name.size()),
-            "assign bucket name");
+          "build options object for lcb_create");
+    check(lcb_createopts_credentials(create_options, username.data(), username.size(),
+                                     password.data(),
+                                     password.size()),
+          "assign credentials");
+    check(lcb_createopts_connstr(create_options, connection_string.data(),
+                                 connection_string.size()),
+          "assign connection string");
+    check(lcb_createopts_bucket(create_options, bucket_name.data(), bucket_name.size()),
+          "assign bucket name");
 
     lcb_INSTANCE *instance = nullptr;
     check(lcb_create(&instance, create_options), "create lcb_INSTANCE");
@@ -111,7 +106,7 @@ main(int, char **)
 
     // Install the storage callback which will be used to retrieve the mutation token
     lcb_install_callback(instance, LCB_CALLBACK_STORE,
-            reinterpret_cast<lcb_RESPCALLBACK>(storage_callback));
+                         reinterpret_cast<lcb_RESPCALLBACK>(storage_callback));
 
     lcb_MUTATION_TOKEN mutation_token{};
 
@@ -119,16 +114,16 @@ main(int, char **)
         std::string key{"user:" + std::to_string(random_number)};
         std::string value{
                 R"({"name": ["Brass", "Doorknob"], "email": "b@email.com", "random":)"
-                        + std::to_string(random_number) +
-                        "}"};
+                + std::to_string(random_number) +
+                "}"};
 
         lcb_CMDSTORE *cmd = nullptr;
         std::cout << "Will insert new document with random number " << random_number << "\n"
                   << value << "\n";
         check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
-        check(lcb_cmdstore_key(cmd, key.c_str(), key.size()), "assign ID for UPSERT command");
-        check(lcb_cmdstore_value(cmd, value.c_str(), value.size()),
-                "assign value for UPSERT command");
+        check(lcb_cmdstore_key(cmd, key.data(), key.size()), "assign ID for UPSERT command");
+        check(lcb_cmdstore_value(cmd, value.data(), value.size()),
+              "assign value for UPSERT command");
         check(lcb_store(instance, &mutation_token, cmd), "schedule UPSERT command");
         check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
         lcb_wait(instance, LCB_WAIT_DEFAULT);
@@ -140,20 +135,20 @@ main(int, char **)
                 "SELECT name, email, random FROM `" + bucket_name + "` WHERE $1 IN name LIMIT 100";
 
         std::string parameters_json = "[\"Brass\"]";
-        
+
         lcb_CMDQUERY *cmd = nullptr;
         check(lcb_cmdquery_create(&cmd), "create QUERY command");
-        check(lcb_cmdquery_statement(cmd, statement.c_str(), statement.size()),
-                "assign statement for QUERY command");
+        check(lcb_cmdquery_statement(cmd, statement.data(), statement.size()),
+              "assign statement for QUERY command");
         check(lcb_cmdquery_positional_params
-                        (cmd,
-                        parameters_json.c_str(),
-                        parameters_json.length()),
-                "set QUERY positional parameters");
-        check(lcb_cmdquery_consistency_token_for_keyspace(cmd, bucket_name.c_str(),
-                        bucket_name.size(),
-                        &mutation_token),
-                "add consistency token for QUERY command");
+                      (cmd,
+                       parameters_json.data(),
+                       parameters_json.length()),
+              "set QUERY positional parameters");
+        check(lcb_cmdquery_consistency_token_for_keyspace(cmd, bucket_name.data(),
+                                                          bucket_name.size(),
+                                                          &mutation_token),
+              "add consistency token for QUERY command");
         check(lcb_cmdquery_callback(cmd, query_callback), "assign callback for QUERY command");
         check(lcb_query(instance, &rows, cmd), "schedule QUERY command");
         check(lcb_cmdquery_destroy(cmd), "destroy QUERY command");

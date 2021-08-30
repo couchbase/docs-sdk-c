@@ -31,27 +31,23 @@
 #include <openssl/err.h>
 
 static void
-osp_free(lcbcrypto_PROVIDER *provider)
-{
+osp_free(lcbcrypto_PROVIDER *provider) {
     free(provider);
 }
 
 static void
-osp_release_bytes(lcbcrypto_PROVIDER *provider, void *bytes)
-{
+osp_release_bytes(lcbcrypto_PROVIDER *provider, void *bytes) {
     free(bytes);
     (void) provider;
 }
 
 static const char *
-osp_get_key_id(lcbcrypto_PROVIDER *provider)
-{
+osp_get_key_id(lcbcrypto_PROVIDER *provider) {
     return common_aes256_key_id;
 }
 
 static lcb_error_t
-osp_generate_iv(struct lcbcrypto_PROVIDER *provider, uint8_t **iv, size_t *iv_len)
-{
+osp_generate_iv(struct lcbcrypto_PROVIDER *provider, uint8_t **iv, size_t *iv_len) {
     *iv_len = AES256_IV_SIZE;
     *iv = malloc(*iv_len);
     memcpy(*iv, common_aes256_iv, *iv_len);
@@ -62,8 +58,7 @@ osp_generate_iv(struct lcbcrypto_PROVIDER *provider, uint8_t **iv, size_t *iv_le
 
 static lcb_error_t
 osp_sign(struct lcbcrypto_PROVIDER *provider, const lcbcrypto_SIGV *inputs, size_t inputs_num,
-        uint8_t **sig, size_t *sig_len)
-{
+         uint8_t **sig, size_t *sig_len) {
     const EVP_MD *md;
     uint8_t out[EVP_MAX_MD_SIZE];
     size_t out_len = EVP_MAX_MD_SIZE;
@@ -116,8 +111,7 @@ osp_sign(struct lcbcrypto_PROVIDER *provider, const lcbcrypto_SIGV *inputs, size
 
 static lcb_error_t
 osp_verify_signature(struct lcbcrypto_PROVIDER *provider, const lcbcrypto_SIGV *inputs,
-        size_t inputs_num, uint8_t *sig, size_t sig_len)
-{
+                     size_t inputs_num, uint8_t *sig, size_t sig_len) {
     const EVP_MD *md;
     uint8_t actual[EVP_MAX_MD_SIZE];
     size_t actual_len = EVP_MAX_MD_SIZE;
@@ -169,8 +163,7 @@ osp_verify_signature(struct lcbcrypto_PROVIDER *provider, const lcbcrypto_SIGV *
 
 static lcb_error_t
 osp_encrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t input_len,
-        const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len)
-{
+            const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len) {
     EVP_CIPHER_CTX *ctx;
     const EVP_CIPHER *cipher;
     int rc, len, block_len, out_len;
@@ -214,8 +207,7 @@ osp_encrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t in
 
 static lcb_error_t
 osp_decrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t input_len,
-        const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len)
-{
+            const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len) {
     EVP_CIPHER_CTX *ctx;
     const EVP_CIPHER *cipher;
     int rc, len, out_len;
@@ -257,8 +249,7 @@ osp_decrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t in
 }
 
 lcbcrypto_PROVIDER *
-osp_create()
-{
+osp_create() {
     lcbcrypto_PROVIDER *provider = calloc(1, sizeof(lcbcrypto_PROVIDER));
     provider->version = 1;
     provider->destructor = osp_free;
@@ -273,8 +264,7 @@ osp_create()
 }
 
 void
-osp_initialize()
-{
+osp_initialize() {
     SSL_library_init();
     SSL_load_error_strings();
     EVP_add_cipher(EVP_aes_256_cbc());

@@ -1,13 +1,11 @@
 #include <vector>
 #include <map>
-#include <string>
 #include <iostream>
 
 #include <libcouchbase/couchbase.h>
 
 static void
-check(lcb_STATUS err, const char *msg)
-{
+check(lcb_STATUS err, const char *msg) {
     if (err != LCB_SUCCESS) {
         std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
         exit(EXIT_FAILURE);
@@ -19,8 +17,7 @@ struct Result {
     std::string key{};
     std::uint64_t cas{0};
 
-    explicit Result(const lcb_RESPSTORE *resp)
-    {
+    explicit Result(const lcb_RESPSTORE *resp) {
         rc = lcb_respstore_status(resp);
         const char *buf = nullptr;
         std::size_t buf_len = 0;
@@ -33,33 +30,31 @@ struct Result {
 };
 
 static void
-upsert_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp)
-{
+upsert_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp) {
     std::vector<Result> *results = nullptr;
     lcb_respstore_cookie(resp, reinterpret_cast<void **>(&results));
     results->emplace_back(resp);
 }
 
 int
-main()
-{
-    std::string connection_string{"couchbase://localhost"};
+main() {
     std::string username{"some-user"};
     std::string password{"some-password"};
     std::string bucket_name{"default"};
+    std::string connection_string{"couchbase://localhost"};
 
     lcb_CREATEOPTS *create_options = nullptr;
     check(lcb_createopts_create(&create_options, LCB_TYPE_BUCKET),
-            "build options object for lcb_create");
-    check(lcb_createopts_credentials(create_options, username.c_str(), username.size(),
-                    password.c_str(),
-                    password.size()),
-            "assign credentials");
-    check(lcb_createopts_connstr(create_options, connection_string.c_str(),
-                    connection_string.size()),
-            "assign connection string");
-    check(lcb_createopts_bucket(create_options, bucket_name.c_str(), bucket_name.size()),
-            "assign bucket name");
+          "build options object for lcb_create");
+    check(lcb_createopts_credentials(create_options, username.data(), username.size(),
+                                     password.data(),
+                                     password.size()),
+          "assign credentials");
+    check(lcb_createopts_connstr(create_options, connection_string.data(),
+                                 connection_string.size()),
+          "assign connection string");
+    check(lcb_createopts_bucket(create_options, bucket_name.data(), bucket_name.size()),
+          "assign bucket name");
 
     lcb_INSTANCE *instance = nullptr;
     check(lcb_create(&instance, create_options), "create lcb_INSTANCE");
@@ -69,7 +64,7 @@ main()
     check(lcb_get_bootstrap_status(instance), "check bootstrap status");
 
     lcb_install_callback(instance, LCB_CALLBACK_STORE,
-            reinterpret_cast<lcb_RESPCALLBACK>(upsert_callback));
+                         reinterpret_cast<lcb_RESPCALLBACK>(upsert_callback));
 
     // Make a list of keys to store initially
     std::map<std::string, std::string> documents_to_store;
@@ -84,10 +79,10 @@ main()
     for (const auto &doc : documents_to_store) {
         lcb_CMDSTORE *cmd = nullptr;
         check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
-        check(lcb_cmdstore_key(cmd, doc.first.c_str(), doc.first.size()),
-                "assign ID for UPSERT command");
-        check(lcb_cmdstore_value(cmd, doc.second.c_str(), doc.second.size()),
-                "assign value for UPSERT command");
+        check(lcb_cmdstore_key(cmd, doc.first.data(), doc.first.size()),
+              "assign ID for UPSERT command");
+        check(lcb_cmdstore_value(cmd, doc.second.data(), doc.second.size()),
+              "assign value for UPSERT command");
         lcb_STATUS rc = lcb_store(instance, &results, cmd);
         check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
         if (rc != LCB_SUCCESS) {
