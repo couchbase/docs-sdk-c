@@ -10,6 +10,10 @@ die(lcb_STATUS rc, const char *msg) {
 
 int
 main(int, char **) {
+    // This connection string assumes you have created x509 certs in the associated directories being referenced.
+    //
+    // For more details see:
+    // https://docs.couchbase.com/c-sdk/current/howtos/managing-connections.html#ssl
     lcb_STATUS rc;
     std::string username = "some-user";
     std::string password = "some-password";
