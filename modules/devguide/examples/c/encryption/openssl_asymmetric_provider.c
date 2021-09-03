@@ -31,28 +31,24 @@
 #include <openssl/err.h>
 
 static void
-oap_free(lcbcrypto_PROVIDER *provider)
-{
+oap_free(lcbcrypto_PROVIDER *provider) {
     free(provider);
 }
 
 static void
-oap_release_bytes(lcbcrypto_PROVIDER *provider, void *bytes)
-{
+oap_release_bytes(lcbcrypto_PROVIDER *provider, void *bytes) {
     free(bytes);
     (void) provider;
 }
 
 static const char *
-oap_get_key_id(lcbcrypto_PROVIDER *provider)
-{
+oap_get_key_id(lcbcrypto_PROVIDER *provider) {
     return common_rsa_public_key_id;
 }
 
 static lcb_error_t
 oap_encrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t input_len,
-        const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len)
-{
+            const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len) {
     BIO *bio = BIO_new_mem_buf((void *) common_rsa_public_key, -1);
     RSA *rsa_pub_key = PEM_read_bio_RSA_PUBKEY(bio, NULL, NULL, NULL);
     BIO_free(bio);
@@ -66,14 +62,13 @@ oap_encrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t in
      */
     *output = malloc(RSA_size(rsa_pub_key));
     *output_len = RSA_public_encrypt(input_len, input, *output, rsa_pub_key,
-            RSA_PKCS1_OAEP_PADDING);
+                                     RSA_PKCS1_OAEP_PADDING);
     return LCB_SUCCESS;
 }
 
 static lcb_error_t
 oap_decrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t input_len,
-        const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len)
-{
+            const uint8_t *iv, size_t iv_len, uint8_t **output, size_t *output_len) {
     BIO *bio = BIO_new_mem_buf((void *) common_rsa_private_key, -1);
     RSA *rsa_priv_key = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, NULL);
     BIO_free(bio);
@@ -88,13 +83,12 @@ oap_decrypt(struct lcbcrypto_PROVIDER *provider, const uint8_t *input, size_t in
      */
     *output = malloc(RSA_size(rsa_priv_key));
     *output_len = RSA_private_decrypt(input_len, input, *output, rsa_priv_key,
-            RSA_PKCS1_OAEP_PADDING);
+                                      RSA_PKCS1_OAEP_PADDING);
     return LCB_SUCCESS;
 }
 
 lcbcrypto_PROVIDER *
-oap_create()
-{
+oap_create() {
     lcbcrypto_PROVIDER *provider = calloc(1, sizeof(lcbcrypto_PROVIDER));
     provider->version = 1;
     provider->destructor = oap_free;
@@ -106,8 +100,7 @@ oap_create()
 }
 
 void
-oap_initialize()
-{
+oap_initialize() {
     SSL_library_init();
     SSL_load_error_strings();
     EVP_add_cipher(EVP_aes_256_cbc());

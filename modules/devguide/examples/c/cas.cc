@@ -1,17 +1,14 @@
+#include <libcouchbase/couchbase.h>
 #include <string>
 #include <vector>
 #include <iostream>
 #include <sstream>
 #include <thread>
 
-#include <libcouchbase/couchbase.h>
-#include <cstring>
-
 constexpr static int number_of_threads = 20;
 
 static void
-check(lcb_STATUS err, const char *msg)
-{
+check(lcb_STATUS err, const char *msg) {
     if (err != LCB_SUCCESS) {
         std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
         exit(EXIT_FAILURE);
@@ -25,8 +22,7 @@ struct Result {
 };
 
 static void
-get_callback(lcb_INSTANCE *, int, const lcb_RESPGET *resp)
-{
+get_callback(lcb_INSTANCE *, int, const lcb_RESPGET *resp) {
     Result *result = nullptr;
     lcb_respget_cookie(resp, reinterpret_cast<void **>(&result));
 
@@ -40,8 +36,7 @@ get_callback(lcb_INSTANCE *, int, const lcb_RESPGET *resp)
 }
 
 static void
-replace_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp)
-{
+replace_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp) {
     Result *result = nullptr;
     lcb_respstore_cookie(resp, reinterpret_cast<void **>(&result));
 
@@ -50,28 +45,27 @@ replace_callback(lcb_INSTANCE *, int, const lcb_RESPSTORE *resp)
 }
 
 static lcb_INSTANCE *
-create_instance()
-{
-    std::string connection_string{"couchbase://localhost"};
+create_instance() {
     std::string username{"some-user"};
     std::string password{"some-password"};
     std::string bucket_name{"default"};
+    std::string connection_string{"couchbase://localhost"};
 
     lcb_CREATEOPTS *create_options = nullptr;
     check(lcb_createopts_create(&create_options, LCB_TYPE_BUCKET),
-            "build options object for lcb_create");
+          "build options object for lcb_create");
     check(lcb_createopts_credentials(create_options,
-                    username.c_str(),
-                    username.size(),
-                    password.c_str(),
-                    password.size()),
-            "assign credentials");
+                                     username.data(),
+                                     username.size(),
+                                     password.data(),
+                                     password.size()),
+          "assign credentials");
     check(lcb_createopts_connstr(create_options,
-                    connection_string.c_str(),
-                    connection_string.size()),
-            "assign connection string");
-    check(lcb_createopts_bucket(create_options, bucket_name.c_str(), bucket_name.size()),
-            "assign bucket name");
+                                 connection_string.data(),
+                                 connection_string.size()),
+          "assign connection string");
+    check(lcb_createopts_bucket(create_options, bucket_name.data(), bucket_name.size()),
+          "assign bucket name");
 
     lcb_INSTANCE *instance = nullptr;
     check(lcb_create(&instance, create_options), "create lcb_INSTANCE");
@@ -81,17 +75,16 @@ create_instance()
     check(lcb_get_bootstrap_status(instance), "check bootstrap status");
 
     lcb_install_callback(instance,
-            LCB_CALLBACK_GET,
-            reinterpret_cast<lcb_RESPCALLBACK>(get_callback));
+                         LCB_CALLBACK_GET,
+                         reinterpret_cast<lcb_RESPCALLBACK>(get_callback));
     lcb_install_callback(instance,
-            LCB_CALLBACK_STORE,
-            reinterpret_cast<lcb_RESPCALLBACK>(replace_callback));
+                         LCB_CALLBACK_STORE,
+                         reinterpret_cast<lcb_RESPCALLBACK>(replace_callback));
     return instance;
 }
 
 static std::string
-add_item_to_list(const std::string &old_list, const std::string &new_item)
-{
+add_item_to_list(const std::string &old_list, const std::string &new_item) {
     // Remove the trailing ']'
     std::string newval = old_list.substr(0, old_list.size() - 1);
 
@@ -107,16 +100,15 @@ add_item_to_list(const std::string &old_list, const std::string &new_item)
 
 // Boilerplate for storing our initial list as '[]'
 static void
-store_initial_list(lcb_INSTANCE *instance, const std::string &id)
-{
+store_initial_list(lcb_INSTANCE *instance, const std::string &id) {
     std::string initial_document{"[]"};
     Result result;
 
     lcb_CMDSTORE *cmd = nullptr;
     check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
-    check(lcb_cmdstore_key(cmd, id.c_str(), id.size()), "assign ID for UPSERT command");
-    check(lcb_cmdstore_value(cmd, initial_document.c_str(), initial_document.size()),
-            "assign value for UPSERT command");
+    check(lcb_cmdstore_key(cmd, id.data(), id.size()), "assign ID for UPSERT command");
+    check(lcb_cmdstore_value(cmd, initial_document.data(), initial_document.size()),
+          "assign value for UPSERT command");
     check(lcb_store(instance, &result, cmd), "schedule UPSERT command");
     check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
     check(lcb_wait(instance, LCB_WAIT_DEFAULT), "wait for initial UPSERT command");
@@ -125,8 +117,7 @@ store_initial_list(lcb_INSTANCE *instance, const std::string &id)
 
 // Counts the number of items in the list
 static int
-count_list_items(const std::string &s)
-{
+count_list_items(const std::string &s) {
     size_t pos = 0;
     int number_of_items = 0;
     while (pos != std::string::npos) {
@@ -145,8 +136,7 @@ count_list_items(const std::string &s)
 }
 
 int
-main()
-{
+main() {
     std::string document_id{"a_list"};
 
     lcb_INSTANCE *instance = create_instance();
@@ -171,11 +161,11 @@ main()
                 lcb_CMDGET *cmd = nullptr;
                 check(lcb_cmdget_create(&cmd), "create GET command");
                 check(lcb_cmdget_key(cmd,
-                                document_id.c_str(),
-                                document_id.size()),
-                        "assign ID for GET command");
+                                     document_id.data(),
+                                     document_id.size()),
+                      "assign ID for GET command");
                 check(lcb_get(local_instance, &result, cmd),
-                        "schedule GET command");
+                      "schedule GET command");
                 check(lcb_cmdget_destroy(cmd), "destroy GET command");
                 lcb_wait(local_instance, LCB_WAIT_DEFAULT);
                 check(result.rc, "could not find list document");
@@ -187,17 +177,17 @@ main()
             {
                 lcb_CMDSTORE *cmd = nullptr;
                 check(lcb_cmdstore_create(&cmd, LCB_STORE_REPLACE),
-                        "create REPLACE command");
+                      "create REPLACE command");
                 check(lcb_cmdstore_key(cmd,
-                                document_id.c_str(),
-                                document_id.size()),
-                        "assign ID for REPLACE command");
+                                       document_id.data(),
+                                       document_id.size()),
+                      "assign ID for REPLACE command");
                 check(lcb_cmdstore_value(cmd,
-                                new_value.c_str(),
-                                new_value.size()),
-                        "assign value for REPLACE command");
+                                         new_value.data(),
+                                         new_value.size()),
+                      "assign value for REPLACE command");
                 check(lcb_store(local_instance, &result, cmd),
-                        "schedule REPLACE command");
+                      "schedule REPLACE command");
                 check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
                 lcb_wait(local_instance, LCB_WAIT_DEFAULT);
 
@@ -223,8 +213,8 @@ main()
         {
             lcb_CMDGET *cmd = nullptr;
             check(lcb_cmdget_create(&cmd), "create GET command");
-            check(lcb_cmdget_key(cmd, document_id.c_str(), document_id.size()),
-                    "assign ID for GET command");
+            check(lcb_cmdget_key(cmd, document_id.data(), document_id.size()),
+                  "assign ID for GET command");
             check(lcb_get(instance, &result, cmd), "schedule GET command");
             check(lcb_cmdget_destroy(cmd), "destroy GET command");
             lcb_wait(instance, LCB_WAIT_DEFAULT);
@@ -263,11 +253,11 @@ main()
                     lcb_CMDGET *cmd = nullptr;
                     check(lcb_cmdget_create(&cmd), "create GET command");
                     check(lcb_cmdget_key(cmd,
-                                    document_id.c_str(),
-                                    document_id.size()),
-                            "assign ID for GET command");
+                                         document_id.data(),
+                                         document_id.size()),
+                          "assign ID for GET command");
                     check(lcb_get(local_instance, &result, cmd),
-                            "schedule GET command");
+                          "schedule GET command");
                     check(lcb_cmdget_destroy(cmd), "destroy GET command");
                     lcb_wait(local_instance, LCB_WAIT_DEFAULT);
                     check(result.rc, "could not find list document");
@@ -280,19 +270,19 @@ main()
                 {
                     lcb_CMDSTORE *cmd = nullptr;
                     check(lcb_cmdstore_create(&cmd, LCB_STORE_REPLACE),
-                            "create REPLACE command");
+                          "create REPLACE command");
                     check(lcb_cmdstore_key(cmd,
-                                    document_id.c_str(),
-                                    document_id.size()),
-                            "assign ID for REPLACE command");
+                                           document_id.data(),
+                                           document_id.size()),
+                          "assign ID for REPLACE command");
                     check(lcb_cmdstore_value(cmd,
-                                    new_value.c_str(),
-                                    new_value.size()),
-                            "assign value for REPLACE command");
+                                             new_value.data(),
+                                             new_value.size()),
+                          "assign value for REPLACE command");
                     check(lcb_cmdstore_cas(cmd, cas),
-                            "assign CAS value for REPLACE command");
+                          "assign CAS value for REPLACE command");
                     check(lcb_store(local_instance, &result, cmd),
-                            "schedule REPLACE command");
+                          "schedule REPLACE command");
                     check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
                     lcb_wait(local_instance, LCB_WAIT_DEFAULT);
 
@@ -326,8 +316,8 @@ main()
         {
             lcb_CMDGET *cmd = nullptr;
             check(lcb_cmdget_create(&cmd), "create GET command");
-            check(lcb_cmdget_key(cmd, document_id.c_str(), document_id.size()),
-                    "assign ID for GET command");
+            check(lcb_cmdget_key(cmd, document_id.data(), document_id.size()),
+                  "assign ID for GET command");
             check(lcb_get(instance, &result, cmd), "schedule GET command");
             check(lcb_cmdget_destroy(cmd), "destroy GET command");
             lcb_wait(instance, LCB_WAIT_DEFAULT);

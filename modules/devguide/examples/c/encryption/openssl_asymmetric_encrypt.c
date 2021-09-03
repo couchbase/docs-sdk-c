@@ -32,15 +32,13 @@
 #include "openssl_asymmetric_provider.h"
 
 static void
-die(lcb_INSTANCE instance, const char *msg, lcb_error_t err)
-{
+die(lcb_INSTANCE instance, const char *msg, lcb_error_t err) {
     fprintf(stderr, "%s. Received code 0x%X (%s)\n", msg, err, lcb_strerror(instance, err));
     exit(EXIT_FAILURE);
 }
 
 static void
-op_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
-{
+op_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb) {
     if (rb->rc == LCB_SUCCESS) {
         fprintf(stderr, "CAS:    0x%"
         PRIx64
@@ -51,8 +49,7 @@ op_callback(lcb_INSTANCE instance, int cbtype, const lcb_RESPBASE *rb)
 }
 
 static void
-store_encrypted(lcb_INSTANCE instance, const char *key, const char *val)
-{
+store_encrypted(lcb_INSTANCE instance, const char *key, const char *val) {
     lcb_error_t err;
     lcb_CMDSTORE cmd = {};
     lcbcrypto_CMDENCRYPT ecmd = {};
@@ -96,8 +93,7 @@ store_encrypted(lcb_INSTANCE instance, const char *key, const char *val)
 }
 
 int
-main(int argc, char *argv[])
-{
+main(int argc, char *argv[]) {
     lcb_error_t err;
     lcb_INSTANCE instance;
 
@@ -131,18 +127,18 @@ main(int argc, char *argv[])
     lcbcrypto_register(instance, "RSA-2048-OAEP-SHA1", oap_create());
 
     store_encrypted(instance, "secret-1",
-            "{\"message\":\"The old grey goose jumped over the wrickety gate.\"}");
+                    "{\"message\":\"The old grey goose jumped over the wrickety gate.\"}");
     printf("\n");
     store_encrypted(instance, "secret-2", "{\"message\":10}");
     printf("\n");
     store_encrypted(instance, "secret-3", "{\"message\":\"10\"}");
     printf("\n");
     store_encrypted(instance,
-            "secret-4",
-            "{\"message\":[\"The\",\"Old\",\"Grey\",\"Goose\",\"Jumped\",\"over\",\"the\",\"wrickety\",\"gate\"]}");
+                    "secret-4",
+                    "{\"message\":[\"The\",\"Old\",\"Grey\",\"Goose\",\"Jumped\",\"over\",\"the\",\"wrickety\",\"gate\"]}");
     printf("\n");
     store_encrypted(instance, "secret-5",
-            "{\"message\":{\"myValue\":\"The old grey goose jumped over the wrickety gate.\",\"myInt\":10}}");
+                    "{\"message\":{\"myValue\":\"The old grey goose jumped over the wrickety gate.\",\"myInt\":10}}");
 
     lcb_destroy(instance);
     return 0;

@@ -1,12 +1,9 @@
-#include <string>
+#include <libcouchbase/couchbase.h>
 #include <vector>
 #include <iostream>
 
-#include <libcouchbase/couchbase.h>
-
 static void
-check(lcb_STATUS err, const char *msg)
-{
+check(lcb_STATUS err, const char *msg) {
     if (err != LCB_SUCCESS) {
         std::cerr << "[ERROR] " << msg << ": " << lcb_strerror_short(err) << "\n";
         exit(EXIT_FAILURE);
@@ -24,8 +21,7 @@ struct SubdocResults {
 };
 
 static void
-sdget_callback(lcb_INSTANCE *, int, const lcb_RESPSUBDOC *resp)
-{
+sdget_callback(lcb_INSTANCE *, int, const lcb_RESPSUBDOC *resp) {
     SubdocResults *results = nullptr;
     lcb_respsubdoc_cookie(resp, reinterpret_cast<void **>(&results));
     results->status = lcb_respsubdoc_status(resp);
@@ -48,25 +44,24 @@ sdget_callback(lcb_INSTANCE *, int, const lcb_RESPSUBDOC *resp)
 }
 
 int
-main(int, char **)
-{
+main(int, char **) {
     std::string username{"some-user"};
     std::string password{"some-password"};
-    std::string connection_string{"couchbase://localhost"};
     std::string bucket_name{"default"};
+    std::string connection_string{"couchbase://localhost"};
 
     lcb_CREATEOPTS *create_options = nullptr;
     check(lcb_createopts_create(&create_options, LCB_TYPE_BUCKET),
-            "build options object for lcb_create");
-    check(lcb_createopts_credentials(create_options, username.c_str(), username.size(),
-                    password.c_str(),
-                    password.size()),
-            "assign credentials");
-    check(lcb_createopts_connstr(create_options, connection_string.c_str(),
-                    connection_string.size()),
-            "assign connection string");
-    check(lcb_createopts_bucket(create_options, bucket_name.c_str(), bucket_name.size()),
-            "assign bucket name");
+          "build options object for lcb_create");
+    check(lcb_createopts_credentials(create_options, username.data(), username.size(),
+                                     password.data(),
+                                     password.size()),
+          "assign credentials");
+    check(lcb_createopts_connstr(create_options, connection_string.data(),
+                                 connection_string.size()),
+          "assign connection string");
+    check(lcb_createopts_bucket(create_options, bucket_name.data(), bucket_name.size()),
+          "assign bucket name");
 
     lcb_INSTANCE *instance = nullptr;
     check(lcb_create(&instance, create_options), "create lcb_INSTANCE");
@@ -87,9 +82,9 @@ main(int, char **)
 
         lcb_CMDSTORE *cmd = nullptr;
         check(lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT), "create UPSERT command");
-        check(lcb_cmdstore_key(cmd, key.c_str(), key.size()), "assign ID for UPSERT command");
-        check(lcb_cmdstore_value(cmd, value.c_str(), value.size()),
-                "assign value for UPSERT command");
+        check(lcb_cmdstore_key(cmd, key.data(), key.size()), "assign ID for UPSERT command");
+        check(lcb_cmdstore_value(cmd, value.data(), value.size()),
+              "assign value for UPSERT command");
         check(lcb_store(instance, nullptr, cmd), "schedule UPSERT command");
         check(lcb_cmdstore_destroy(cmd), "destroy UPSERT command");
         lcb_wait(instance, LCB_WAIT_DEFAULT);
@@ -98,7 +93,7 @@ main(int, char **)
     // Install the callback for GET operations. Note this can be done at any
     // time before the operation is scheduled
     lcb_install_callback(instance, LCB_CALLBACK_SDLOOKUP,
-            reinterpret_cast<lcb_RESPCALLBACK>(sdget_callback));
+                         reinterpret_cast<lcb_RESPCALLBACK>(sdget_callback));
 
     {
         SubdocResults results;
@@ -112,20 +107,20 @@ main(int, char **)
                 "non-exist",
         };
 
-        check(lcb_subdocspecs_get(specs, 0, 0, paths[0].c_str(), paths[0].size()),
-                "create SUBDOC-GET operation");
+        check(lcb_subdocspecs_get(specs, 0, 0, paths[0].data(), paths[0].size()),
+              "create SUBDOC-GET operation");
         // tag::sub-doc-retrieve[]
-        check(lcb_subdocspecs_get(specs, 1, 0, paths[1].c_str(), paths[1].size()),
-                "create SUBDOC-GET operation");
+        check(lcb_subdocspecs_get(specs, 1, 0, paths[1].data(), paths[1].size()),
+              "create SUBDOC-GET operation");
         // end::sub-doc-retrieve[]
         // tag::sub-doc-exists[]
-        check(lcb_subdocspecs_exists(specs, 2, 0, paths[2].c_str(), paths[2].size()),
-                "create SUBDOC-EXISTS operation");
+        check(lcb_subdocspecs_exists(specs, 2, 0, paths[2].data(), paths[2].size()),
+              "create SUBDOC-EXISTS operation");
         // end::sub-doc-exists[]
 
         lcb_CMDSUBDOC *cmd = nullptr;
         check(lcb_cmdsubdoc_create(&cmd), "create SUBDOC command");
-        check(lcb_cmdsubdoc_key(cmd, key.c_str(), key.size()), "assign ID to SUBDOC command");
+        check(lcb_cmdsubdoc_key(cmd, key.data(), key.size()), "assign ID to SUBDOC command");
         check(lcb_cmdsubdoc_specs(cmd, specs), "assign operations to SUBDOC command");
         check(lcb_subdoc(instance, &results, cmd), "schedule SUBDOC command");
         check(lcb_cmdsubdoc_destroy(cmd), "destroy SUBDOC command");
