@@ -34,7 +34,7 @@ Therefore, where necessary, enforce document size limits in your application on 
 
 == Operating Modes
 
-The three modes in which compression can be used, “off”, “passive” and “active”, are per bucket configuration settings on the cluster.
+The three modes in which compression can be used, "off", "passive" and "active", are per bucket configuration settings on the cluster.
 Depending on how it is set, the HELLO negotiation will fail or succeed.
 The `HELLO` flag for compression has the value `0x0a` and is defined as:
 
