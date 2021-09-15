@@ -64,7 +64,7 @@ Each individual request has the following format:
 | `last_dispatch_duration_us` | The duration of the last dispatch span if present.
 | `total_dispatch_duration_us` | The duration of all dispatch spans, summed up.
 | `last_server_duration_us` | The server duration attribute of the last dispatch span, if present.
-| `operation_name` | The name of the outer request span, with “cb.” prefix removed.
+| `operation_name` | The name of the outer request span, with "cb." prefix removed.
 | `last_local_id` | The local_id from the last dispatch span, if present.
 | `operation_id` | The operation_id from the outer request span, if present.
 | `last_local_socket` | The local_address from the last dispatch span, if present.

@@ -37,17 +37,17 @@ The overall structure looks like this (here prettified for readability):
 [source,json]
 ----
 {
-  “meta”: {
-	“emit_interval_s”: 600,
+  "meta": {
+	"emit_interval_s": 600,
   }
-  “<service-a>”: {
-      “total_count”: 1234,
-      “percentiles_us”: {
-        “50.0”: 5,
-        “90.0”: 10,
-        “99.0”: 33,
-        “99.9”: 55,
-        “100.0”: 101,
+  "<service-a>": {
+      "total_count": 1234,
+      "percentiles_us": {
+        "50.0": 5,
+        "90.0": 10,
+        "99.0": 33,
+        "99.9": 55,
+        "100.0": 101,
       }
     }
   },
@@ -87,8 +87,8 @@ You should expect to see output in JSON format in the logs for the services enco
 ----
 
 The `total_count` represents the total amount of over-threshold recorded items in each interval per service.
-The number of entries in “top_requests” is configured by the `sampleSize`.
-The service placeholder is replaced with each service -- “kv”, “query”, etc.
+The number of entries in "top_requests" is configured by the `sampleSize`.
+The service placeholder is replaced with each service -- "kv", "query", etc.
 Each entry looks like this, with all fields populated:
 
 [source,json]
@@ -119,7 +119,7 @@ It does not expose an external API to the application and is very focussed on it
 
 The way it works is that every time a response is in the process of being completed,
 when the SDK detects that the original caller is not listening anymore (likely because of a timeout),
-it will send this “orphan” response to a reporting utility which then aggregates it and in regular intervals logs them in a specific format.
+it will send this "orphan" response to a reporting utility which then aggregates it and in regular intervals logs them in a specific format.
 
 When the user then sees timeouts in their logs, they can go look at the output of the orphan reporter and correlate certain properties that aid debugging in production.
 For example, if a single node is slow but the rest of the cluster is responsive, this would be visible from orphan reporting.
@@ -136,19 +136,19 @@ The overall structure looks like this (here prettified for readability):
 [source,json]
 ----
 {
-  “<service-a>”: {
-    “total_count”: 1234,
-    “top_requests”: [{<entry>}, {<entry>},...]
+  "<service-a>": {
+    "total_count": 1234,
+    "top_requests": [{<entry>}, {<entry>},...]
   },
-  “<service-b>”: {
-    “total_count”: 1234,
-    “top_requests”: [{<entry>}, {<entry>},...]
+  "<service-b>": {
+    "total_count": 1234,
+    "top_requests": [{<entry>}, {<entry>},...]
   },
 }
 ----
 
 The total_count represents the total amount of recorded items in each interval per service.
-The number of entries in “top_requests” is configured by the sampleSize. The service placeholder is replaced with each service, i.e. “kv”, “query” etc.
+The number of entries in "top_requests" is configured by the sampleSize. The service placeholder is replaced with each service, i.e. "kv", "query" etc.
 Each entry looks like this, with all fields populated (same as the threshold logging):
 
 [source,json]
@@ -159,7 +159,7 @@ Each entry looks like this, with all fields populated (same as the threshold log
   "last_dispatch_duration_us": 40,
   "total_dispatch_duration_us": 40,
   "last_server_duration_us": 2,
-  “timeout_ms”: 75000,
+  "timeout_ms": 75000,
   "operation_name": "upsert",
   "last_local_id": "66388CF5BFCF7522/18CC8791579B567C",
   "operation_id": "0x23",

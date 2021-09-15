@@ -217,7 +217,7 @@ bucket.MutateIn("my_array", ops =>
 [source,csharp]
 ----
 bucket.MutateIn("my_array", ops =>
-    ops.ArrayAppend('', ['elem1', 'elem2', 'elem3']”)
+    ops.ArrayAppend('', ['elem1', 'elem2', 'elem3']")
 );
 # the document my_array is now ["some_element", ["elem1", "elem2", "elem3"]]
 ----
@@ -285,7 +285,7 @@ std::string value_to_add{ "42" };
 check(lcb_subdocspecs_array_add_last(specs, 0, 0, paths[0].c_str(), paths[0].size(), value_to_add.c_str(), value_to_add.size()),"create ARRAY_ADD_LAST operation");
 ----
 
-// for your examples, above, CD: “I feel like somewhere in this we should also just a an example path like "my.path[1]" too, just to show how to use the index with a nested path. I don't think it's necessarily clear.”
+// for your examples, above, CD: "I feel like somewhere in this we should also just a an example path like "my.path[1]" too, just to show how to use the index with a nested path. I don't think it's necessarily clear."
 
 Note that the array must already exist and that the index must be valid (i.e.
 it must not point to an element which is out of bounds).
