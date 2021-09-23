@@ -23,23 +23,23 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.2/index.html[API Refer
 
 * https://issues.couchbase.com/browse/CCBC-1485[CCBC-1485]: Allow disabling tracer for connected instance.
 
-* https://issues.couchbase.com/browse/CCBC-1472[CCBC-1472]: Ensure strict JSON parsing mode for query meta.
+* https://issues.couchbase.com/browse/CCBC-1472[CCBC-1472]: Fix handling in case of invalid responses by ensuring strict JSON parsing mode for query meta.
 
-* https://issues.couchbase.com/browse/CCBC-1494[CCBC-1494]: Disconnect logger after `lcb_destroy` invoked to avoid double free errors.
+* https://issues.couchbase.com/browse/CCBC-1494[CCBC-1494]: Disconnect logger after `lcb_destroy` invoked to avoid double free errors for some IO backends.
 
-* https://issues.couchbase.com/browse/CCBC-1457[CCBC-1457]: improve error message when server enforces encryption
+* https://issues.couchbase.com/browse/CCBC-1457[CCBC-1457]: Improve error message when server enforces TLS encryption
 
 * https://issues.couchbase.com/browse/CCBC-1489[CCBC-1489]: Fixed get_and_touch to use the correct expiry.
 
-* https://issues.couchbase.com/browse/CCBC-1487[CCBC-1487]: Fixed `retryq` erasing already sent packets.
+* https://issues.couchbase.com/browse/CCBC-1487[CCBC-1487]: Fixed issue with completion IO where `retryq` erased already sent packets.
 
-* https://issues.couchbase.com/browse/CCBC-1488[CCBC-1488]: Fixed incorrect refcounting in `Connstart`.
+* https://issues.couchbase.com/browse/CCBC-1488[CCBC-1488]: Fixed incorrect refcounting in `Connstart`, where an error state followed by cancellation caused an error. 
 
-* https://issues.couchbase.com/browse/CCBC-1479[CCBC-1479]: Initialize fields of custom tracer struct.
+* https://issues.couchbase.com/browse/CCBC-1479[CCBC-1479]: Initialize fields of custom tracer struct, fixing issues during destruction.
 
-* https://issues.couchbase.com/browse/CCBC-1478[CCBC-1478]: Do not retry successful query with empty result.
+* https://issues.couchbase.com/browse/CCBC-1478[CCBC-1478]: Fix issue where successful query returning no results triggered retry when run readonly, resulting in a timeout error.
 
-* https://issues.couchbase.com/browse/CCBC-1216[CCBC-1216]: Implement user impersonation API
+* https://issues.couchbase.com/browse/CCBC-1216[CCBC-1216]: Implement user impersonation API, for use-cases where SDK performs work on behalf of an application.
 
 * Improved test coverage and stability.
 
