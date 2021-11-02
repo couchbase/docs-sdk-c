@@ -1,10 +1,16 @@
 // tag::installation[]
 == Platform support and installation
 
-The Couchbase C SDK can be installed via apt or yum repositories on GNU/Linux; homebrew on Mac OS X; and <<install-windows,binary archives for Microsoft Windows>>.
-It may also be https://github.com/couchbase/libcouchbase[built from source^] on any of the platforms mentioned above, and more.
+The Couchbase C SDK can be installed via apt or yum repositories on xref:#install-linux[GNU/Linux]; homebrew on xref:#install-mac[Mac OS X]; and binary archives for Microsoft xref:#install-windows[Windows].
 
+It may also be built from source on any of the platforms mentioned above, and more.
 
+== Installation from source
+
+You may install the library from source either by downloading a source archive, or by checking out the https://github.com/couchbase/libcouchbase[git repository^].
+Follow the instructions in the archive's https://github.com/couchbase/libcouchbase/blob/master/README.markdown[README] for further instructions.
+
+[#install-linux]
 == Installing on GNU/Linux
 
 The various Linux distributions contain the following packages:
@@ -18,7 +24,7 @@ To install the C SDK from a static binary package or by manually configuring the
 
 === Configuring yum repositories (CentOS, Redhat)
 
-This section assumes you know how to add an external http://yum.baseurl.org/[yum] repository and Linux quick start explains the steps it will perform on your distribution.
+This section assumes you know how to add an external http://yum.baseurl.org/[yum] repository.
 To configure the repository:
 
 . Find the appropriate repository location for your distribution in the following table.
@@ -44,9 +50,30 @@ gpgcheck = 1
 gpgkey = https://packages.couchbase.com/clients/c/repos/rpm/couchbase.key
 ----
 
+Now that you have the repository configured, refresh the cache then check to see that you have been successful:
+
+====
+[source,console]
+----
+$ sudo yum check-update
+----
+
+[source,console]
+----
+$ sudo yum search libcouchbase
+----
+====
+
+Now, install `libcouchbase3`, and any other packages that you need for development:
+
+[source,console]
+----
+$ sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
+----
+
 === Configuring APT repositories (Debian, Ubuntu)
 
-This section assumes some knowledge of https://wiki.debian.org/Apt[apt] and Linux quick start explains the steps it will perform on your distribution.
+This section assumes some knowledge of https://wiki.debian.org/Apt[apt].
 To configure the repository:
 
 . Download the Couchbase GPG key from https://packages.couchbase.com/clients/c/repos/deb/couchbase.key
@@ -103,63 +130,44 @@ Now, install `libcouchbase3`, and any other packages that you need for developme
 $ sudo apt install libcouchbase3 libcouchbase-dev libcouchbase3-tools libcouchbase-dbg libcouchbase3-libev libcouchbase3-libevent
 ----
 
-For CentOS and Red Hat, the equivalent commands are:
-
-====
-[source,console]
-----
-$ sudo yum check-update
-----
-
-[source,console]
-----
-$ sudo yum search libcouchbase
-----
-
-[source,console]
-----
-$ sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
-----
-====
-
-
 === Installing binary packages without a repository
 
 You can install standalone packages by downloading a tarball containing the necessary binary packages for your platform.
 
 *Installing RPMs*
 
-The following commands show steps to execute on *CentOS 8* box, see table below for other RPM-based distributions.
+The following commands show steps to execute for the current version on a *CentOS 8* box.
+Check the xref:project-docs:sdk-release-notes.adoc#downloads[Downloads table] for other Redhat based systems.
 
 ====
 [source,console]
 ----
-$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_centos8_x86_64.tar
+$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_centos8_x86_64.tar
 ----
 
 [source,console]
 ----
-$ tar xf libcouchbase-3.2.0_centos8_x86_64.tar
+$ tar xf libcouchbase-3.2.1_centos8_x86_64.tar
 ----
 
 [source,console]
 ----
-$ cd libcouchbase-3.2.0_centos8_x86_64
+$ cd libcouchbase-3.2.1_centos8_x86_64
 ----
 
 [source,console]
 ----
-$ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.2.0*.rpm libcouchbase-devel-*.rpm
+$ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.2.1*.rpm libcouchbase-devel-*.rpm
 ----
 
 [source,console]
 ----
 > ...
 > Installed:
->   libcouchbase-devel-3.2.0-1.el8.x86_64
->   libcouchbase3-3.2.0-1.el8.x86_64
->   libcouchbase3-libevent-3.2.0-1.el8.x86_64
->   libcouchbase3-tools-3.2.0-1.el8.x86_64
+>   libcouchbase-devel-3.2.1-1.el8.x86_64
+>   libcouchbase3-3.2.1-1.el8.x86_64
+>   libcouchbase3-libevent-3.2.1-1.el8.x86_64
+>   libcouchbase3-tools-3.2.1-1.el8.x86_64
 > ...
 >
 > Complete!
@@ -168,22 +176,23 @@ $ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.2.0*.rpm libcouchbase-d
 
 *Installing DEBs*
 
-The following commands show steps to execute on *Debian 10 (buster)* box, see table below for other DEB-based distributions.
+The following commands show steps to execute for the current version on a *Debian 10 (buster)* box.
+Check the xref:project-docs:sdk-release-notes.adoc#downloads[Downloads table] for the other DEB-based distributions.
 
 ====
 [source,console]
 ----
-$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_debian10_buster_amd64.tar
+$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_debian10_buster_amd64.tar
 ----
 
 [source,console]
 ----
-$ tar xf libcouchbase-3.2.0_debian10_buster_amd64.tar
+$ tar xf libcouchbase-3.2.1_debian10_buster_amd64.tar
 ----
 
 [source,console]
 ----
-$ cd libcouchbase-3.2.0_debian10_buster_amd64
+$ cd libcouchbase-3.2.1_debian10_buster_amd64
 ----
 
 [source,console]
@@ -193,44 +202,43 @@ $ sudo apt install libevent-core-2.1
 
 [source,console]
 ----
-$ sudo dpkg -i libcouchbase3{-tools,-libevent,}_3.2.0*.deb libcouchbase-dev*.deb
+$ sudo dpkg -i libcouchbase3{-tools,-libevent,}_3.2.1*.deb libcouchbase-dev*.deb
 > Selecting previously unselected package libcouchbase3-tools.
 > (Reading database ... 7177 files and directories currently installed.)
-> Preparing to unpack libcouchbase3-tools_3.2.0-1_amd64.deb ...
-> Unpacking libcouchbase3-tools (3.2.0-1) ...
+> Preparing to unpack libcouchbase3-tools_3.2.1-1_amd64.deb ...
+> Unpacking libcouchbase3-tools (3.2.1-1) ...
 > Selecting previously unselected package libcouchbase3-libevent:amd64.
-> Preparing to unpack libcouchbase3-libevent_3.2.0-1_amd64.deb ...
-> Unpacking libcouchbase3-libevent:amd64 (3.2.0-1) ...
+> Preparing to unpack libcouchbase3-libevent_3.2.1-1_amd64.deb ...
+> Unpacking libcouchbase3-libevent:amd64 (3.2.1-1) ...
 > Selecting previously unselected package libcouchbase3:amd64.
-> Preparing to unpack libcouchbase3_3.2.0-1_amd64.deb ...
-> Unpacking libcouchbase3:amd64 (3.2.0-1) ...
+> Preparing to unpack libcouchbase3_3.2.1-1_amd64.deb ...
+> Unpacking libcouchbase3:amd64 (3.2.1-1) ...
 > Selecting previously unselected package libcouchbase-dev:amd64.
-> Preparing to unpack libcouchbase-dev_3.2.0-1_amd64.deb ...
-> Unpacking libcouchbase-dev:amd64 (3.2.0-1) ...
-> Setting up libcouchbase3:amd64 (3.2.0-1) ...
-> Setting up libcouchbase-dev:amd64 (3.2.0-1) ...
-> Setting up libcouchbase3-libevent:amd64 (3.2.0-1) ...
-> Setting up libcouchbase3-tools (3.2.0-1) ...
+> Preparing to unpack libcouchbase-dev_3.2.1-1_amd64.deb ...
+> Unpacking libcouchbase-dev:amd64 (3.2.1-1) ...
+> Setting up libcouchbase3:amd64 (3.2.1-1) ...
+> Setting up libcouchbase-dev:amd64 (3.2.1-1) ...
+> Setting up libcouchbase3-libevent:amd64 (3.2.1-1) ...
+> Setting up libcouchbase3-tools (3.2.1-1) ...
 > Processing triggers for libc-bin (2.28-10) ...
 ----
 ====
 
-
-== Installation from source
-
-You may install the library from source either by downloading a source archive, or by checking out the https://github.com/couchbase/libcouchbase[git repository].
-Follow the instructions in the archive's https://github.com/couchbase/libcouchbase/blob/master/README.markdown[README] for further instructions.
-
+[#install-mac]
 == Installation on Mac OS X
 
-To install the library on Mac OS X, first install the de-facto package manager for OS X: http://brew.sh/[homebrew^].
+To install the latest version of the library on Mac OS X, first install the de-facto package manager for OS X: http://brew.sh/[homebrew^].
 Once _homebrew_ is configured:
 
 ====
+Get list of latest packages:
+
 [source,console]
 ----
-$ brew update # get list of latest packages
+$ brew update
 ----
+
+Install the latest version of `libcouchbase`:
 
 [source,console]
 ----
@@ -238,13 +246,13 @@ $ brew install libcouchbase
 ----
 ====
 
-To install development files and command line tools on Mac OS, follow the instructions for https://github.com/couchbase/libcouchbase/blob/master/README.markdown#building-on-unix-like-systems[installing from source].
+To install development files and command line tools on Mac OS, or to install an earlier version of the library, follow the instructions for https://github.com/couchbase/libcouchbase/blob/master/README.markdown#building-on-unix-like-systems[installing from source].
 
 
 [#install-windows]
 == Windows Installation
 
-Windows binary packages can be found as downloads for each version listed below.
+Windows binary packages can be found in the xref:project-docs:sdk-release-notes.adoc#downloads[Downloads table] for each supported version of libcouchbase.
 Included are the header files, release and debug variants of the DLLs and import libraries, and release and debug variants of the command line tools.
 Note that the C SDK does not have any preferred installation path, and it is up to you to determine where to place ``libcouchbase.dll``.
 
