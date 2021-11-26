@@ -21,23 +21,24 @@ Version 3.2.4 is the fifth release of the 3.2 series.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.4/index.html[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-1522[CCBC-1522]: Filter `DnsQuery` results on Windows by type: only use
-  records with `DNS_TYPE_SRV` type.
+* https://issues.couchbase.com/browse/CCBC-1522[CCBC-1522]:
+  Filter `DnsQuery` results on Windows by type: only use records with `DNS_TYPE_SRV` type.
 
-* https://issues.couchbase.com/browse/CCBC-1521[CCBC-1521]: Fixed bootstrap process when client certificate is used. We
-  always pipeline error map request with `HELLO` request, and usually await for `hello`+`error_map` responses, because
-  after that goes SASL authentication (and then optional selection of the bucket) which cannot be completely pipelined.
-  But in case of client certificate, we might terminate bootstrap process too early if the bootstrap process does not
-  require immediate selection of the bucket.
+* https://issues.couchbase.com/browse/CCBC-1521[CCBC-1521]:
+  Fixed bootstrap process when client certificate is used.
+  We always pipeline error map request with `HELLO` request, and usually await for `hello`+`error_map` responses, because after that goes SASL authentication (and then optional selection of the bucket) which cannot be completely pipelined.
+  But in case of client certificate, we might terminate bootstrap process too early if the bootstrap process does not require immediate selection of the bucket.
     
-* https://issues.couchbase.com/browse/CCBC-1432[CCBC-1432]: Support for rate limiting error codes:
+* https://issues.couchbase.com/browse/CCBC-1432[CCBC-1432]
+  Support for rate limiting error codes:
   `LCB_ERR_RATE_LIMITED` and `LCB_ERR_QUOTA_LIMITED`.
 
-* https://issues.couchbase.com/browse/CCBC-1514[CCBC-1514]: Do not translate unknown error with "item-only" attribute
-  into `LCB_ERR_CAS_MISMATCH`.
+* https://issues.couchbase.com/browse/CCBC-1514[CCBC-1514]:
+  Do not translate unknown error with "item-only" attribute into `LCB_ERR_CAS_MISMATCH`.
 
-* https://issues.couchbase.com/browse/CCBC-1515[CCBC-1515]: Performance optimization: replace `sstream` with string
-  `append()`. Only if list of IO vectors supplied for value in mutation operations.
+* https://issues.couchbase.com/browse/CCBC-1515[CCBC-1515]: 
+  Performance optimization: replace `sstream` with string `append()`.
+  Only if list of IO vectors supplied for value in mutation operations.
 
 === Downloads
 
