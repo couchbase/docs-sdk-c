@@ -46,7 +46,7 @@ however, you can see all recent updates https://github.com/couchbase/libcouchbas
 * {lcb_api_link}/md_doc_cbc-pillowfight.html[cbc-pillowfight]:
 `cbc-pillowfight` is a stress test for Couchbase Client and Cluster.
 It creates a specified number of threads each looping and performing get and set operations within the cluster.
-* {lcb_api_link}/md_doc_cbc-n1qlback.html[cbc-n1qlback]:
+* {lcb_api_link}/md_doc_cbc_n1qlback.html[cbc-n1qlback]:
 `cbc-n1qlback` creates a specified number of threads each executing a set of user defined queries.
 
 
