@@ -52,6 +52,11 @@ It is best to upgrade either the SDK or the Couchbase version you are using.
 Note the https://www.couchbase.com/support-policy[End of Life dates^] for Couchbase Server and SDK versions.
 See the notes there for Support details.
 
+=== Capella Compatibility
+
+At time of release, the Couchbase 3.3 C SDK is fully compatible with Couchbase Capella, our fully-hosted database-as-a-service.
+Note, LCB does not bundle the Capella Client Certificate, follow the xref:server:guides:connect.adoc#tls[instructions] to download and install the certificate from Capella, then guide to xref:howtos:managing-connections.adoc#ssl[secure connections with LCB].
+
 
 == Platform Compatibility
 
@@ -63,10 +68,10 @@ Libcouchbase (the C SDK) is tested and supported on the following platforms:
 
 * Amazon Linux 2.
 * Red Hat Enterprise Linux 7 & 8;
-+
-& CentOS 7 & 8.
+* CentOS 7 & 8.
 * Ubuntu (LTS) 16.04 (_Xenial_), 18.04 (_Bionic_), & 20.04 (_Focal_).
 * Debian 9 (_Stretch_) & 10 (_Buster_).
+* Alpine Linux
 
 [discrete]
 === Microsoft Windows
@@ -81,6 +86,10 @@ At time of writing (July 2021): 10.14 (_Mojave_), 10.15 (_Catalina_), and 11 (_B
 ****
 
 Although installable or compilable on many other platforms, we cannot provide support for untested combinations.
+
+=== ARM Processor Support
+
+Python 4.0 SDK supports AWS Amazon Graviton2 and Apple M1 ARM processors.
 
 
 == Couchbase New Feature Availability Matrix
