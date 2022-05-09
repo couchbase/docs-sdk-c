@@ -24,18 +24,20 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.0/index.html[API Refer
 Features:
 
 * https://issues.couchbase.com/browse/CCBC-1540[CCBC-1540]:
-  Bundle Capella CA certificate with SDK.
+  The SDK now bundles the Capella CA certificate automatically.
 
 Fixes:
 
 * https://issues.couchbase.com/browse/CCBC-1538[CCBC-1538]:
-  Use 64-bit integer to store time in IOCP plugin
+  The SDK now uses a 64-bit integer to store time in the IOCP plugin.
 
 * https://issues.couchbase.com/browse/CCBC-1526[CCBC-1526]:
-  Do not validate length of collection specifier. Length will be checked on the server-side.
+  The SDK no longer validates the length of collection specifier.
+  This will be checked on the server-side.
 
 * https://issues.couchbase.com/browse/CCBC-1527[CCBC-1527]:
-  Pillowfight: deallocate all memory during shutdown
+  Fixed issue where `Pillowfight` was leaking a large number of memory allocations, which occured during startup.
+  Pillowfight will now deallocate all memory during shutdown.
 
 === Downloads
 
@@ -60,6 +62,212 @@ Fixes:
 | Visual Studio 2015 TLS (VC14) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.0_vc14_amd64_openssl.zip[libcouchbase-3.3.0_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.0_vc15_amd64_openssl.zip[libcouchbase-3.3.0_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.0_vc16_amd64_openssl.zip[libcouchbase-3.3.0_vc16_amd64_openssl.zip]
+|===
+
+== Version 3.2.4 (26 November 2021)
+
+Version 3.2.4 is the fifth release of the 3.2 series.
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.4/index.html[API Reference]
+
+* https://issues.couchbase.com/browse/CCBC-1522[CCBC-1522]:
+  Filter `DnsQuery` results on Windows by type: only use records with `DNS_TYPE_SRV` type.
+
+* https://issues.couchbase.com/browse/CCBC-1521[CCBC-1521]:
+  Fixed bootstrap process when client certificate is used.
+  We always pipeline error map request with `HELLO` request, and usually await for `hello`+`error_map` responses, because after that goes SASL authentication (and then optional selection of the bucket) which cannot be completely pipelined.
+  But in case of client certificate, we might terminate bootstrap process too early if the bootstrap process does not require immediate selection of the bucket.
+    
+* https://issues.couchbase.com/browse/CCBC-1432[CCBC-1432]
+  Support for rate limiting error codes:
+  `LCB_ERR_RATE_LIMITED` and `LCB_ERR_QUOTA_LIMITED`.
+
+* https://issues.couchbase.com/browse/CCBC-1514[CCBC-1514]:
+  Do not translate unknown error with "item-only" attribute into `LCB_ERR_CAS_MISMATCH`.
+
+* https://issues.couchbase.com/browse/CCBC-1515[CCBC-1515]: 
+  Performance optimization: replace `sstream` with string `append()`.
+  Only if list of IO vectors supplied for value in mutation operations.
+
+=== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4.sha256sum[libcouchbase-3.2.4.sha256sum]
+| Source Archive                | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4.tar.gz[libcouchbase-3.2.4.tar.gz]
+| Amazon Linux 2                | aarch64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_amzn2_aarch64.tar[libcouchbase-3.2.4_amzn2_aarch64.tar]
+| Amazon Linux 2                | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_amzn2_x86_64.tar[libcouchbase-3.2.4_amzn2_x86_64.tar]
+| Enterprise Linux 7            | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_centos7_x86_64.tar[libcouchbase-3.2.4_centos7_x86_64.tar]
+| Enterprise Linux 8            | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_centos8_x86_64.tar[libcouchbase-3.2.4_centos8_x86_64.tar]
+| Ubuntu 16.04 (xenial)         | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_ubuntu1604_xenial_amd64.tar[libcouchbase-3.2.4_ubuntu1604_xenial_amd64.tar]
+| Ubuntu 18.04 (bionic)         | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_ubuntu1804_bionic_amd64.tar[libcouchbase-3.2.4_ubuntu1804_bionic_amd64.tar]
+| Ubuntu 20.04 (focal)          | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_ubuntu2004_focal_amd64.tar[libcouchbase-3.2.4_ubuntu2004_focal_amd64.tar]
+| Debian 9 (stretch)            | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_debian9_stretch_amd64.tar[libcouchbase-3.2.4_debian9_stretch_amd64.tar]
+| Debian 10 (buster)            | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_debian10_buster_amd64.tar[libcouchbase-3.2.4_debian10_buster_amd64.tar]
+| Debian 11 (bullseye)          | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_debian11_bullseye_amd64.tar[libcouchbase-3.2.4_debian11_bullseye_amd64.tar]
+| Visual Studio 2015 (VC14)     | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_vc14_amd64.zip[libcouchbase-3.2.4_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_vc15_amd64.zip[libcouchbase-3.2.4_vc15_amd64.zip]
+| Visual Studio 2019 (VC16)     | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_vc16_amd64.zip[libcouchbase-3.2.4_vc16_amd64.zip]
+| Visual Studio 2015 TLS (VC14) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_vc14_amd64_openssl.zip[libcouchbase-3.2.4_vc14_amd64_openssl.zip]
+| Visual Studio 2017 TLS (VC15) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_vc15_amd64_openssl.zip[libcouchbase-3.2.4_vc15_amd64_openssl.zip]
+| Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_vc16_amd64_openssl.zip[libcouchbase-3.2.4_vc16_amd64_openssl.zip]
+|===
+
+== Version 3.2.3 (20 October 2021)
+
+Version 3.2.3 is the fourth release of the 3.2 series.
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.3/index.html[API Reference]
+
+* https://issues.couchbase.com/browse/CCBC-1484[CCBC-1484]: Fixed tracing tags in accordance to RFC.
+
+* https://issues.couchbase.com/browse/CCBC-1510[CCBC-1510]: Fixed key length calculation for exists/get/touch/unlock.
+
+* https://issues.couchbase.com/browse/CCBC-1495[CCBC-1495]: Fixed payload encoding in query index management helpers.
+  Query index management helpers now explicitly declared deperecated.
+
+* https://issues.couchbase.com/browse/CCBC-1506[CCBC-1506]: Duration values now accepted golang style encoding.
+  Connection string and `lcb_cntl_string` now can parse strings with duration encoded in golang style, e.g.
+  `analytics_timeout=5s42us`. The result still converted into 32-bit value with microsecond resolution.
+
+* Improved test coverage, stability and documentation.
+
+=== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3.sha256sum[libcouchbase-3.2.3.sha256sum]
+| Source Archive                | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3.tar.gz[libcouchbase-3.2.3.tar.gz]
+| Amazon Linux 2                | aarch64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_amzn2_aarch64.tar[libcouchbase-3.2.3_amzn2_aarch64.tar]
+| Amazon Linux 2                | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_amzn2_x86_64.tar[libcouchbase-3.2.3_amzn2_x86_64.tar]
+| Enterprise Linux 7            | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_centos7_x86_64.tar[libcouchbase-3.2.3_centos7_x86_64.tar]
+| Enterprise Linux 8            | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_centos8_x86_64.tar[libcouchbase-3.2.3_centos8_x86_64.tar]
+| Ubuntu 16.04 (xenial)         | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_ubuntu1604_xenial_amd64.tar[libcouchbase-3.2.3_ubuntu1604_xenial_amd64.tar]
+| Ubuntu 18.04 (bionic)         | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_ubuntu1804_bionic_amd64.tar[libcouchbase-3.2.3_ubuntu1804_bionic_amd64.tar]
+| Ubuntu 20.04 (focal)          | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_ubuntu2004_focal_amd64.tar[libcouchbase-3.2.3_ubuntu2004_focal_amd64.tar]
+| Debian 9 (stretch)            | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_debian9_stretch_amd64.tar[libcouchbase-3.2.3_debian9_stretch_amd64.tar]
+| Debian 10 (buster)            | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_debian10_buster_amd64.tar[libcouchbase-3.2.3_debian10_buster_amd64.tar]
+| Debian 11 (bullseye)          | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_debian11_bullseye_amd64.tar[libcouchbase-3.2.3_debian11_bullseye_amd64.tar]
+| Visual Studio 2015 (VC14)     | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_vc14_amd64.zip[libcouchbase-3.2.3_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_vc15_amd64.zip[libcouchbase-3.2.3_vc15_amd64.zip]
+| Visual Studio 2019 (VC16)     | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_vc16_amd64.zip[libcouchbase-3.2.3_vc16_amd64.zip]
+| Visual Studio 2015 TLS (VC14) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_vc14_amd64_openssl.zip[libcouchbase-3.2.3_vc14_amd64_openssl.zip]
+| Visual Studio 2017 TLS (VC15) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_vc15_amd64_openssl.zip[libcouchbase-3.2.3_vc15_amd64_openssl.zip]
+| Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_vc16_amd64_openssl.zip[libcouchbase-3.2.3_vc16_amd64_openssl.zip]
+|===
+
+
+== Version 3.2.2 (23 September 2021)
+
+Version 3.2.2 is the third release of the 3.2 series.
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.2/index.html[API Reference]
+
+* https://issues.couchbase.com/browse/CCBC-1485[CCBC-1485]: Allow disabling tracer for connected instance.
+
+* https://issues.couchbase.com/browse/CCBC-1472[CCBC-1472]: Fix handling in case of invalid responses by ensuring strict JSON parsing mode for query meta.
+
+* https://issues.couchbase.com/browse/CCBC-1494[CCBC-1494]: Disconnect logger after `lcb_destroy` invoked to avoid double free errors for some IO backends.
+
+* https://issues.couchbase.com/browse/CCBC-1457[CCBC-1457]: Improve error message when server enforces TLS encryption
+
+* https://issues.couchbase.com/browse/CCBC-1489[CCBC-1489]: Fixed get_and_touch to use the correct expiry.
+
+* https://issues.couchbase.com/browse/CCBC-1487[CCBC-1487]: Fixed issue with completion IO where `retryq` erased already sent packets.
+
+* https://issues.couchbase.com/browse/CCBC-1488[CCBC-1488]: Fixed incorrect refcounting in `Connstart`, where an error state followed by cancellation caused an error.
+
+* https://issues.couchbase.com/browse/CCBC-1479[CCBC-1479]: Initialize fields of custom tracer struct, fixing issues during destruction.
+
+* https://issues.couchbase.com/browse/CCBC-1478[CCBC-1478]: Fix issue where successful query returning no results triggered retry when run readonly, resulting in a timeout error.
+
+* https://issues.couchbase.com/browse/CCBC-1216[CCBC-1216]: Implement user impersonation API, for use-cases where SDK performs work on behalf of an application.
+
+* Improved test coverage and stability.
+
+=== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2.sha256sum[libcouchbase-3.2.2.sha256sum]
+| Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2.tar.gz[libcouchbase-3.2.2.tar.gz]
+| Amazon Linux 2                | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_amzn2_x86_64.tar[libcouchbase-3.2.2_amzn2_x86_64.tar]
+| Enterprise Linux 7            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_centos7_x86_64.tar[libcouchbase-3.2.2_centos7_x86_64.tar]
+| Enterprise Linux 8            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_centos8_x86_64.tar[libcouchbase-3.2.2_centos8_x86_64.tar]
+| Ubuntu 16.04 (xenial)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_ubuntu1604_xenial_amd64.tar[libcouchbase-3.2.2_ubuntu1604_xenial_amd64.tar]
+| Ubuntu 18.04 (bionic)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_ubuntu1804_bionic_amd64.tar[libcouchbase-3.2.2_ubuntu1804_bionic_amd64.tar]
+| Ubuntu 20.04 (focal)          | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_ubuntu2004_focal_amd64.tar[libcouchbase-3.2.2_ubuntu2004_focal_amd64.tar]
+| Debian 9 (stretch)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_debian9_stretch_amd64.tar[libcouchbase-3.2.2_debian9_stretch_amd64.tar]
+| Debian 10 (buster)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_debian10_buster_amd64.tar[libcouchbase-3.2.2_debian10_buster_amd64.tar]
+| Debian 11 (bullseye)          | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_debian11_bullseye_amd64.tar[libcouchbase-3.2.2_debian11_bullseye_amd64.tar]
+| Visual Studio 2015 (VC14)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_vc14_amd64.zip[libcouchbase-3.2.2_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_vc15_amd64.zip[libcouchbase-3.2.2_vc15_amd64.zip]
+| Visual Studio 2019 (VC16)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_vc16_amd64.zip[libcouchbase-3.2.2_vc16_amd64.zip]
+| Visual Studio 2015 TLS (VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_vc14_amd64_openssl.zip[libcouchbase-3.2.2_vc14_amd64_openssl.zip]
+| Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_vc15_amd64_openssl.zip[libcouchbase-3.2.2_vc15_amd64_openssl.zip]
+| Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_vc16_amd64_openssl.zip[libcouchbase-3.2.2_vc16_amd64_openssl.zip]
+|===
+
+== Version 3.2.1 (20 August 2021)
+
+Version 3.2.1 is the second release of the 3.2 series.
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.1/index.html[API Reference]
+
+* https://issues.couchbase.com/browse/CCBC-1429[CCBC-1429]:
+  Fixed positional parameters for query/analtyics:
+  ** Reverts behaviour `lcb_cmdquery_positional_param` and `lcb_cmdanalytics_positional_param` to append single JSON-encoded value to arguments array.
+  ** Introduces new functions -- `lcb_cmdquery_positional_params` and `lcb_cmdanalytics_positional_params` -- that accept all positional arguments at once as JSON-encoded array.
+  ** Document that old functions will emit compiler warning from 3.3.0 release, and will be removed later.
+
+* https://issues.couchbase.com/browse/CCBC-1428[CCBC-1428]:
+  Clear callback upon error in `lcb_search`.
+
+* https://issues.couchbase.com/browse/CCBC-1454[CCBC-1454]:
+  Fixed compiler warning in `lcb_getreplica`.
+
+* https://issues.couchbase.com/browse/CCBC-1453[CCBC-1453]:
+  Refactored local name caching in `lcbio_cache_local_name` to simplify the code and eliminate compiler warnings.
+
+* https://issues.couchbase.com/browse/CCBC-1451[CCBC-1451]:
+  Fixed strdup usage, in some cases the compiler might choose `strdup` to return `int` instead of `char *` which might lead to memory issues.
+
+* https://issues.couchbase.com/browse/CCBC-1448[CCBC-1448]:
+  Fixed cmake macro for examples.
+  The macro `ADD_EXAMPLE` now correctly updates header directories for generated target.
+
+* https://issues.couchbase.com/browse/CCBC-1445[CCBC-1445]:
+  Always invoke callbacks for pending HTTP operations.
+  When destroying `lcb_INSTANCE` make sure that all HTTP requests (views, query, search, analytics) will have their callbacks invoked.
+
+* https://issues.couchbase.com/browse/CCBC-1438[CCBC-1438]:
+  Fixed frame size for mutations with durability. Counter, Store and Subdoc mutations were sending incorrect frame size of durability encoding, which led to rejection of the command by the server.
+
+=== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1.sha256sum[libcouchbase-3.2.1.sha256sum]
+| Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1.tar.gz[libcouchbase-3.2.1.tar.gz]
+| Amazon Linux 2                | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_amzn2_x86_64.tar[libcouchbase-3.2.1_amzn2_x86_64.tar]
+| Red Hat Enterprise Linux 7            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_centos7_x86_64.tar[libcouchbase-3.2.1_centos7_x86_64.tar]
+| Red Hat Enterprise Linux 8            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_centos8_x86_64.tar[libcouchbase-3.2.1_centos8_x86_64.tar]
+| Ubuntu 16.04 (xenial)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_ubuntu1604_xenial_amd64.tar[libcouchbase-3.2.1_ubuntu1604_xenial_amd64.tar]
+| Ubuntu 18.04 (bionic)         | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_ubuntu1804_bionic_amd64.tar[libcouchbase-3.2.1_ubuntu1804_bionic_amd64.tar]
+| Ubuntu 20.04 (focal)          | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_ubuntu2004_focal_amd64.tar[libcouchbase-3.2.1_ubuntu2004_focal_amd64.tar]
+| Debian 9 (stretch)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_debian9_stretch_amd64.tar[libcouchbase-3.2.1_debian9_stretch_amd64.tar]
+| Debian 10 (buster)            | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_debian10_buster_amd64.tar[libcouchbase-3.2.1_debian10_buster_amd64.tar]
+| Debian 11 (bullseye)          | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_debian11_bullseye_amd64.tar[libcouchbase-3.2.1_debian11_bullseye_amd64.tar]
+| Windows (Visual Studio 2015, VC14)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_vc14_amd64.zip[libcouchbase-3.2.1_vc14_amd64.zip]
+| Windows (Visual Studio 2017, VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_vc15_amd64.zip[libcouchbase-3.2.1_vc15_amd64.zip]
+| Windows (Visual Studio 2019, VC16)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_vc16_amd64.zip[libcouchbase-3.2.1_vc16_amd64.zip]
+| Windows (Visual Studio 2015 TLS, VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_vc14_amd64_openssl.zip[libcouchbase-3.2.1_vc14_amd64_openssl.zip]
+| Windows (Visual Studio 2017 TLS, VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_vc15_amd64_openssl.zip[libcouchbase-3.2.1_vc15_amd64_openssl.zip]
+| Windows (Visual Studio 2019 TLS, VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_vc16_amd64_openssl.zip[libcouchbase-3.2.1_vc16_amd64_openssl.zip]
 |===
 
 == Version 3.2.0 (20 July 2021)
