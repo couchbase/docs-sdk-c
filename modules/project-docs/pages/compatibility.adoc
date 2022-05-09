@@ -83,7 +83,7 @@ Any MS-supported version compatible with Visual Studio 2015 (VC14) or 2017 (VC15
 
 The current and previous two releases of OS X.
 At time of writing (April 2022): 10.15 (_Catalina_), 11 (_Big Sur_), and 12 (_Monterey_).
-M1 ARM  architecture is fully supported in the 3.3 Python SDK.
+M1 ARM  architecture is fully supported in the 3.3 C SDK.
 ****
 
 Although installable or compilable on many other platforms, we cannot provide support for untested combinations.
