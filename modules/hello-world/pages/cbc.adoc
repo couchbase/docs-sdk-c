@@ -52,6 +52,6 @@ It creates a specified number of threads each looping and performing get and set
 
 == Couchbase Web Console Document & Query Access
 
-You can use the Couchbase Web Console to view, edit, and create JSON documents up to 256KB in size -- see the xref:7.0@server:manage:manage-ui/manage-ui.adoc[Couchbase Web Console] in the Server docs.
+You can use the Couchbase Web Console to view, edit, and create JSON documents up to 256KB in size -- see the xref:7.1@server:manage:manage-ui/manage-ui.adoc[Couchbase Web Console] in the Server docs.
 
-You can also use the xref:7.0@server:tools:query-workbench.adoc[Query Workbench] to issue N1QL queries using the web console.
+You can also use the xref:7.1@server:tools:query-workbench.adoc[Query Workbench] to issue N1QL queries using the web console.

@@ -37,7 +37,7 @@ lcb_createopts_credentials(create_options, argv[2], strlen(argv[2]), argv[3], st
 
 If you are connecting to Couchbase Cloud rather than a local Couchbase Server, see the <<cloud-connections, Cloud section>>, below.
 
-Couchbase uses xref:7.0@server:learn:security/roles.adoc[Role Based Access Control (RBAC)] to control access to resources.
+Couchbase uses xref:7.1@server:learn:security/roles.adoc[Role Based Access Control (RBAC)] to control access to resources.
 Here we will use the _Full Admin_ role created during installation of the Couchbase Data Platform.
 For production client code, you will want to use xref:howtos:managing-connections.adoc#rbac[more appropriate, restrictive settings], but here we want to get you up and running quickly.
 If you're developing client code on the same VM or machine as the Couchbase Server, your URI can be _localhost_.
@@ -73,7 +73,7 @@ rc = lcb_open(instance, name, strlen(name)),
 
 If you installed the travel sample data bucket, substitute _travel-sample_ for _bucket-name_.
 
-The 3.x SDKs support full integration with the xref:concept-docs:collections.adoc[Collections] feature in the latest release of Couchbase Server, 7.0. 
+The 3.x SDKs support full integration with the xref:concept-docs:collections.adoc[Collections] feature introduced in Couchbase Server 7.0. 
 This includes complete support of Collections, allowing Documents to be grouped by purpose or theme, according to a specified _Scope_. 
 Here we will use the `users` collection within the `tenant_agent_00` scope from `travel-sample` bucket as an example.
 
@@ -137,7 +137,7 @@ rc = lcb_wait(instance);
 ----
 
 This code shows how you would use a named collection and scope. 
-A named or default xref:7.0@server:learn:data/scopes-and-collections.adoc[collection] will provide the same functionality as bucket-level operations did in previous versions of Couchbase Server.
+A named or default xref:7.1@server:learn:data/scopes-and-collections.adoc[collection] will provide the same functionality as bucket-level operations did in previous versions of Couchbase Server.
 
 
 == Cloud Connections
