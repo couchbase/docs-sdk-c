@@ -27,7 +27,6 @@ To configure the repository:
 |===
 | Version | Architecture | Repository
 | Amazon Linux 2     | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/amzn2/x86_64
-| Enterprise Linux 8 | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/el8/x86_64
 | Enterprise Linux 7 | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/el7/x86_64
 |===
 
@@ -37,8 +36,8 @@ To configure the repository:
 ----
 [couchbase]
 enabled = 1
-name = libcouchbase package for centos8 x86_64
-baseurl = https://packages.couchbase.com/clients/c/repos/rpm/el8/x86_64
+name = libcouchbase package for centos7 x86_64
+baseurl = https://packages.couchbase.com/clients/c/repos/rpm/el7/x86_64
 gpgcheck = 1
 gpgkey = https://packages.couchbase.com/clients/c/repos/rpm/couchbase.key
 ----
@@ -127,37 +126,37 @@ You can install standalone packages by downloading a tarball containing the nece
 
 *Installing RPMs*
 
-The following commands show steps to execute on *CentOS 8* box, see table below for other RPM-based distributions.
+The following commands show steps to execute on *CentOS 7* box, see table below for other RPM-based distributions.
 
 ====
 [source,console]
 ----
-$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_centos8_x86_64.tar
+$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.3.0_centos7_x86_64.tar
 ----
 
 [source,console]
 ----
-$ tar xf libcouchbase-3.2.0_centos8_x86_64.tar
+$ tar xf libcouchbase-3.3.0_centos7_x86_64.tar
 ----
 
 [source,console]
 ----
-$ cd libcouchbase-3.2.0_centos8_x86_64
+$ cd libcouchbase-3.3.0_centos7_x86_64
 ----
 
 [source,console]
 ----
-$ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.2.0*.rpm libcouchbase-devel-*.rpm
+$ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.3.0*.rpm libcouchbase-devel-*.rpm
 ----
 
 [source,console]
 ----
 > ...
 > Installed:
->   libcouchbase-devel-3.2.0-1.el8.x86_64
->   libcouchbase3-3.2.0-1.el8.x86_64
->   libcouchbase3-libevent-3.2.0-1.el8.x86_64
->   libcouchbase3-tools-3.2.0-1.el8.x86_64
+>   libcouchbase-devel.x86_64 0:3.3.0-1.el7
+>   libcouchbase3.x86_64 0:3.3.0-1.el7
+>   libcouchbase3-libevent.x86_64 0:3.3.0-1.el7
+>   libcouchbase3-tools.x86_64 0:3.3.0-1.el7
 > ...
 >
 > Complete!
