@@ -21,6 +21,9 @@ Version 3.3.1 is the second release of the 3.3 series.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.1/index.html[API Reference]
 
+Note: CentOS 7 RPMs depend on OpenSSL 1.1, which is available in EPEL. Make sure that `epel-release` package installed
+in the system (`yum install epel-release`).
+
 Fixes:
 
 * https://issues.couchbase.com/browse/CCBC-1550[CCBC-1550]:
