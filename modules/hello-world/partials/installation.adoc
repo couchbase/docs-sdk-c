@@ -113,6 +113,14 @@ $ sudo yum check-update
 $ sudo yum search libcouchbase
 ----
 
+Starting from 3.3.1 libcouchbase RPMs for CentOS 7 require OpenSSL 1.1, because Couchbase Capella
+https://docs.couchbase.com/cloud/security/security.html#security-highlights[requires modern cyphers].
+
+[source,console]
+----
+sudo yum install -y epel-release
+----
+
 [source,console]
 ----
 $ sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
@@ -131,22 +139,22 @@ The following commands show steps to execute on *CentOS 7* box, see table below 
 ====
 [source,console]
 ----
-$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.3.0_centos7_x86_64.tar
+$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.3.1_centos7_x86_64.tar
 ----
 
 [source,console]
 ----
-$ tar xf libcouchbase-3.3.0_centos7_x86_64.tar
+$ tar xf libcouchbase-3.3.1_centos7_x86_64.tar
 ----
 
 [source,console]
 ----
-$ cd libcouchbase-3.3.0_centos7_x86_64
+$ cd libcouchbase-3.3.1_centos7_x86_64
 ----
 
 [source,console]
 ----
-$ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.3.0*.rpm libcouchbase-devel-*.rpm
+$ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.3.1*.rpm libcouchbase-devel-*.rpm
 ----
 
 [source,console]
@@ -170,22 +178,26 @@ The following commands show steps to execute on *Debian 10 (buster)* box, see ta
 ====
 [source,console]
 ----
-$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_debian10_buster_amd64.tar
+$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.3.1_debian10_buster_amd64.tar
 ----
 
 [source,console]
 ----
-$ tar xf libcouchbase-3.2.0_debian10_buster_amd64.tar
+$ tar xf libcouchbase-3.3.1_debian10_buster_amd64.tar
 ----
 
 [source,console]
 ----
-$ cd libcouchbase-3.2.0_debian10_buster_amd64
+$ cd libcouchbase-3.3.1_debian10_buster_amd64
 ----
 
 [source,console]
 ----
 $ sudo apt install libevent-core-2.1
+
+[source,console]
+----
+$ sudo dpkg -i libcouchbase3{-tools,-libevent,}_3.3.1*.deb libcouchbase-dev*.deb
 ----
 
 [source,console]
