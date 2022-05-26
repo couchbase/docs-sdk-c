@@ -29,7 +29,7 @@ Fixes:
   explicitly defined.
 
 * https://issues.couchbase.com/browse/CCBC-1546[CCBC-1546]:
-  cbc-pillowfight: add '--rand-space-per-thread' to allow threads to work from different rand numbers.
+  cbc-pillowfight: add `--rand-space-per-thread` to allow threads to work from different rand numbers.
 
 === Downloads
 
