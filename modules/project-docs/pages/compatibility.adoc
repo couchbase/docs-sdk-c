@@ -134,3 +134,5 @@ include::{cb_server_version}@sdk:shared:partial$network-requirements.adoc[]
 include::{cb_server_version}@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]
 
 include::{version-server}@sdk:shared:partial$api-version.adoc[tag=api-version]
+
+include::7.1@sdk:shared:partial$archive.adoc[tag=link]
