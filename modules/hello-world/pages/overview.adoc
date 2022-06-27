@@ -114,3 +114,5 @@ For community help, visit the https://forums.couchbase.com/c/c-sdk/7[Couchbase f
 ++++
 </div>
 ++++
+
+include::7.1@sdk:shared:partial$archive.adoc[tag=link]
