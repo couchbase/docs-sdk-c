@@ -138,3 +138,5 @@ include::6.5@sdk:shared:partial$migration.adoc[tag=lang]
  - where it is found, what exceptions it throws, etc.
 
 ////
+
+include::7.1@sdk:shared:partial$archive.adoc[tag=migration]
