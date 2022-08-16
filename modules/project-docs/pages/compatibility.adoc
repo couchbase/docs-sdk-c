@@ -58,6 +58,8 @@ See the notes there for Support details.
 At time of release, the Couchbase 3.2 C SDK is fully compatible with Couchbase Capella, our fully-hosted database-as-a-service.
 Note, LCB does not bundle the Capella Client Certificate, follow the xref:server:guides:connect.adoc#tls[instructions] to download and install the certificate from Capella, then guide to xref:howtos:managing-connections.adoc#ssl[secure connections with LCB].
 
+include::{cb_server_version}@sdk:shared:partial$capella.adoc[tag=cloud]
+
 
 == Platform Compatibility
 
