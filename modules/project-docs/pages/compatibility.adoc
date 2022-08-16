@@ -3,7 +3,7 @@
 Plus notes on Cloud, networks, and AWS Lambda.
 :navtitle: Compatibility
 :page-aliases: ROOT:overview,ROOT:compatibility-versions-features,compatibility-versions-features
-:toc-level: 2
+:page-toclevels: 2
 
 [abstract]
 {description}
