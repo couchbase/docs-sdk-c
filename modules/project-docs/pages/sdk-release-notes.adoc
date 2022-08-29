@@ -15,6 +15,63 @@ include::hello-world:partial$installation.adoc[]
 
 
 [#latest-release]
+== Version 3.3.2 (25 May 2022)
+
+Version 3.3.2 is the third release of the 3.3 series.
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.2/index.html[API Reference]
+
+Fixes:
+
+* https://issues.couchbase.com/browse/CCBC-1559[CCBC-1559]:
+  `cbc-n1qlback`: give time to IO loop in case of failure.
+  .
+  In schenario where all query nodes suddenly failed over and/or removed from the cluster, all requests in cbc-n1qlback
+  will start failing.  Because the libcouchbase knows that the latest config does not have any query nodes, it rejects all
+  queries immediately. The single-threaded nature of libcouchbase does not allow the IO loop to run in background, and the
+  code in the tool does not run `lcb_wait` in case of failure.
+  .
+  As a fix, we run `lcb_tick_nowait` in case of failure, which is enough for libcouchbase to give IO loop a chance to
+  check for any pending events and invoke corresponding callbacks.
+
+Improvements:
+
+* https://issues.couchbase.com/browse/CCBC-1552[CCBC-1552]:
+  Allow building with external jsoncpp
+
+* https://issues.couchbase.com/browse/CCBC-1557[CCBC-1557]:
+  Allow caching cluster-level configurations.
+  .
+  The library will cache cluster-level configurations only if the `config_cache=` connection string option is set to
+  directory (ends with '/' symbol), otherwise it will cache only buckets configurations (note that in this case the
+  application should use unique cache name for each bucket, otherwise the library will ignore cache if the bucket name
+  will not match).
+
+
+=== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2.sha256sum[libcouchbase-3.3.2.sha256sum]
+| Source Archive                | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2.tar.gz[libcouchbase-3.3.2.tar.gz]
+| Amazon Linux 2                | aarch64 | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_amzn2_aarch64.tar[libcouchbase-3.3.2_amzn2_aarch64.tar]
+| Amazon Linux 2                | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_amzn2_x86_64.tar[libcouchbase-3.3.2_amzn2_x86_64.tar]
+| Enterprise Linux 7            | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_centos7_x86_64.tar[libcouchbase-3.3.2_centos7_x86_64.tar]
+| Ubuntu 16.04 (xenial)         | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_ubuntu1604_xenial_amd64.tar[libcouchbase-3.3.2_ubuntu1604_xenial_amd64.tar]
+| Ubuntu 18.04 (bionic)         | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_ubuntu1804_bionic_amd64.tar[libcouchbase-3.3.2_ubuntu1804_bionic_amd64.tar]
+| Ubuntu 20.04 (focal)          | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_ubuntu2004_focal_amd64.tar[libcouchbase-3.3.2_ubuntu2004_focal_amd64.tar]
+| Debian 9 (stretch)            | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_debian9_stretch_amd64.tar[libcouchbase-3.3.2_debian9_stretch_amd64.tar]
+| Debian 10 (buster)            | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_debian10_buster_amd64.tar[libcouchbase-3.3.2_debian10_buster_amd64.tar]
+| Debian 11 (bullseye)          | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_debian11_bullseye_amd64.tar[libcouchbase-3.3.2_debian11_bullseye_amd64.tar]
+| Visual Studio 2015 (VC14)     | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_vc14_amd64.zip[libcouchbase-3.3.2_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_vc15_amd64.zip[libcouchbase-3.3.2_vc15_amd64.zip]
+| Visual Studio 2019 (VC16)     | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_vc16_amd64.zip[libcouchbase-3.3.2_vc16_amd64.zip]
+| Visual Studio 2015 TLS (VC14) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_vc14_amd64_openssl.zip[libcouchbase-3.3.2_vc14_amd64_openssl.zip]
+| Visual Studio 2017 TLS (VC15) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_vc15_amd64_openssl.zip[libcouchbase-3.3.2_vc15_amd64_openssl.zip]
+| Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_vc16_amd64_openssl.zip[libcouchbase-3.3.2_vc16_amd64_openssl.zip]
+|===
+
 == Version 3.3.1 (25 May 2022)
 
 Version 3.3.1 is the second release of the 3.3 series.
