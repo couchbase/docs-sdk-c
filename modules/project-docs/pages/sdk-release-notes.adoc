@@ -21,7 +21,7 @@ Version 3.3.2 is the third release of the 3.3 series.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.2/index.html[API Reference]
 
-Fixes:
+=== Bug Fixes
 
 * https://issues.couchbase.com/browse/CCBC-1559[CCBC-1559]: `cbc-n1qlback`: give time to IO loop in case of failure.
 
@@ -31,8 +31,7 @@ The single-threaded nature of libcouchbase does not allow the IO loop to run in 
   
 As a fix, we run `lcb_tick_nowait` in case of failure, which is enough for libcouchbase to give IO loop a chance to check for any pending events and invoke corresponding callbacks.
 
-
-Improvements:
+=== Improvements
 
 * https://issues.couchbase.com/browse/CCBC-1552[CCBC-1552]:
 Libcouchbase may now be built with an external `jsoncpp` library.
@@ -68,6 +67,7 @@ otherwise the library will ignore cache if the bucket name will not match).
 | Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_vc16_amd64_openssl.zip[libcouchbase-3.3.2_vc16_amd64_openssl.zip]
 |===
 
+
 == Version 3.3.1 (25 May 2022)
 
 Version 3.3.1 is the second release of the 3.3 series.
@@ -77,7 +77,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.1/index.html[API Refer
 NOTE: CentOS 7 RPMs depend on OpenSSL 1.1, which is available in EPEL. 
 Make sure that the `epel-release` package is installed in the system (`yum install epel-release`).
 
-Fixes:
+=== Bug Fixes
 
 * https://issues.couchbase.com/browse/CCBC-1550[CCBC-1550]:
   Fixed RPM packages for CentOS 7, now they will require OpenSSL 1.1 during build. Also build script will not
@@ -111,18 +111,19 @@ Fixes:
 | Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.1_vc16_amd64_openssl.zip[libcouchbase-3.3.1_vc16_amd64_openssl.zip]
 |===
 
+
 == Version 3.3.0 (9 May 2022)
 
 Version 3.3.0 is the first release of the 3.3 series.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.0/index.html[API Reference]
 
-Features:
+=== New Features
 
 * https://issues.couchbase.com/browse/CCBC-1540[CCBC-1540]:
   The SDK now bundles the Capella CA certificate automatically.
 
-Fixes:
+=== Bug Fixes
 
 * https://issues.couchbase.com/browse/CCBC-1538[CCBC-1538]:
   The SDK now uses a 64-bit integer to store time in the IOCP plugin.
@@ -158,6 +159,7 @@ Fixes:
 | Visual Studio 2017 TLS (VC15) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.0_vc15_amd64_openssl.zip[libcouchbase-3.3.0_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.0_vc16_amd64_openssl.zip[libcouchbase-3.3.0_vc16_amd64_openssl.zip]
 |===
+
 
 == Version 3.2.4 (26 November 2021)
 
