@@ -1,5 +1,5 @@
 = Couchbase C Release Notes and Archives
-:description: Release notes, installation instructions, and download archive for the Couchbase C Client, libcouchbase.
+:description: Release notes, installation instructions, and download archive for the Couchbase C Client, libcouchbase (LCB).
 :navtitle: Release Notes
 :page-topic-type: project-doc
 :page-aliases: ROOT:sdk-release-notes,ROOT:relnotes-c-sdk,ROOT:release-notes,ROOT:download-install,ROOT:download-list
@@ -15,7 +15,7 @@ include::hello-world:partial$installation.adoc[]
 
 
 [#latest-release]
-== Version 3.3.2 (25 May 2022)
+== Version 3.3.2 (25 August 2022)
 
 Version 3.3.2 is the third release of the 3.3 series.
 
@@ -25,27 +25,24 @@ Fixes:
 
 * https://issues.couchbase.com/browse/CCBC-1559[CCBC-1559]:
   `cbc-n1qlback`: give time to IO loop in case of failure.
-  .
-  In schenario where all query nodes suddenly failed over and/or removed from the cluster, all requests in cbc-n1qlback
-  will start failing.  Because the libcouchbase knows that the latest config does not have any query nodes, it rejects all
-  queries immediately. The single-threaded nature of libcouchbase does not allow the IO loop to run in background, and the
-  code in the tool does not run `lcb_wait` in case of failure.
-  .
-  As a fix, we run `lcb_tick_nowait` in case of failure, which is enough for libcouchbase to give IO loop a chance to
-  check for any pending events and invoke corresponding callbacks.
+  +
+  In schenarios where all query nodes suddenly fail over and/or are removed from the cluster, all requests in `cbc-n1qlback`   will start failing.  
+  Because libcouchbase knows that the latest config does not have any query nodes, it rejects all queries immediately. 
+  The single-threaded nature of libcouchbase does not allow the IO loop to run in background, and the code in the tool does not run `lcb_wait` in case of failure.
+  +
+  As a fix, we run `lcb_tick_nowait` in case of failure, which is enough for libcouchbase to give IO loop a chance to check for any pending events and invoke corresponding callbacks.
 
 Improvements:
 
 * https://issues.couchbase.com/browse/CCBC-1552[CCBC-1552]:
-  Allow building with external jsoncpp
+  Libcouchbase may now be built with an external `jsoncpp` library.
 
 * https://issues.couchbase.com/browse/CCBC-1557[CCBC-1557]:
   Allow caching cluster-level configurations.
-  .
-  The library will cache cluster-level configurations only if the `config_cache=` connection string option is set to
-  directory (ends with '/' symbol), otherwise it will cache only buckets configurations (note that in this case the
-  application should use unique cache name for each bucket, otherwise the library will ignore cache if the bucket name
-  will not match).
+  +
+  The library will cache cluster-level configurations only if the `config_cache=` connection string option is set to directory (ends with '/' symbol),
+  otherwise it will cache only buckets configurations (note that in this case the application should use unique cache name for each bucket, 
+  otherwise the library will ignore cache if the bucket name will not match).
 
 
 === Downloads
