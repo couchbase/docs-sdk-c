@@ -93,7 +93,7 @@ Although installable or compilable on many other platforms, we cannot provide su
 
 === ARM Processor Support
 
-Python 4.0 SDK supports AWS Amazon Graviton2 and Apple M1 ARM processors.
+Libcouchbase (C SDK) 3.3 supports AWS Amazon Graviton2 and Apple M1 ARM processors.
 
 
 == Couchbase New Feature Availability Matrix
