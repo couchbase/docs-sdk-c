@@ -132,10 +132,30 @@ Libcouchbase (C SDK) 3.3 supports AWS Amazon Graviton2 and Apple M1 ARM processo
 2+| Since SDK 3.0.2
 |===
 
-include::{cb_server_version}@sdk:shared:partial$network-requirements.adoc[]
+// TODO: Uncomment the partial below once C SDK supports DNS SRV refresh.
+// At the time of writing C SDK 3.3.3 does not support DNS SRV refresh, however, it is expected to in future (via Couchbase++).
+//include::{version-common}@sdk:shared:partial$network-requirements.adoc[]
 
-include::{cb_server_version}@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]
+== Network Requirements
 
-include::{version-server}@sdk:shared:partial$api-version.adoc[tag=api-version]
+Couchbase SDKs are developed to be run in an environment with local area network (LAN) like throughput and latencies.
+While there is no technical issue that prevents the use across a wide area network (WAN), SDKs have certain thresholds around timeouts and behaviors to recover that will not be the same once the higher latency and possible bandwidth constraints and congestion of a WAN is introduced.
+Couchbase tests for correctness under LAN like conditions.
+For this reason, only LAN-like network environments are officially supported.
 
-include::7.1@sdk:shared:partial$archive.adoc[tag=link]
+Couchbase does document, for purposes of convenience when developing and performing basic operational work, what may need to be tuned when network throughputs and latencies are higher.
+If you encounter issues, even with these tune-ables, you should attempt the same workload from a supported, LAN-like environment.
+
+=== Serverless Environments
+
+SDK API 3.4 introduces better resilience in handling errors that may occur when running your application in serverless environments, in particular when processes are frozen or thawed, and a rebalance is required.
+This means official support for AWS Lambda, Azure Functions, and GCP Functions.
+
+NOTE: When *DNS SRV* records are used to connect to the SDK it is possible for the underlying addresses to change (i.e. the cluster could move).
+The SDK will not be able to detect this, so it is recommended that you shutdown and retry any Lambda operations that fail.
+
+include::{version-common}@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]
+
+include::{version-common}@sdk:shared:partial$api-version.adoc[tag=api-version]
+
+include::{version-common}@sdk:shared:partial$archive.adoc[tag=link]
