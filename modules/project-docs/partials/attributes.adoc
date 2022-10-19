@@ -1,0 +1,2 @@
+:version-server: 7.1
+:version-common: 7.1.2
