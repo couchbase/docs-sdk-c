@@ -63,6 +63,7 @@ Repositories are available for the following distributions:
 | Ubuntu 20.04 ("focal")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu2004 focal focal/main``
 | Debian 9 ("stretch")    | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian9 stretch stretch/main``
 | Debian 10 ("buster")    | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian10 buster buster/main``
+| Debian 11 ("bullseye")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian11 bullseye bullseye/main``
 |===
 
 Note that only Ubuntu LTS (long term support) releases are supported.
