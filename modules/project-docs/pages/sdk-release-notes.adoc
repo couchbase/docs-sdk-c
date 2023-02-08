@@ -19,7 +19,10 @@ include::hello-world:partial$installation.adoc[]
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.4/index.html[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-1583[CCBC-1583]: disable collections support if KV does not ack it.
+* https://issues.couchbase.com/browse/CCBC-1583[CCBC-1583]: 
+Collections support is disabled in 3.x SDKs if the configuration does not have collections capabilities.
+Now, it is also disabled when a KV node does not negotiate collection support in HELLO flags.
+This should help with clusters in mixed mode (with both 6.x and 7.x Server versions) during an upgrade.
 
 === Downloads
 
