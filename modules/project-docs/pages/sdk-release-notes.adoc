@@ -3,4 +3,4 @@
 :page-topic-type: project-doc
 :page-aliases: ROOT:sdk-release-notes,ROOT:relnotes-c-sdk,ROOT:release-notes,ROOT:download-install,ROOT:download-list
 
-include::3.2@c-sdk:project-docs:page$sdk-release-notes.adoc[tag=all]
+include::3.3@c-sdk:project-docs:page$sdk-release-notes.adoc[tag=all]
