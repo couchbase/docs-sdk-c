@@ -14,10 +14,10 @@ Individual behavior changes across services are explained here.
 
 
 
-include::6.5@sdk:shared:partial$migration.adoc[tag=intro]
+include::7.1@sdk:shared:partial$migration.adoc[tag=intro]
 
 
-include::6.5@sdk:shared:partial$migration.adoc[tag=terms]
+include::7.1@sdk:shared:partial$migration.adoc[tag=terms]
 
 ////
 As an example here is a KeyValue document fetch:
@@ -37,10 +37,10 @@ QueryResult queryResult = cluster.query("select 1=1", queryOptions().timeout(Dur
 ----
 ////
 
-include::6.5@sdk:shared:partial$migration.adoc[tag=terms2]
+include::7.1@sdk:shared:partial$migration.adoc[tag=terms2]
 
 
-include::6.5@sdk:shared:partial$migration.adoc[tag=new]
+include::7.1@sdk:shared:partial$migration.adoc[tag=new]
 
 // temp link below until engg content available.
 == Next Steps
@@ -61,7 +61,7 @@ Information on the new API is to be found in the {lcb_api_link}/index.html[libco
 
 
 ////
-include::6.5@sdk:shared:partial$migration.adoc[tag=lang]
+include::7.1@sdk:shared:partial$migration.adoc[tag=lang]
 
 // CCBC-1103 & CCBC-1115
 
