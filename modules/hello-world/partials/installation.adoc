@@ -30,6 +30,7 @@ To configure the repository:
 | Amazon Linux 2     | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/amzn2/x86_64
 | Enterprise Linux 7 | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/el7/x86_64
 | Enterprise Linux 8 | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/el8/x86_64
+| Enterprise Linux 9 | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/el9/x86_64
 |===
 
 . Create a `couchbase.repo` file in your `/etc/yum.repos.d` directory.  It should look similar to the following:
@@ -62,6 +63,7 @@ Repositories are available for the following distributions:
 | Ubuntu 16.04 ("xenial") | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu1604 xenial xenial/main``
 | Ubuntu 18.04 ("bionic") | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu1804 bionic bionic/main``
 | Ubuntu 20.04 ("focal")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu2004 focal focal/main``
+| Ubuntu 22.04 ("jammy")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu2204 jammy jammy/main``
 | Debian 9 ("stretch")    | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian9 stretch stretch/main``
 | Debian 10 ("buster")    | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian10 buster buster/main``
 | Debian 11 ("bullseye")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian11 bullseye bullseye/main``
