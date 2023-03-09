@@ -22,9 +22,10 @@ include::hello-world:partial$installation.adoc[]
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.5/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1545[CCBC-1545]:
-Handle `LCB_ERR_REQUEST_CANCELED` in ping callback. If the instance is being destroyed, while the operations in flight,
-all these operations will be cancelled with error code `LCB_ERR_REQUEST_CANCELED`. Ping implementation should handle
-this error code and don't assume any of the objects (except response) be in valid state.
+Handle `LCB_ERR_REQUEST_CANCELED` in ping callback. 
+If the instance is being destroyed, while the operations in flight,
+all these operations will be cancelled with error code `LCB_ERR_REQUEST_CANCELED`. 
+Ping implementation should handle this error code and not assume any of the objects (except response) to be in a valid state.
 
 * https://issues.couchbase.com/browse/CCBC-1586[CCBC-1586]:
 Force SASL PLAIN for TLS connections.
