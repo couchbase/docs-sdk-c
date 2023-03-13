@@ -8,7 +8,7 @@ query_callback(__unused lcb_INSTANCE *instance, __unused int cbtype, const lcb_R
 {
     // This might also fail if the index is already created!
     if (resp->rc != LCB_SUCCESS) {
-        fprintf(stderr, "N1QL query failed (%s)\n", lcb_strerror(NULL, resp->rc));
+        fprintf(stderr, "Query failed (%s)\n", lcb_strerror(NULL, resp->rc));
     }
     printf("Result text: %.*s\n", (int) resp->nrow, resp->row);
 }
@@ -62,7 +62,7 @@ main(int, char **)
     lcb_n1p_mkcmd(params, &cmd);
     rc = lcb_n1ql_query(instance, nullptr, &cmd); // Check RC
     if (rc != LCB_SUCCESS) {
-        die("Couldn't schedule N1QL query command", rc);
+        die("Couldn't schedule query command", rc);
     }
 
     lcb_wait(instance, LCB_WAIT_DEFAULT);

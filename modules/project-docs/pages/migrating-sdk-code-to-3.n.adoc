@@ -28,7 +28,7 @@ As an example here is a KeyValue document fetch:
 GetResult getResult = collection.get("key", getOptions().timeout(Duration.ofSeconds(3));
 ----
 
-Compare this to a N1QL query:
+Compare this to a {sqlpp} query:
 
 // change to $Your_language
 [source,java]

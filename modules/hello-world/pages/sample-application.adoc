@@ -43,7 +43,7 @@ route  /api/airports  tcblcb_api_airports
 
 is defined in https://github.com/couchbaselabs/try-cb-lcb/blob/master/src/api-airports.c#L74[api-airports.c]
 
-Other files contain the functions for handling users, registration, and N1QL queries.
+Other files contain the functions for handling users, registration, and {sqlpp} (formerly N1QL) queries.
 
 
 include::{version-server}@sdk:shared:partial$sample-application.adoc[tag=data-model]
