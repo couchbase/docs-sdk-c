@@ -1,6 +1,5 @@
 .Getting Started
 * xref:hello-world:start-using-sdk.adoc[Start Using the SDK]
-//* xref:hello-world:start-using-sdk.adoc[Start Using the SDK]
 * xref:hello-world:sample-application.adoc[Sample Application]
 * xref:hello-world:cbc.adoc[Browser and CLI Access]
 
@@ -9,8 +8,8 @@
 // ** xref:howtos:caching-example.adoc[Caching Example]
 * xref:howtos:subdocument-operations.adoc[Sub-Document Operations]
 * xref:howtos:n1ql-queries-with-sdk.adoc[Query]
-* xref:howtos:analytics-using-sdk.adoc[Analytics from the SDK]
-* xref:howtos:full-text-searching-with-sdk.adoc[Full Text Search from the SDK]
+* xref:howtos:analytics-using-sdk.adoc[Analytics]
+* xref:howtos:full-text-searching-with-sdk.adoc[Search]
 * xref:howtos:view-queries-with-sdk.adoc[MapReduce Views]
 
 .Advanced Data Operations
@@ -73,6 +72,8 @@
 * xref:project-docs:compatibility.adoc[Compatibility]
 // *xref:project-docs:integrations.adoc[Integrations]]
 // ** xref:project-docs:migrating-sdk-code-to-3.n.adoc[Migrating to SDK 3 API]
+/ Once migration page is ready, move collections page to this section of nav:
+// ** xref:howtos:working-with-collections.adoc[Working with Collections]
 * https://docs-archive.couchbase.com/home/index.html[Older Versions Archive]
 * xref:project-docs:sdk-licenses.adoc[Licenses]
 * xref:project-docs:get-involved.adoc[Get involved]
