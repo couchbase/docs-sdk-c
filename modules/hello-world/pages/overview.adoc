@@ -1,6 +1,7 @@
 = Couchbase C SDK {lcb_current_version}
 :page-type: landing-page
 :page-layout: landing-page-top-level-sdk
+:page-meta-zd-site-verification: l6235mojs6qcq5ox3z6gfa
 :page-role: tiles
 :!sectids:
 // :page-aliases: ROOT:c-sdk.sdoc
