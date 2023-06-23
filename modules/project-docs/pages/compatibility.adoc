@@ -70,9 +70,9 @@ Libcouchbase (the C SDK) is tested and supported on the following platforms:
 === GNU/Linux
 
 * Amazon Linux 2.
-* Red Hat Enterprise Linux 7 & 8;
+* Red Hat Enterprise Linux 7, 8, & 9 (from LCB 3.3.5);
 * CentOS 7 & 8.
-* Ubuntu (LTS) 16.04 (_Xenial_), 18.04 (_Bionic_), 20.04 (_Focal_), & 22.04 (_Jammy_).
+* Ubuntu (LTS) 16.04 (_Xenial_), 18.04 (_Bionic_), 20.04 (_Focal_), & 22.04 (_Jammy_ -- from LCB 3.3.3).
 * Debian 9 (_Stretch_), 10 (_Buster_), & 11 (_Bullseye_).
 * Alpine Linux (Since LCB 3.2.5)
 
@@ -103,7 +103,7 @@ Libcouchbase (C SDK) 3.3 supports AWS Amazon Graviton2 and Apple M1 ARM processo
 [.table-merge-cells]
 [cols="7,5,6,5"]
 |===
-| | Server 6.0 | Server 6.5 & 6.6 | Server 7.0 & 7.1
+| | Server 6.0 | Server 6.5 & 6.6 | Server 7.0, 7.1, & 7.2
 
 | Enhanced Durability
 3+| All SDK versions
@@ -137,6 +137,6 @@ include::{cb_server_version}@sdk:shared:partial$network-requirements.adoc[]
 
 include::{cb_server_version}@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]
 
-include::{version-server}@sdk:shared:partial$api-version.adoc[tag=api-version]
+include::7.1.2@sdk:shared:partial$api-version.adoc[tag=api-version]
 
-include::7.1@sdk:shared:partial$archive.adoc[tag=link]
+include::{version-server}@sdk:shared:partial$archive.adoc[tag=link]
