@@ -37,16 +37,16 @@ Links to online versions in the latest API docs are provided below.
 They are fairly stable utilities, and do not tend to change across LCB versions,
 however, you can see all recent updates https://github.com/couchbase/libcouchbase/tree/master/doc/man[on their GitHub page].
 
-* {lcb_api_link}/md_doc_cbc.html[cbc]:
+* {lcb_api_link}/md_doc_2cbc.html[cbc]:
 `cbc` is a utility for communicating with a Couchbase cluster.
-* {lcb_api_link}/md_doc_cbcrc.html[cbcrc]:
+* {lcb_api_link}/md_doc_2cbcrc.html[cbcrc]:
 `cbcrc` is an optional configuration file used to provide default values for the `cbc` and `cbc-pillowfight` utilities.
-* {lcb_api_link}/md_doc_cbc-subdoc.html[cbc-subdoc]:
+* {lcb_api_link}/md_doc_2cbc-subdoc.html[cbc-subdoc]:
 `cbc-subdoc` runs an interactive shell with commands from subdocument API.
-* {lcb_api_link}/md_doc_cbc-pillowfight.html[cbc-pillowfight]:
+* {lcb_api_link}/md_doc_2cbc-pillowfight.html[cbc-pillowfight]:
 `cbc-pillowfight` is a stress test for Couchbase Client and Cluster.
 It creates a specified number of threads each looping and performing get and set operations within the cluster.
-* {lcb_api_link}/md_doc_cbc-n1qlback.html[cbc-n1qlback]:
+* {lcb_api_link}/md_doc_cbc-2n1qlback.html[cbc-n1qlback]:
 `cbc-n1qlback` creates a specified number of threads each executing a set of user defined queries.
 
 
