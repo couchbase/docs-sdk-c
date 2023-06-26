@@ -7,7 +7,7 @@
 [abstract]
 {description}
 
-Refer to the {lcb_api_link}/group\__lcb-cntl.html[API doc on `lcb_cntl()`]
+Refer to the {lcb_api_link}/group__lcb-cntl.html[API doc on `lcb_cntl()`]
 and the {lcb_api_link}/group__lcb-cntl-settings.html[settings list].
 // == Timeout Options
 
