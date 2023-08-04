@@ -16,7 +16,6 @@
 * xref:howtos:concurrent-async-apis.adoc[Async & Batching APIs]
 * xref:howtos:concurrent-document-mutations.adoc[Concurrent Document Mutations]
 * xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc[{cpp} Distributed ACID Transactions]
-* xref:howtos:working-with-collections.adoc[Working with Collections]
 //* xref:howtos:durability.adoc[Durability]
 
 .Managing Couchbase
@@ -71,9 +70,8 @@
 * xref:project-docs:sdk-release-notes.adoc[Release Notes]
 * xref:project-docs:compatibility.adoc[Compatibility]
 // *xref:project-docs:integrations.adoc[Integrations]]
-// ** xref:project-docs:migrating-sdk-code-to-3.n.adoc[Migrating to SDK 3 API]
-/ Once migration page is ready, move collections page to this section of nav:
-// ** xref:howtos:working-with-collections.adoc[Working with Collections]
+** xref:project-docs:migrating-sdk-code-to-3.n.adoc[Migrating to SDK 3 API]
+*** xref:howtos:working-with-collections.adoc[Working with Collections]
 * https://docs-archive.couchbase.com/home/index.html[Older Versions Archive]
 * xref:project-docs:sdk-licenses.adoc[Licenses]
 * xref:project-docs:get-involved.adoc[Get involved]
