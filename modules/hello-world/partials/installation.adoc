@@ -241,7 +241,7 @@ To install development files and command line tools on Mac OS, follow the instru
 [#install-windows]
 == Windows Installation
 
-Windows binary packages can be found as downloads for each version listed below.
+Windows binary packages can be found as downloads for each version listed on the xref:../../project-docs/pages/sdk-release-notes.adoc[Release Notes and Archives page].
 Included are the header files, release and debug variants of the DLLs and import libraries, and release and debug variants of the command line tools.
 Note that the C SDK does not have any preferred installation path, and it is up to you to determine where to place ``libcouchbase.dll``.
 
