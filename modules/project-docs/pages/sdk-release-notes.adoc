@@ -21,17 +21,15 @@ include::hello-world:partial$installation.adoc[]
 == Version 3.3.8 (16 August 2023)
 
 * https://issues.couchbase.com/browse/CCBC-1584[CCBC-1584]:
-Update documentation on how to use collections with pillowfight
+Updated documentation on how to use collections with pillowfight.
 
 * https://issues.couchbase.com/browse/CCBC-1607[CCBC-1607]:
-Fix collection id encoding in mixed cluster
+Fixed collection id encoding in mixed cluster, so that SDK will now work in a mixed environment of collection aware and non-collection aware Server nodes (e.g. 6.6 and 7.0 during an upgrade).
 
 * https://issues.couchbase.com/browse/CCBC-1602[CCBC-1602]:
-Implement Faster Failover.
-.
-This implements the set of protocol optimizations that help the SDK to save
-network traffic when tracking cluster topology. The feature will be only
-activated if the server supports it (7.6+).
+Implemented Faster Failover.
+This implements the set of protocol optimizations that help the SDK to save network traffic when tracking cluster topology. 
+The feature will be only activated if the server supports it -- which is planned for a future Server release.
 
 * https://issues.couchbase.com/browse/CCBC-1603[CCBC-1603]:
 Do not log if logger is not accessible in `iotssl_log_errors`.
@@ -65,6 +63,7 @@ Account NUL-byte when format IPv6 address (fixes potential invalid memory access
 | Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.8_vc15_amd64_openssl.zip[libcouchbase-3.3.8_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.8_vc16_amd64_openssl.zip[libcouchbase-3.3.8_vc16_amd64_openssl.zip]
 |===
+
 
 == Version 3.3.7 (11 May 2023)
 
@@ -104,6 +103,7 @@ Update threading example, reduce global state.
 | Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.7_vc15_amd64_openssl.zip[libcouchbase-3.3.7_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.7_vc16_amd64_openssl.zip[libcouchbase-3.3.7_vc16_amd64_openssl.zip]
 |===
+
 
 == Version 3.3.6 (26 April 2023)
 
