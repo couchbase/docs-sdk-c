@@ -140,7 +140,7 @@ You can install standalone packages by downloading a tarball containing the nece
 
 *Installing RPMs*
 
-The following commands show steps to execute on *CentOS 7* box, see table below for other RPM-based distributions.
+The following commands show steps to execute on *CentOS 7* box, for other RPM-based distributions -- such as Amazon Linux 2 -- the steps are the same or similar.
 
 ====
 [source,console]
