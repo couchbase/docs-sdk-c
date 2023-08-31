@@ -47,7 +47,7 @@ Account NUL-byte when format IPv6 address (fixes potential invalid memory access
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.8.sha256sum[libcouchbase-3.3.8.sha256sum]
 | Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.8.tar.gz[libcouchbase-3.3.8.tar.gz]
@@ -70,7 +70,7 @@ Account NUL-byte when format IPv6 address (fixes potential invalid memory access
 | Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.8_vc14_amd64_openssl.zip[libcouchbase-3.3.8_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.8_vc15_amd64_openssl.zip[libcouchbase-3.3.8_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.8_vc16_amd64_openssl.zip[libcouchbase-3.3.8_vc16_amd64_openssl.zip]
-|====
+|===
 
 
 === Version 3.3.7 (11 May 2023)
@@ -88,7 +88,7 @@ Update threading example, reduce global state.
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.7.sha256sum[libcouchbase-3.3.7.sha256sum]
 | Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.7.tar.gz[libcouchbase-3.3.7.tar.gz]
@@ -110,7 +110,7 @@ Update threading example, reduce global state.
 | Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.7_vc14_amd64_openssl.zip[libcouchbase-3.3.7_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.7_vc15_amd64_openssl.zip[libcouchbase-3.3.7_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.7_vc16_amd64_openssl.zip[libcouchbase-3.3.7_vc16_amd64_openssl.zip]
-|====
+|===
 
 
 === Version 3.3.6 (26 April 2023)
@@ -144,7 +144,7 @@ Fix various compiler warnings.
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.6.sha256sum[libcouchbase-3.3.6.sha256sum]
 | Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.6.tar.gz[libcouchbase-3.3.6.tar.gz]
@@ -166,7 +166,7 @@ Fix various compiler warnings.
 | Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.6_vc14_amd64_openssl.zip[libcouchbase-3.3.6_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.6_vc15_amd64_openssl.zip[libcouchbase-3.3.6_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.6_vc16_amd64_openssl.zip[libcouchbase-3.3.6_vc16_amd64_openssl.zip]
-|====
+|===
 
 
 === Version 3.3.5 (9 March 2023)
@@ -194,7 +194,7 @@ Allow to disable uninstall target.
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.5.sha256sum[libcouchbase-3.3.5.sha256sum]
 | Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.5.tar.gz[libcouchbase-3.3.5.tar.gz]
@@ -216,7 +216,7 @@ Allow to disable uninstall target.
 | Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.5_vc14_amd64_openssl.zip[libcouchbase-3.3.5_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.5_vc15_amd64_openssl.zip[libcouchbase-3.3.5_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.5_vc16_amd64_openssl.zip[libcouchbase-3.3.5_vc16_amd64_openssl.zip]
-|====
+|===
 
 
 === Version 3.3.4 (8 February 2023)
@@ -231,7 +231,7 @@ This should help with clusters in mixed mode (with both 6.x and 7.x Server versi
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.4.sha256sum[libcouchbase-3.3.4.sha256sum]
 | Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.4.tar.gz[libcouchbase-3.3.4.tar.gz]
@@ -251,7 +251,7 @@ This should help with clusters in mixed mode (with both 6.x and 7.x Server versi
 | Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.4_vc14_amd64_openssl.zip[libcouchbase-3.3.4_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.4_vc15_amd64_openssl.zip[libcouchbase-3.3.4_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.4_vc16_amd64_openssl.zip[libcouchbase-3.3.4_vc16_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.3.3 (9 September 2022)
 
@@ -274,7 +274,7 @@ This patch ensures that once socket context has been closed, its pointer in SSL 
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.3.sha256sum[libcouchbase-3.3.3.sha256sum]
 | Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.3.tar.gz[libcouchbase-3.3.3.tar.gz]
@@ -294,7 +294,7 @@ This patch ensures that once socket context has been closed, its pointer in SSL 
 | Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.3_vc14_amd64_openssl.zip[libcouchbase-3.3.3_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.3_vc15_amd64_openssl.zip[libcouchbase-3.3.3_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.3_vc16_amd64_openssl.zip[libcouchbase-3.3.3_vc16_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.3.2 (25 August 2022)
 
@@ -327,7 +327,7 @@ otherwise the library will ignore cache if the bucket name will not match).
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2.sha256sum[libcouchbase-3.3.2.sha256sum]
 | Source Archive                | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2.tar.gz[libcouchbase-3.3.2.tar.gz]
@@ -346,7 +346,7 @@ otherwise the library will ignore cache if the bucket name will not match).
 | Visual Studio 2015 TLS (VC14) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_vc14_amd64_openssl.zip[libcouchbase-3.3.2_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_vc15_amd64_openssl.zip[libcouchbase-3.3.2_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.2_vc16_amd64_openssl.zip[libcouchbase-3.3.2_vc16_amd64_openssl.zip]
-|====
+|===
 
 
 === Version 3.3.1 (25 May 2022)
@@ -371,7 +371,7 @@ Make sure that the `epel-release` package is installed in the system (`yum insta
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.3.1.sha256sum[libcouchbase-3.3.1.sha256sum]
 | Source Archive                | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.3.1.tar.gz[libcouchbase-3.3.1.tar.gz]
@@ -390,7 +390,7 @@ Make sure that the `epel-release` package is installed in the system (`yum insta
 | Visual Studio 2015 TLS (VC14) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.1_vc14_amd64_openssl.zip[libcouchbase-3.3.1_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.1_vc15_amd64_openssl.zip[libcouchbase-3.3.1_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.1_vc16_amd64_openssl.zip[libcouchbase-3.3.1_vc16_amd64_openssl.zip]
-|====
+|===
 
 
 === Version 3.3.0 (9 May 2022)
@@ -420,7 +420,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.0/index.html[API Refer
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.3.0.sha256sum[libcouchbase-3.3.0.sha256sum]
 | Source Archive                | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.3.0.tar.gz[libcouchbase-3.3.0.tar.gz]
@@ -439,7 +439,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.0/index.html[API Refer
 | Visual Studio 2015 TLS (VC14) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.0_vc14_amd64_openssl.zip[libcouchbase-3.3.0_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.0_vc15_amd64_openssl.zip[libcouchbase-3.3.0_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.3.0_vc16_amd64_openssl.zip[libcouchbase-3.3.0_vc16_amd64_openssl.zip]
-|====
+|===
 
 
 === Version 3.2.4 (26 November 2021)
@@ -470,7 +470,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.4/index.html[API Refer
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4.sha256sum[libcouchbase-3.2.4.sha256sum]
 | Source Archive                | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4.tar.gz[libcouchbase-3.2.4.tar.gz]
@@ -490,7 +490,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.4/index.html[API Refer
 | Visual Studio 2015 TLS (VC14) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_vc14_amd64_openssl.zip[libcouchbase-3.2.4_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_vc15_amd64_openssl.zip[libcouchbase-3.2.4_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_vc16_amd64_openssl.zip[libcouchbase-3.2.4_vc16_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.2.3 (20 October 2021)
 
@@ -514,7 +514,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.3/index.html[API Refer
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3.sha256sum[libcouchbase-3.2.3.sha256sum]
 | Source Archive                | Any     | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3.tar.gz[libcouchbase-3.2.3.tar.gz]
@@ -534,7 +534,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.3/index.html[API Refer
 | Visual Studio 2015 TLS (VC14) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_vc14_amd64_openssl.zip[libcouchbase-3.2.3_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_vc15_amd64_openssl.zip[libcouchbase-3.2.3_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.3_vc16_amd64_openssl.zip[libcouchbase-3.2.3_vc16_amd64_openssl.zip]
-|====
+|===
 
 
 === Version 3.2.2 (23 September 2021)
@@ -568,7 +568,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.2/index.html[API Refer
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2.sha256sum[libcouchbase-3.2.2.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2.tar.gz[libcouchbase-3.2.2.tar.gz]
@@ -587,7 +587,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.2/index.html[API Refer
 | Visual Studio 2015 TLS (VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_vc14_amd64_openssl.zip[libcouchbase-3.2.2_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_vc15_amd64_openssl.zip[libcouchbase-3.2.2_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_vc16_amd64_openssl.zip[libcouchbase-3.2.2_vc16_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.2.1 (20 August 2021)
 
@@ -627,7 +627,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.1/index.html[API Refer
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1.sha256sum[libcouchbase-3.2.1.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1.tar.gz[libcouchbase-3.2.1.tar.gz]
@@ -646,7 +646,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.1/index.html[API Refer
 | Windows (Visual Studio 2015 TLS, VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_vc14_amd64_openssl.zip[libcouchbase-3.2.1_vc14_amd64_openssl.zip]
 | Windows (Visual Studio 2017 TLS, VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_vc15_amd64_openssl.zip[libcouchbase-3.2.1_vc15_amd64_openssl.zip]
 | Windows (Visual Studio 2019 TLS, VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_vc16_amd64_openssl.zip[libcouchbase-3.2.1_vc16_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.2.0 (20 July 2021)
 
@@ -730,7 +730,7 @@ with latencies for each operation.  This can be used to call into an opentelemet
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0.sha256sum[libcouchbase-3.2.0.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0.tar.gz[libcouchbase-3.2.0.tar.gz]
@@ -748,7 +748,7 @@ with latencies for each operation.  This can be used to call into an opentelemet
 | Visual Studio 2015 TLS (VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_vc14_amd64_openssl.zip[libcouchbase-3.2.0_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_vc15_amd64_openssl.zip[libcouchbase-3.2.0_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_vc16_amd64_openssl.zip[libcouchbase-3.2.0_vc16_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.1.3 (10 May 2021)
 
@@ -789,7 +789,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.3/index.html[API Refer
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3.sha256sum[libcouchbase-3.1.3.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3.tar.gz[libcouchbase-3.1.3.tar.gz]
@@ -807,7 +807,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.3/index.html[API Refer
 | Visual Studio 2015 TLS (VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_vc14_amd64_openssl.zip[libcouchbase-3.1.3_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_vc15_amd64_openssl.zip[libcouchbase-3.1.3_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_vc16_amd64_openssl.zip[libcouchbase-3.1.3_vc16_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.1.2 (26 April 2021)
 
@@ -841,7 +841,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.2/index.html[API Refer
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.1.2.sha256sum[libcouchbase-3.1.2.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.1.2.tar.gz[libcouchbase-3.1.2.tar.gz]
@@ -859,7 +859,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.2/index.html[API Refer
 | Visual Studio 2015 TLS (VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.2_vc14_amd64_openssl.zip[libcouchbase-3.1.2_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.2_vc15_amd64_openssl.zip[libcouchbase-3.1.2_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.2_vc16_amd64_openssl.zip[libcouchbase-3.1.2_vc16_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.1.1 (9 April 2021)
 
@@ -912,7 +912,7 @@ lcb_cntl_setu32(instance, LCB_CNTL_QUERY_GRACE_PERIOD, 100000);
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.1.1.sha256sum[libcouchbase-3.1.1.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.1.1.tar.gz[libcouchbase-3.1.1.tar.gz]
@@ -930,7 +930,7 @@ lcb_cntl_setu32(instance, LCB_CNTL_QUERY_GRACE_PERIOD, 100000);
 | Visual Studio 2015 TLS (VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.1_vc14_amd64_openssl.zip[libcouchbase-3.1.1_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.1_vc15_amd64_openssl.zip[libcouchbase-3.1.1_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.1_vc16_amd64_openssl.zip[libcouchbase-3.1.1_vc16_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.1.0 (3 March 2021)
 
@@ -974,7 +974,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.0/index.html[API Refer
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.1.0.sha256sum[libcouchbase-3.1.0.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.1.0.tar.gz[libcouchbase-3.1.0.tar.gz]
@@ -992,7 +992,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.0/index.html[API Refer
 | Visual Studio 2015 TLS (VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.0_vc14_amd64_openssl.zip[libcouchbase-3.1.0_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.0_vc15_amd64_openssl.zip[libcouchbase-3.1.0_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.0_vc16_amd64_openssl.zip[libcouchbase-3.1.0_vc16_amd64_openssl.zip]
-|====
+|===
 
 
 === Version 3.0.7 (16 December 2020)
@@ -1062,7 +1062,7 @@ These parts of API are non-standard and volatile.
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.7.sha256sum[libcouchbase-3.0.7.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.7.tar.gz[libcouchbase-3.0.7.tar.gz]
@@ -1085,7 +1085,7 @@ These parts of API are non-standard and volatile.
 // | Visual Studio 2017 (VC15)     | x32 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.7_vc15_x86.zip[libcouchbase-3.0.7_vc15_x86.zip]
 // | Visual Studio 2015 TLS (VC14) | x32 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.7_vc14_x86_openssl.zip[libcouchbase-3.0.7_vc14_x86_openssl.zip]
 // | Visual Studio 2017 TLS (VC15) | x32 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.7_vc15_x86_openssl.zip[libcouchbase-3.0.7_vc15_x86_openssl.zip]
-|====
+|===
 
 
 === Version 3.0.6 (21 October 2020)
@@ -1124,7 +1124,7 @@ Fixed two-step bootstrap (`lcb_connect` + `lcb_open`) for memcached bucket.
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.6.sha256sum[libcouchbase-3.0.6.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.6.tar.gz[libcouchbase-3.0.6.tar.gz]
@@ -1145,7 +1145,7 @@ Fixed two-step bootstrap (`lcb_connect` + `lcb_open`) for memcached bucket.
 // | Visual Studio 2017 (VC15)     | x32 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.6_vc15_x86.zip[libcouchbase-3.0.6_vc15_x86.zip]
 // | Visual Studio 2015 TLS (VC14) | x32 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.6_vc14_x86_openssl.zip[libcouchbase-3.0.6_vc14_x86_openssl.zip]
 // | Visual Studio 2017 TLS (VC15) | x32 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.6_vc15_x86_openssl.zip[libcouchbase-3.0.6_vc15_x86_openssl.zip]
-|====
+|===
 
 === Version 3.0.5 (21 September 2020)
 
@@ -1170,7 +1170,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.5/index.html[API Refer
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.5.sha256sum[libcouchbase-3.0.5.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.5.tar.gz[libcouchbase-3.0.5.tar.gz]
@@ -1191,7 +1191,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.5/index.html[API Refer
 // | Visual Studio 2017 (VC15)     | x32 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.5_vc15_x86.zip[libcouchbase-3.0.5_vc15_x86.zip]
 // | Visual Studio 2015 TLS (VC14) | x32 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.5_vc14_x86_openssl.zip[libcouchbase-3.0.5_vc14_x86_openssl.zip]
 // | Visual Studio 2017 TLS (VC15) | x32 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.5_vc15_x86_openssl.zip[libcouchbase-3.0.5_vc15_x86_openssl.zip]
-|====
+|===
 
 === Version 3.0.4 (26 August 2020)
 Version 3.0.4 is the fifth release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
@@ -1209,7 +1209,7 @@ Expose cmake option to help dissect TLS traffic.
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.4.sha256sum[libcouchbase-3.0.4.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.4.tar.gz[libcouchbase-3.0.4.tar.gz]
@@ -1225,7 +1225,7 @@ Expose cmake option to help dissect TLS traffic.
 | Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.4_vc15_amd64.zip[libcouchbase-3.0.4_vc15_amd64.zip]
 | Visual Studio 2015 TLS (VC14) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.4_vc14_amd64_openssl.zip[libcouchbase-3.0.4_vc14_amd64_openssl.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.4_vc15_amd64_openssl.zip[libcouchbase-3.0.4_vc15_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.0.3 (27 July 2020)
 
@@ -1271,7 +1271,7 @@ The SDK will now always request error map feature and send HELLO message to spee
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.3.sha256sum[libcouchbase-3.0.3.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.3.tar.gz[libcouchbase-3.0.3.tar.gz]
@@ -1286,7 +1286,7 @@ The SDK will now always request error map feature and send HELLO message to spee
 | Visual Studio 2015 (VC14)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.3_vc14_amd64.zip[libcouchbase-3.0.3_vc14_amd64.zip]
 | Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.3_vc15_amd64.zip[libcouchbase-3.0.3_vc15_amd64.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.3_vc15_amd64_openssl.zip[libcouchbase-3.0.3_vc15_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.0.2 (10 June 2020)
 
@@ -1346,7 +1346,7 @@ https://issues.couchbase.com/browse/CCBC-1245[CCBC-1245])
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2.sha256sum[libcouchbase-3.0.2.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2.tar.gz[libcouchbase-3.0.2.tar.gz]
@@ -1360,7 +1360,7 @@ https://issues.couchbase.com/browse/CCBC-1245[CCBC-1245])
 | Visual Studio 2015 (VC14)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_vc14_amd64.zip[libcouchbase-3.0.2_vc14_amd64.zip]
 | Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_vc15_amd64.zip[libcouchbase-3.0.2_vc15_amd64.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.2_vc15_amd64_openssl.zip[libcouchbase-3.0.2_vc15_amd64_openssl.zip]
-|====
+|===
 
 
 === Version 3.0.1 (8 April 2020)
@@ -1409,7 +1409,7 @@ Replaced with `std::shuffle`.
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1.sha256sum[libcouchbase-3.0.1.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1.tar.gz[libcouchbase-3.0.1.tar.gz]
@@ -1423,7 +1423,7 @@ Replaced with `std::shuffle`.
 | Visual Studio 2015 (VC14)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_vc14_amd64.zip[libcouchbase-3.0.1_vc14_amd64.zip]
 | Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_vc15_amd64.zip[libcouchbase-3.0.1_vc15_amd64.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_vc15_amd64_openssl.zip[libcouchbase-3.0.1_vc15_amd64_openssl.zip]
-|====
+|===
 
 === Version 3.0.0 (17 January 2020)
 
@@ -1483,7 +1483,7 @@ Renamed "N1QL" to "QUERY" in the APIs.
 ==== Downloads
 
 [cols="12,^8,23"]
-|====
+|===
 | Platform                      | Architecture | File
 | Checksums                     | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0.sha256sum[libcouchbase-3.0.0.sha256sum]
 | Source Archive                | Any | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0.tar.gz[libcouchbase-3.0.0.tar.gz]
@@ -1498,7 +1498,7 @@ Renamed "N1QL" to "QUERY" in the APIs.
 | Visual Studio 2017 (VC15)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_vc15_amd64.zip[libcouchbase-3.0.0_vc15_amd64.zip]
 | Visual Studio 2019 (VC16)     | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_vc16_amd64.zip[libcouchbase-3.0.0_vc16_amd64.zip]
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.0_vc15_amd64_openssl.zip[libcouchbase-3.0.0_vc15_amd64_openssl.zip]
-|====
+|===
 
 
 
