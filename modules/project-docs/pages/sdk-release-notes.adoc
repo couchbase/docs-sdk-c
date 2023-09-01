@@ -1,6 +1,7 @@
 = Couchbase C Release Notes and Archives
 :description: Release notes, installation instructions, and download archive for the Couchbase C Client, libcouchbase (LCB).
 :navtitle: Release Notes
+:page-toclevels: 2
 :page-topic-type: project-doc
 :page-aliases: ROOT:sdk-release-notes,ROOT:relnotes-c-sdk,ROOT:release-notes,ROOT:download-install,ROOT:download-list
 
@@ -17,8 +18,14 @@ include::hello-world:partial$installation.adoc[]
 
 
 [#latest-release]
+== C SDK Releases
 
-== Version 3.3.8 (16 August 2023)
+We always recommend using the latest version of the SDK -- it contains all of the latest security patches and support for new and upcoming features.
+All patch releases for each dot minor release should be API compatible, and safe to upgrade;
+any changes to expected behavior are noted in the release notes that follow.
+
+
+=== Version 3.3.8 (16 August 2023)
 
 * https://issues.couchbase.com/browse/CCBC-1584[CCBC-1584]:
 Updated documentation on how to use collections with pillowfight.
@@ -37,7 +44,7 @@ Do not log if logger is not accessible in `iotssl_log_errors`.
 * https://issues.couchbase.com/browse/CCBC-1599[CCBC-1599]:
 Account NUL-byte when format IPv6 address (fixes potential invalid memory access).
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -66,7 +73,7 @@ Account NUL-byte when format IPv6 address (fixes potential invalid memory access
 |===
 
 
-== Version 3.3.7 (11 May 2023)
+=== Version 3.3.7 (11 May 2023)
 
 * https://issues.couchbase.com/browse/CCBC-1596[CCBC-1596]:
 Replace unsafe `sprintf` with `snprintf`.
@@ -78,7 +85,7 @@ Update threading example, reduce global state.
   - Constants for tracing system defined as mutable static strings, this patch replaces it with const static strings.
   - Updated examples for thread-safe usage is updated to SDK3 API and added them to the build pipeline
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -106,7 +113,7 @@ Update threading example, reduce global state.
 |===
 
 
-== Version 3.3.6 (26 April 2023)
+=== Version 3.3.6 (26 April 2023)
 
 * https://issues.couchbase.com/browse/CCBC-1590[CCBC-1590]:
 Always pick random node for HTTP services.
@@ -134,7 +141,7 @@ Do not share the same value of expiry for get operations.  Also it does not turn
 * https://issues.couchbase.com/browse/CCBC-1596[CCBC-1596]:
 Fix various compiler warnings.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -162,7 +169,7 @@ Fix various compiler warnings.
 |===
 
 
-== Version 3.3.5 (9 March 2023)
+=== Version 3.3.5 (9 March 2023)
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.5/index.html[API Reference]
 
@@ -184,7 +191,7 @@ Fix build for GCC 13.
 * https://issues.couchbase.com/browse/CCBC-1587[CCBC-1587]:
 Allow to disable uninstall target.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -212,7 +219,7 @@ Allow to disable uninstall target.
 |===
 
 
-== Version 3.3.4 (8 February 2023)
+=== Version 3.3.4 (8 February 2023)
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.4/index.html[API Reference]
 
@@ -221,7 +228,7 @@ Collections support is disabled in 3.x SDKs if the configuration does not have c
 Now, it is also disabled when a KV node does not negotiate collection support in HELLO flags.
 This should help with clusters in mixed mode (with both 6.x and 7.x Server versions) during an upgrade.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -246,7 +253,7 @@ This should help with clusters in mixed mode (with both 6.x and 7.x Server versi
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.4_vc16_amd64_openssl.zip[libcouchbase-3.3.4_vc16_amd64_openssl.zip]
 |===
 
-== Version 3.3.3 (9 September 2022)
+=== Version 3.3.3 (9 September 2022)
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.3/index.html[API Reference]
 
@@ -264,7 +271,7 @@ This patch ensures that once socket context has been closed, its pointer in SSL 
 
 * Added cbc-bucket-list command to list all buckets.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -289,13 +296,13 @@ This patch ensures that once socket context has been closed, its pointer in SSL 
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.3_vc16_amd64_openssl.zip[libcouchbase-3.3.3_vc16_amd64_openssl.zip]
 |===
 
-== Version 3.3.2 (25 August 2022)
+=== Version 3.3.2 (25 August 2022)
 
 Version 3.3.2 is the third release of the 3.3 series.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.2/index.html[API Reference]
 
-=== Bug Fixes
+==== Bug Fixes
 
 * https://issues.couchbase.com/browse/CCBC-1559[CCBC-1559]: `cbc-n1qlback`: give time to IO loop in case of failure.
 
@@ -305,7 +312,7 @@ The single-threaded nature of libcouchbase does not allow the IO loop to run in 
 
 As a fix, we run `lcb_tick_nowait` in case of failure, which is enough for libcouchbase to give IO loop a chance to check for any pending events and invoke corresponding callbacks.
 
-=== Improvements
+==== Improvements
 
 * https://issues.couchbase.com/browse/CCBC-1552[CCBC-1552]:
 Libcouchbase may now be built with an external `jsoncpp` library.
@@ -317,7 +324,7 @@ The library will cache cluster-level configurations only if the `config_cache=` 
 otherwise it will cache only buckets configurations (note that in this case the application should use unique cache name for each bucket,
 otherwise the library will ignore cache if the bucket name will not match).
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -342,7 +349,7 @@ otherwise the library will ignore cache if the bucket name will not match).
 |===
 
 
-== Version 3.3.1 (25 May 2022)
+=== Version 3.3.1 (25 May 2022)
 
 Version 3.3.1 is the second release of the 3.3 series.
 
@@ -351,7 +358,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.1/index.html[API Refer
 NOTE: CentOS 7 RPMs depend on OpenSSL 1.1, which is available in EPEL.
 Make sure that the `epel-release` package is installed in the system (`yum install epel-release`).
 
-=== Bug Fixes
+==== Bug Fixes
 
 * https://issues.couchbase.com/browse/CCBC-1550[CCBC-1550]:
   Fixed RPM packages for CentOS 7, now they will require OpenSSL 1.1 during build. Also build script will not
@@ -361,7 +368,7 @@ Make sure that the `epel-release` package is installed in the system (`yum insta
 * https://issues.couchbase.com/browse/CCBC-1546[CCBC-1546]:
   cbc-pillowfight: add `--rand-space-per-thread` to allow threads to work from different rand numbers.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -386,18 +393,18 @@ Make sure that the `epel-release` package is installed in the system (`yum insta
 |===
 
 
-== Version 3.3.0 (9 May 2022)
+=== Version 3.3.0 (9 May 2022)
 
 Version 3.3.0 is the first release of the 3.3 series.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.0/index.html[API Reference]
 
-=== New Features
+==== New Features
 
 * https://issues.couchbase.com/browse/CCBC-1540[CCBC-1540]:
   The SDK now bundles the Capella CA certificate automatically.
 
-=== Bug Fixes
+==== Bug Fixes
 
 * https://issues.couchbase.com/browse/CCBC-1538[CCBC-1538]:
   The SDK now uses a 64-bit integer to store time in the IOCP plugin.
@@ -410,7 +417,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.0/index.html[API Refer
   Fixed issue where `Pillowfight` was leaking a large number of memory allocations, which occured during startup.
   Pillowfight will now deallocate all memory during shutdown.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -435,7 +442,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.0/index.html[API Refer
 |===
 
 
-== Version 3.2.4 (26 November 2021)
+=== Version 3.2.4 (26 November 2021)
 
 Version 3.2.4 is the fifth release of the 3.2 series.
 
@@ -460,7 +467,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.4/index.html[API Refer
   Performance optimization: replace `sstream` with string `append()`.
   Only if list of IO vectors supplied for value in mutation operations.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -485,7 +492,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.4/index.html[API Refer
 | Visual Studio 2019 TLS (VC16) | x86_64  | https://packages.couchbase.com/clients/c/libcouchbase-3.2.4_vc16_amd64_openssl.zip[libcouchbase-3.2.4_vc16_amd64_openssl.zip]
 |===
 
-== Version 3.2.3 (20 October 2021)
+=== Version 3.2.3 (20 October 2021)
 
 Version 3.2.3 is the fourth release of the 3.2 series.
 
@@ -504,7 +511,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.3/index.html[API Refer
 
 * Improved test coverage, stability and documentation.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -530,7 +537,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.3/index.html[API Refer
 |===
 
 
-== Version 3.2.2 (23 September 2021)
+=== Version 3.2.2 (23 September 2021)
 
 Version 3.2.2 is the third release of the 3.2 series.
 
@@ -558,7 +565,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.2/index.html[API Refer
 
 * Improved test coverage and stability.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -582,7 +589,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.2/index.html[API Refer
 | Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.2_vc16_amd64_openssl.zip[libcouchbase-3.2.2_vc16_amd64_openssl.zip]
 |===
 
-== Version 3.2.1 (20 August 2021)
+=== Version 3.2.1 (20 August 2021)
 
 Version 3.2.1 is the second release of the 3.2 series.
 
@@ -617,7 +624,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.1/index.html[API Refer
 * https://issues.couchbase.com/browse/CCBC-1438[CCBC-1438]:
   Fixed frame size for mutations with durability. Counter, Store and Subdoc mutations were sending incorrect frame size of durability encoding, which led to rejection of the command by the server.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -641,7 +648,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.2.1/index.html[API Refer
 | Windows (Visual Studio 2019 TLS, VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.1_vc16_amd64_openssl.zip[libcouchbase-3.2.1_vc16_amd64_openssl.zip]
 |===
 
-== Version 3.2.0 (20 July 2021)
+=== Version 3.2.0 (20 July 2021)
 
 Version 3.2.0 is the first release of the 3.2 series.
 
@@ -720,7 +727,7 @@ with latencies for each operation.  This can be used to call into an opentelemet
 
 * Various improvements and fixes in test and build infrastructure
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -743,7 +750,7 @@ with latencies for each operation.  This can be used to call into an opentelemet
 | Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.2.0_vc16_amd64_openssl.zip[libcouchbase-3.2.0_vc16_amd64_openssl.zip]
 |===
 
-== Version 3.1.3 (10 May 2021)
+=== Version 3.1.3 (10 May 2021)
 
 Version 3.1.3 is the fourth release of the 3.1 series.
 
@@ -779,7 +786,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.3/index.html[API Refer
 
 * Upgrade snappy to 1.1.8
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -802,7 +809,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.3/index.html[API Refer
 | Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.3_vc16_amd64_openssl.zip[libcouchbase-3.1.3_vc16_amd64_openssl.zip]
 |===
 
-== Version 3.1.2 (26 April 2021)
+=== Version 3.1.2 (26 April 2021)
 
 Version 3.1.2 is the third release of the 3.1 series.
 
@@ -831,7 +838,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.2/index.html[API Refer
 * https://issues.couchbase.com/browse/CCBC-1386[CCBC-1386]:
   Remove legacy options for `cbc-bucket-create`.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -854,7 +861,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.2/index.html[API Refer
 | Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.2_vc16_amd64_openssl.zip[libcouchbase-3.1.2_vc16_amd64_openssl.zip]
 |===
 
-== Version 3.1.1 (9 April 2021)
+=== Version 3.1.1 (9 April 2021)
 
 Version 3.1.1 is the second release of the 3.1 series.
 
@@ -902,7 +909,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.1/index.html[API Refer
 lcb_cntl_setu32(instance, LCB_CNTL_QUERY_GRACE_PERIOD, 100000);
 ----
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -925,7 +932,7 @@ lcb_cntl_setu32(instance, LCB_CNTL_QUERY_GRACE_PERIOD, 100000);
 | Visual Studio 2019 TLS (VC16) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.1.1_vc16_amd64_openssl.zip[libcouchbase-3.1.1_vc16_amd64_openssl.zip]
 |===
 
-== Version 3.1.0 (3 March 2021)
+=== Version 3.1.0 (3 March 2021)
 
 Version 3.1.0 is the first release of the 3.1 series.
 
@@ -964,7 +971,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.0/index.html[API Refer
 * https://issues.couchbase.com/browse/CCBC-1346[CCBC-1346]:
   Return `LCB_ERR_DOCUMENT_LOCKED` for locked documents.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -988,7 +995,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.1.0/index.html[API Refer
 |===
 
 
-== Version 3.0.7 (16 December 2020)
+=== Version 3.0.7 (16 December 2020)
 
 Version 3.0.7 is the eighth release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
@@ -1052,7 +1059,7 @@ These parts of API are non-standard and volatile.
 
 * Bundle HdrHistogram_c v0.11.2 and allow to fall back to it.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -1081,7 +1088,7 @@ These parts of API are non-standard and volatile.
 |===
 
 
-== Version 3.0.6 (21 October 2020)
+=== Version 3.0.6 (21 October 2020)
 
 Version 3.0.6 is the seventh release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
@@ -1114,7 +1121,7 @@ Extra checks for socket state in `lcb_ping` to avoid invalid access issues.
 * https://issues.couchbase.com/browse/CCBC-1316[CCBC-1316]:
 Fixed two-step bootstrap (`lcb_connect` + `lcb_open`) for memcached bucket.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -1140,7 +1147,7 @@ Fixed two-step bootstrap (`lcb_connect` + `lcb_open`) for memcached bucket.
 // | Visual Studio 2017 TLS (VC15) | x32 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.6_vc15_x86_openssl.zip[libcouchbase-3.0.6_vc15_x86_openssl.zip]
 |===
 
-== Version 3.0.5 (21 September 2020)
+=== Version 3.0.5 (21 September 2020)
 
 Version 3.0.5 is the sixth release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
@@ -1160,7 +1167,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.5/index.html[API Refer
 * https://issues.couchbase.com/browse/CCBC-1313[CCBC-1313]:
   Replaced `std::random_shuffle` with `std::shuffle`. fixing build of `cbc-n1qlback` tool.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -1186,7 +1193,7 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.5/index.html[API Refer
 // | Visual Studio 2017 TLS (VC15) | x32 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.5_vc15_x86_openssl.zip[libcouchbase-3.0.5_vc15_x86_openssl.zip]
 |===
 
-== Version 3.0.4 (26 August 2020)
+=== Version 3.0.4 (26 August 2020)
 Version 3.0.4 is the fifth release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.4/index.html[API Reference]
@@ -1199,7 +1206,7 @@ Expose cmake option to help dissect TLS traffic.
 
 * Detect configuration change when replica indexes changed.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -1220,7 +1227,7 @@ Expose cmake option to help dissect TLS traffic.
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.4_vc15_amd64_openssl.zip[libcouchbase-3.0.4_vc15_amd64_openssl.zip]
 |===
 
-== Version 3.0.3 (27 July 2020)
+=== Version 3.0.3 (27 July 2020)
 
 Version 3.0.3 is the fourth release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
@@ -1261,7 +1268,7 @@ The SDK will now always request error map feature and send HELLO message to spee
 
 * Fixed collections issues for future server release.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -1281,7 +1288,7 @@ The SDK will now always request error map feature and send HELLO message to spee
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.3_vc15_amd64_openssl.zip[libcouchbase-3.0.3_vc15_amd64_openssl.zip]
 |===
 
-== Version 3.0.2 (10 June 2020)
+=== Version 3.0.2 (10 June 2020)
 
 Version 3.0.2 is the third release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
@@ -1336,7 +1343,7 @@ https://issues.couchbase.com/browse/CCBC-1241[CCBC-1241],
 https://issues.couchbase.com/browse/CCBC-1243[CCBC-1243],
 https://issues.couchbase.com/browse/CCBC-1245[CCBC-1245])
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -1356,11 +1363,11 @@ https://issues.couchbase.com/browse/CCBC-1245[CCBC-1245])
 |===
 
 
-== Version 3.0.1 (8 April 2020)
+=== Version 3.0.1 (8 April 2020)
 
 Version 3.0.1 is the second release of the 3.0 series, bringing enhancements and bugfixes over the last stable release.
 
-=== Fixed Issues
+==== Fixed Issues
 
 * https://issues.couchbase.com/browse/CCBC-1188[CCBC-1188]:
 cbc-pillowfight: fixed `--collection` switch.
@@ -1395,11 +1402,11 @@ Replaced with `std::shuffle`.
 
 * Fixed several issues reported by coverity.
 
-=== Known Issues
+==== Known Issues
 
 * Attempting to install libcouchbase via homebrew on OS X prior to June 8th, 2020 would result in libcouchbase 2.10 being installed instead of 3.0.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
@@ -1418,11 +1425,11 @@ Replaced with `std::shuffle`.
 | Visual Studio 2017 TLS (VC15) | x64 | https://packages.couchbase.com/clients/c/libcouchbase-3.0.1_vc15_amd64_openssl.zip[libcouchbase-3.0.1_vc15_amd64_openssl.zip]
 |===
 
-== Version 3.0.0 (17 January 2020)
+=== Version 3.0.0 (17 January 2020)
 
 This is the first GA release of the third generation C SDK.
 
-=== Fixed Issues
+==== Fixed Issues
 
 // https://docs.couchbase.com/sdk-api/couchbase-c-client-3.0.0[API Reference]
 
@@ -1469,11 +1476,11 @@ Renamed "N1QL" to "QUERY" in the APIs.
 
 * Fixed various memory leaks. Improved build, testing and packaging systems.
 
-=== Known Issues
+==== Known Issues
 
 * Attempting to install libcouchbase via homebrew on OS X prior to June 8th, 2020 would result in libcouchbase 2.10 being installed instead of 3.0.
 
-=== Downloads
+==== Downloads
 
 [cols="12,^8,23"]
 |===
