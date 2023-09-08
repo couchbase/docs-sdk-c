@@ -111,10 +111,10 @@ lcb_cntl_string(instance, "config_poll_interval", "4.5");
 auto timeout_in_seconds = std::chrono::milliseconds(4500);
 auto timeout_in_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(timeout_in_seconds);
 std::uint32_t timeout = std::static_cast<std::uint32_t>(timeout_in_microseconds.count());
-lcb_cntl(instance, LCB_CNTL_SET, LCB_CNTL_TCP_KEEPALIVE, &timeout);
+lcb_cntl(instance, LCB_CNTL_SET, LCB_CNTL_CONFIG_POLL_INTERVAL, &timeout);
 
 std::uint32_t timeout = 4500000; // in microseconds
-lcb_cntl_set32(instance, LCB_CNTL_TCP_KEEPALIVE, timeout);
+lcb_cntl_set32(instance, LCB_CNTL_CONFIG_POLL_INTERVAL, timeout);
 ----
 
 
