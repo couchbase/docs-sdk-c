@@ -1,5 +1,6 @@
 = Browser and CLI Access
 :description: Web and command line interfaces to Couchbase Server are available.
+:page-toclevels: 2
 :page-topic-type: landing-page
 :page-aliases: ROOT:webui-cli-access
 
