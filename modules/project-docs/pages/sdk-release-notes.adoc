@@ -24,28 +24,32 @@ We always recommend using the latest version of the SDK -- it contains all of th
 All patch releases for each dot minor release should be API compatible, and safe to upgrade;
 any changes to expected behavior are noted in the release notes that follow.
 
-=== Version 3.3.9 (16 August 2023)
+=== Version 3.3.9 (22 September 2023)
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.9/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1608[CCBC-1608]:
-  Reduce timeout for idle HTTP connections to 1 second.
+Reduced the default timeout for idle HTTP connections to 1 second. 
+The previous default (4.5 seconds) was too close to the 5-second server-side timeout, and could lead to spurious request failures.
 
 * https://issues.couchbase.com/browse/CCBC-1615[CCBC-1615]:
-  Handle rate limit codes during bootstrap.
+Handle rate limit codes during bootstrap.
 
 * https://issues.couchbase.com/browse/CCBC-1612[CCBC-1612]:
-  Improve recovery time during rebalance for upcoming Server 7.6.
-    * do not throttle CCCP provider in faster failover mode.
-    * try to refresh configuration in case of network errors to speed up the recovery process during failover.
+Improved recovery time during rebalance for upcoming Server releases.
+In faster failover mode:
+** The CCCP provider will not be throttleed.
+** In case of network errors the configuration will be refreshed, to speed up the recovery process during failover.
 
 * https://issues.couchbase.com/browse/CCBC-1611[CCBC-1611]:
-  Handle `0x0d` (`ECONFIG_ONLY`) status code. Treat this status code as a signal to refresh configuration. The new or
-  failed over nodes are set into config-only mode, where all data operatios will be failed with code 0x0d. It is
-  possible that the SDK might be using stale configuration and send requests to the node, that is not part of the
-  cluster anymore, so to work around this, the library will update the configuration and retry the operation.
+To handle `0x0d` (`ECONFIG_ONLY`) status code --
+we now treat this status code as a signal to refresh the configuration.
+The new or failed over nodes are set into config-only mode, where all data operations will be failed with code `0x0d`.
+It is possible that the SDK might be using stale configuration and send requests to the node that is not part of the cluster any more, 
+so to work around this the library will update the configuration and retry the operation.
 
 * https://issues.couchbase.com/browse/CCBC-1610[CCBC-1610]:
-  Fix memory issues when setting collection id in the cluster with mixed server versions, where some of the nodes do not
-  support collections.
+Fixed a memory issues when setting collection id in the cluster with mixed server versions, where some of the nodes do not support collections (such as in a swap rebalance upgrade).
 
 
 ==== Downloads
@@ -77,6 +81,8 @@ any changes to expected behavior are noted in the release notes that follow.
 |===
 
 === Version 3.3.8 (16 August 2023)
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.8/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1584[CCBC-1584]:
 Updated documentation on how to use collections with pillowfight.
@@ -126,6 +132,8 @@ Account NUL-byte when format IPv6 address (fixes potential invalid memory access
 
 === Version 3.3.7 (11 May 2023)
 
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.7/index.html[API Reference]
+
 * https://issues.couchbase.com/browse/CCBC-1596[CCBC-1596]:
 Replace unsafe `sprintf` with `snprintf`.
 
@@ -165,6 +173,8 @@ Update threading example, reduce global state.
 
 
 === Version 3.3.6 (26 April 2023)
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.6/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1590[CCBC-1590]:
 Always pick random node for HTTP services.
