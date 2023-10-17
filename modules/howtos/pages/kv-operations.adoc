@@ -251,9 +251,14 @@ See the {lcb_doc_src_link}/modules/devguide/examples/c/expiration.cc[code sample
 
 == Atomic Counters
 
-The numeric content of a document can be manipulated using {lcb_api_link}/group__lcb-counter.html[lcb_RESPCOUNTER^]. Counter opeations treat the document
-as a numeric value (the document must contain a parseable integer as its content). This value may then be incremented
-or decremented.
+The numeric content of a document can be manipulated using {lcb_api_link}/group__lcb-counter.html[lcb_RESPCOUNTER^]. 
+
+NOTE: Increment & Decrement are considered part of the ‘binary’ API and as such may still be subject to change.
+
+
+Counter opeations treat the document as a numeric value (the document must contain a parseable integer as its content). 
+This value may then be incremented or decremented.
+
 [source,c]
 ----
 include::devguide:example$c/counter.cc[tag=atomic-counter]
@@ -299,7 +304,7 @@ await collection.Binary.Decrement("document-key", 1, 1000, TimeSpan.FromSeconds(
 
 See the {lcb_doc_src_link}/modules/devguide/examples/c/counter.cc[code sample^] for use in context.
 
-NOTE: Increment & Decrement are considered part of the ‘binary’ API and as such may still be subject to change
+TIP: Setting the document expiry time only works when a document is created, and it is not possible to update the expiry time of an existing counter document with the Increment method -- to do this during an increment, use with the `Touch()` method.
 
 
 include::7.1@sdk:shared:partial$atomic.adoc[tag=xdcr]
