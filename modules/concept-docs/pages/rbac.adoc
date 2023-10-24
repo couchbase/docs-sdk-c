@@ -1,1 +1,1 @@
-include::6.5@sdk:pages:partial$rbac.adoc[]
+include::7.1@sdk:pages:partial$rbac.adoc[]
