@@ -125,7 +125,7 @@ For those occasions when you do, please see the relevant API docs:
 
 == View Management
 
-include::6.5@sdk:shared:partial$flush-info-pars.adoc[tag=view-management]
+include::7.0@sdk:shared:partial$flush-info-pars.adoc[tag=view-management]
 
 In the SDK, design documents are represented by the `DesignDocument` and `View` structs.
 All operations on design documents are performed on the `ViewIndexManager` instance:
@@ -143,7 +143,7 @@ The following example upserts a design document with two views:
 include::devguide:example$go/provisioning-resources-views.go[tag=createView]
 ----
 
-include::6.6@sdk:shared:partial$flush-info-pars.adoc[tag=one-view-update-warning]
+include::7.0@sdk:shared:partial$flush-info-pars.adoc[tag=one-view-update-warning]
 
 Note the use of `DesignDocumentNamespaceDevelopment`, the other option is `DesignDocumentNamespaceProduction`.
 This parameter specifies whether the design document should be created as development, or as production -- with the former running over only a small fraction of the documents.
