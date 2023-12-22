@@ -65,7 +65,6 @@ Repositories are available for the following distributions:
 | Ubuntu 18.04 ("bionic") | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu1804 bionic bionic/main``
 | Ubuntu 20.04 ("focal")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu2004 focal focal/main``
 | Ubuntu 22.04 ("jammy")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu2204 jammy jammy/main``
-| Debian 9 ("stretch")    | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian9 stretch stretch/main``
 | Debian 10 ("buster")    | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian10 buster buster/main``
 | Debian 11 ("bullseye")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian11 bullseye bullseye/main``
 |===
@@ -281,7 +280,9 @@ If for some reason you cannot use any of the prebuilt Windows binaries, follow t
 == Verifying Installed Package
 
 The easiest way to verify installed package is to check its version using cbc tools. It requires package *libcouchbase3-tools* installed on Linux systems, for Windows *cbc.exe* included in the zip archive.
-To verify the client run *cbc version* (*cbc.exe version* on Windows). Below is the output from version 3.2.0 on CentOS 8. It shows version along with git commit numbers. Then it prints default directory where IO plugins installed and enumerates the currently installed and available plugins. After that it reports whether OpenSSL linked to this particular version of libcouchbase, and displays the version number if it is accessible.
+To verify the client run *cbc version* (*cbc.exe version* on Windows).
+It shows version along with git commit numbers. Then it prints default directory where IO plugins installed and enumerates the currently installed and available plugins. 
+After that it reports whether OpenSSL linked to this particular version of libcouchbase, and displays the version number if it is accessible.
 
 [source,console]
 ----
