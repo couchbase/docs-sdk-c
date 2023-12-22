@@ -69,11 +69,11 @@ Libcouchbase (the C SDK) is tested and supported on the following platforms:
 [discrete]
 === GNU/Linux
 
-* Amazon Linux 2.
-* Red Hat Enterprise Linux 7, 8, & 9 (from LCB 3.3.5);
-* CentOS 7 & 8 (until these platforms reach https://www.redhat.com/en/topics/linux/centos-linux-eol[End-of-Life]).
-* Ubuntu (LTS) 16.04 (_Xenial_), 18.04 (_Bionic_), 20.04 (_Focal_), & 22.04 (_Jammy_ -- from LCB 3.3.3).
-* Debian 9 (_Stretch_), 10 (_Buster_), & 11 (_Bullseye_).
+* Amazon Linux 2
+* Red Hat Enterprise Linux 7, 8, & 9 (from LCB 3.3.5)
+* CentOS 7
+* Ubuntu (LTS) 16.04 (_Xenial_), 18.04 (_Bionic_), 20.04 (_Focal_), & 22.04 (_Jammy_ -- from LCB 3.3.3)
+* Debian 10 (_Buster_) & 11 (_Bullseye_)
 * Alpine Linux (Since LCB 3.2.5)
 
 
@@ -86,8 +86,8 @@ Any MS-supported version compatible with Visual Studio 2015 (VC14) or 2017 (VC15
 === Mac OS X
 
 The current and previous two releases of OS X.
-At time of writing (April 2022): 10.15 (_Catalina_), 11 (_Big Sur_), and 12 (_Monterey_).
-M1 ARM  architecture is fully supported in the 3.3 C SDK.
+At time of writing (December 2023): 14 (Sonoma), 13 (Ventura), and 12 (Monterey).
+M1 ARM architecture is fully supported in the 3.3 C SDK.
 ****
 
 Although installable or compilable on many other platforms, we cannot provide support for untested combinations.
