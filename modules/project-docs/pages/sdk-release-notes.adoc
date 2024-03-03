@@ -29,25 +29,23 @@ any changes to expected behavior are noted in the release notes that follow.
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.12/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1636[CCBC-1636]:
-Deallocate old packet when updating collection ID. `mcreq_renew_packet()` requires the caller to
-deallocate original copy, otherwise the memory will be only released by pipeline destructor.
+The library was not deallocating the old packet after setting the collection ID field in the copy.
+`mcreq_renew_packet()` requires the caller to deallocate original copy, otherwise the memory will be only released by pipeline destructor.
+This has been addressed, and old packets are now deallocated when the collection ID is updated, freeing up memory.
 
 * https://issues.couchbase.com/browse/CCBC-1634[CCBC-1634]:
-Fix reporting unresponsive nodes in `lcb_ping()`.
-  * do not retry NOOP commands, as they might be routed to different pipeline, instead fail fast
-    NOOPs to reflect network issues more precisely.
-  * use pipeline address as ping entry identifier instead of socket address, as socket might not be
-    existing (not connected) due to network failures.
-  * `lcb_ping` still have report even when overall status is not `LCB_SUCCESS`, so cbc-ping should
-    still try to print report instead just printing overall status code.
+Fixed the reporting of unresponsive nodes in `lcb_ping()`.
+** No longer retrying NOOP commands, as they might be routed to different pipeline, instead fail fast NOOPs to reflect network issues more precisely.
+** Now using pipeline address as ping entry identifier instead of socket address, as socket may not exist (not connected), owing to network failures.
+** `lcb_ping` must still now report, even when overall status is not `LCB_SUCCESS`, so `cbc-ping` should still try to print report instead of just printing overall status code.
 
 * https://issues.couchbase.com/browse/CCBC-1630[CCBC-1630]:
-Check collection id before storing packet to pipeline. Every time `check_collection_id()` is
-invoked, the caller should ensure that this function potentially is rewriting the packet, if it
-decides to insert/update encoded collection ID.
+Check collection id before storing packet to pipeline.
+Every time `check_collection_id()` is invoked, the caller should ensure that this function potentially is rewriting the packet, if it decides to insert/update an encoded collection ID.
+This will help to avoid problems when running in mixed mode -- during an upgrade rebalance from Server 6.6 to 7.2, for instance.
 
 * https://issues.couchbase.com/browse/CCBC-1627[CCBC-1627]:
-Fix `bodylen` value when `ffextlen` (flexible frame extra length) is not zero.
+Fixed `bodylen` value when `ffextlen` (flexible frame extra length) is not zero.
 
 ==== Downloads
 
@@ -83,11 +81,11 @@ Fix `bodylen` value when `ffextlen` (flexible frame extra length) is not zero.
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.11/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1618[CCBC-1618]:
-Update query error codes for dynamic authenticator. This is an update to internal interface, that
-allows more granular detection of stale authentication conditions for query service.
+Updated query error codes for dynamic authenticator.
+This is an update to the internal interface, that allows more granular detection of stale authentication conditions for the Query Service.
 
-* Prevent full rebuild on every run of cmake. Do not render built timestamp into the header, but
-instead only use it in object file.
+* Prevent full rebuild on every run of `cmake`.
+The SDK no longer renders the built timestamp into the header, but instead only uses it in the object file.
 
 ==== Downloads
 
@@ -116,6 +114,7 @@ instead only use it in object file.
 | Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_vc15_amd64_openssl.zip[libcouchbase-3.3.11_vc15_amd64_openssl.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_vc16_amd64_openssl.zip[libcouchbase-3.3.11_vc16_amd64_openssl.zip]
 |===
+
 
 === Version 3.3.10 (10 October 2023)
 
