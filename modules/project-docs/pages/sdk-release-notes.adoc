@@ -24,19 +24,110 @@ We always recommend using the latest version of the SDK -- it contains all of th
 All patch releases for each dot minor release should be API compatible, and safe to upgrade;
 any changes to expected behavior are noted in the release notes that follow.
 
+=== Version 3.3.12 (21 December 2023)
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.12/index.html[API Reference]
+
+* https://issues.couchbase.com/browse/CCBC-1636[CCBC-1636]:
+The library was not deallocating the old packet after setting the collection ID field in the copy.
+`mcreq_renew_packet()` requires the caller to deallocate original copy, otherwise the memory will be only released by pipeline destructor.
+This has been addressed, and old packets are now deallocated when the collection ID is updated, freeing up memory.
+
+* https://issues.couchbase.com/browse/CCBC-1634[CCBC-1634]:
+Fixed the reporting of unresponsive nodes in `lcb_ping()`.
+** No longer retrying NOOP commands, as they might be routed to different pipeline, instead fail fast NOOPs to reflect network issues more precisely.
+** Now using pipeline address as ping entry identifier instead of socket address, as socket may not exist (not connected), owing to network failures.
+** `lcb_ping` must still now report, even when overall status is not `LCB_SUCCESS`, so `cbc-ping` should still try to print report instead of just printing overall status code.
+
+* https://issues.couchbase.com/browse/CCBC-1630[CCBC-1630]:
+Check collection id before storing packet to pipeline.
+Every time `check_collection_id()` is invoked, the caller should ensure that this function potentially is rewriting the packet, if it decides to insert/update an encoded collection ID.
+This will help to avoid problems when running in mixed mode -- during an upgrade rebalance from Server 6.6 to 7.2, for instance.
+
+* https://issues.couchbase.com/browse/CCBC-1627[CCBC-1627]:
+Fixed `bodylen` value when `ffextlen` (flexible frame extra length) is not zero.
+
+==== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12.sha256sum[libcouchbase-3.3.12.sha256sum]
+| Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12.tar.gz[libcouchbase-3.3.12.tar.gz]
+| Amazon Linux 2023             | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_amzn2023_x86_64.tar[libcouchbase-3.3.12_amzn2023_x86_64.tar]
+| Amazon Linux 2                | aarch64      | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_amzn2_aarch64.tar[libcouchbase-3.3.12_amzn2_aarch64.tar]
+| Amazon Linux 2                | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_amzn2_x86_64.tar[libcouchbase-3.3.12_amzn2_x86_64.tar]
+| Enterprise Linux 7            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_centos7_x86_64.tar[libcouchbase-3.3.12_centos7_x86_64.tar]
+| Enterprise Linux 8            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_rhel8_x86_64.tar[libcouchbase-3.3.12_rhel8_x86_64.tar]
+| Enterprise Linux 9            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_rhel9_x86_64.tar[libcouchbase-3.3.12_rhel9_x86_64.tar]
+| Ubuntu 16.04 (xenial)         | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_ubuntu1604_xenial_amd64.tar[libcouchbase-3.3.12_ubuntu1604_xenial_amd64.tar]
+| Ubuntu 18.04 (bionic)         | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_ubuntu1804_bionic_amd64.tar[libcouchbase-3.3.12_ubuntu1804_bionic_amd64.tar]
+| Ubuntu 20.04 (focal)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_ubuntu2004_focal_amd64.tar[libcouchbase-3.3.12_ubuntu2004_focal_amd64.tar]
+| Ubuntu 22.04 (jammy)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_ubuntu2204_jammy_amd64.tar[libcouchbase-3.3.12_ubuntu2204_jammy_amd64.tar]
+| Debian 9 (stretch)            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_debian9_stretch_amd64.tar[libcouchbase-3.3.12_debian9_stretch_amd64.tar]
+| Debian 10 (buster)            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_debian10_buster_amd64.tar[libcouchbase-3.3.12_debian10_buster_amd64.tar]
+| Debian 11 (bullseye)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_debian11_bullseye_amd64.tar[libcouchbase-3.3.12_debian11_bullseye_amd64.tar]
+| Visual Studio 2015 (VC14)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_vc14_amd64.zip[libcouchbase-3.3.12_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_vc15_amd64.zip[libcouchbase-3.3.12_vc15_amd64.zip]
+| Visual Studio 2019 (VC16)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_vc16_amd64.zip[libcouchbase-3.3.12_vc16_amd64.zip]
+| Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_vc14_amd64_openssl.zip[libcouchbase-3.3.12_vc14_amd64_openssl.zip]
+| Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_vc15_amd64_openssl.zip[libcouchbase-3.3.12_vc15_amd64_openssl.zip]
+| Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_vc16_amd64_openssl.zip[libcouchbase-3.3.12_vc16_amd64_openssl.zip]
+|===
+
+
+=== Version 3.3.11 (21 December 2023)
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.11/index.html[API Reference]
+
+* https://issues.couchbase.com/browse/CCBC-1618[CCBC-1618]:
+Updated query error codes for dynamic authenticator.
+This is an update to the internal interface, that allows more granular detection of stale authentication conditions for the Query Service.
+
+* Prevent full rebuild on every run of `cmake`.
+The SDK no longer renders the built timestamp into the header, but instead only uses it in the object file.
+
+==== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11.sha256sum[libcouchbase-3.3.11.sha256sum]
+| Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11.tar.gz[libcouchbase-3.3.11.tar.gz]
+| Amazon Linux 2023             | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_amzn2023_x86_64.tar[libcouchbase-3.3.11_amzn2023_x86_64.tar]
+| Amazon Linux 2                | aarch64      | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_amzn2_aarch64.tar[libcouchbase-3.3.11_amzn2_aarch64.tar]
+| Amazon Linux 2                | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_amzn2_x86_64.tar[libcouchbase-3.3.11_amzn2_x86_64.tar]
+| Enterprise Linux 7            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_centos7_x86_64.tar[libcouchbase-3.3.11_centos7_x86_64.tar]
+| Enterprise Linux 8            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_rhel8_x86_64.tar[libcouchbase-3.3.11_rhel8_x86_64.tar]
+| Enterprise Linux 9            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_rhel9_x86_64.tar[libcouchbase-3.3.11_rhel9_x86_64.tar]
+| Ubuntu 16.04 (xenial)         | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_ubuntu1604_xenial_amd64.tar[libcouchbase-3.3.11_ubuntu1604_xenial_amd64.tar]
+| Ubuntu 18.04 (bionic)         | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_ubuntu1804_bionic_amd64.tar[libcouchbase-3.3.11_ubuntu1804_bionic_amd64.tar]
+| Ubuntu 20.04 (focal)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_ubuntu2004_focal_amd64.tar[libcouchbase-3.3.11_ubuntu2004_focal_amd64.tar]
+| Ubuntu 22.04 (jammy)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_ubuntu2204_jammy_amd64.tar[libcouchbase-3.3.11_ubuntu2204_jammy_amd64.tar]
+| Debian 9 (stretch)            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_debian9_stretch_amd64.tar[libcouchbase-3.3.11_debian9_stretch_amd64.tar]
+| Debian 10 (buster)            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_debian10_buster_amd64.tar[libcouchbase-3.3.11_debian10_buster_amd64.tar]
+| Debian 11 (bullseye)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_debian11_bullseye_amd64.tar[libcouchbase-3.3.11_debian11_bullseye_amd64.tar]
+| Visual Studio 2015 (VC14)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_vc14_amd64.zip[libcouchbase-3.3.11_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_vc15_amd64.zip[libcouchbase-3.3.11_vc15_amd64.zip]
+| Visual Studio 2019 (VC16)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_vc16_amd64.zip[libcouchbase-3.3.11_vc16_amd64.zip]
+| Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_vc14_amd64_openssl.zip[libcouchbase-3.3.11_vc14_amd64_openssl.zip]
+| Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_vc15_amd64_openssl.zip[libcouchbase-3.3.11_vc15_amd64_openssl.zip]
+| Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.11_vc16_amd64_openssl.zip[libcouchbase-3.3.11_vc16_amd64_openssl.zip]
+|===
+
 
 === Version 3.3.10 (10 October 2023)
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.10/index.html[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-1616[CCBC-1616]: 
-A `wait_for_config` check is now applied for all pipelines. 
+* https://issues.couchbase.com/browse/CCBC-1616[CCBC-1616]:
+A `wait_for_config` check is now applied for all pipelines.
 Previously, the `lcb_wait` function would wait for the pending configuration updates, but didn't do it if the configuration update operation was being retried.
-Now, the operation also will not wait for pending configuration updates, rather it will return from `lcb_wait` as soon as the operation completes. 
+Now, the operation also will not wait for pending configuration updates, rather it will return from `lcb_wait` as soon as the operation completes.
 
-** The old behaviour still works when `wait_for_config=true` is passed in the connection string 
+** The old behaviour still works when `wait_for_config=true` is passed in the connection string
 (or `LCB_CNTL_WAIT_FOR_CONFIG` is set to non-zero value):
-in this case the library will wait for the configuration. 
+in this case the library will wait for the configuration.
 ** This setting does not affect the mode when the event loop is executed by the application, and without `lcb_wait`.
 
 ==== Downloads
@@ -73,7 +164,7 @@ in this case the library will wait for the configuration.
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.9/index.html[API Reference]
 
 * https://issues.couchbase.com/browse/CCBC-1608[CCBC-1608]:
-Reduced the default timeout for idle HTTP connections to 1 second. 
+Reduced the default timeout for idle HTTP connections to 1 second.
 The previous default (4.5 seconds) was too close to the 5-second server-side timeout, and could lead to spurious request failures.
 
 * https://issues.couchbase.com/browse/CCBC-1615[CCBC-1615]:
@@ -89,7 +180,7 @@ In faster failover mode:
 To handle `0x0d` (`ECONFIG_ONLY`) status code --
 we now treat this status code as a signal to refresh the configuration.
 The new or failed over nodes are set into config-only mode, where all data operations will be failed with code `0x0d`.
-It is possible that the SDK might be using stale configuration and send requests to the node that is not part of the cluster any more, 
+It is possible that the SDK might be using stale configuration and send requests to the node that is not part of the cluster any more,
 so to work around this the library will update the configuration and retry the operation.
 
 * https://issues.couchbase.com/browse/CCBC-1610[CCBC-1610]:

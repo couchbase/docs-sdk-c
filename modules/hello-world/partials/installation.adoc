@@ -145,32 +145,32 @@ For other RPM-based distributions -- such as Amazon Linux 2023 -- the steps are 
 ====
 [source,console]
 ----
-$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.3.10_centos7_x86_64.tar
+$ curl -O https://packages.couchbase.com/clients/c/libcouchbase-3.3.12_centos7_x86_64.tar
 ----
 
 [source,console]
 ----
-$ tar xf libcouchbase-3.3.10_centos7_x86_64.tar
+$ tar xf libcouchbase-3.3.12_centos7_x86_64.tar
 ----
 
 [source,console]
 ----
-$ cd libcouchbase-3.3.10_centos7_x86_64
+$ cd libcouchbase-3.3.12_centos7_x86_64
 ----
 
 [source,console]
 ----
-$ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.3.10*.rpm libcouchbase-devel-*.rpm
+$ sudo yum install -y libcouchbase3{-tools,-libevent,}-3.3.12*.rpm libcouchbase-devel-*.rpm
 ----
 
 [source,console]
 ----
 > ...
 > Installed:
->   libcouchbase-devel.x86_64 0:3.3.10-1.el7
->   libcouchbase3.x86_64 0:3.3.10-1.el7
->   libcouchbase3-libevent.x86_64 0:3.3.10-1.el7
->   libcouchbase3-tools.x86_64 0:3.3.10-1.el7
+>   libcouchbase-devel.x86_64 0:3.3.12-1.el7
+>   libcouchbase3.x86_64 0:3.3.12-1.el7
+>   libcouchbase3-libevent.x86_64 0:3.3.12-1.el7
+>   libcouchbase3-tools.x86_64 0:3.3.12-1.el7
 > ...
 >
 > Complete!
@@ -281,7 +281,7 @@ If for some reason you cannot use any of the prebuilt Windows binaries, follow t
 
 The easiest way to verify installed package is to check its version using cbc tools. It requires package *libcouchbase3-tools* installed on Linux systems, for Windows *cbc.exe* included in the zip archive.
 To verify the client run *cbc version* (*cbc.exe version* on Windows).
-It shows version along with git commit numbers. Then it prints default directory where IO plugins installed and enumerates the currently installed and available plugins. 
+It shows version along with git commit numbers. Then it prints default directory where IO plugins installed and enumerates the currently installed and available plugins.
 After that it reports whether OpenSSL linked to this particular version of libcouchbase, and displays the version number if it is accessible.
 
 [source,console]
