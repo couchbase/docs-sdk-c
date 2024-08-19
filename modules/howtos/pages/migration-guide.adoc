@@ -1,0 +1,401 @@
+:source-highlighter: coderay
+
+= Migration to C++SDK
+
+[abstract]
+{description}
+
+This document highlights the conceptual differences between libcouchbase (C SDK)
+and the new Couchbase C++ SDK.
+
+== Structure
+
+The diagrams below describe the components of both libraries.
+
+=== libcouchbase
+
+[mermaid]
+----
+block-beta
+  columns 3
+
+  developer("Developer")
+  block:user:2
+    columns 2
+    Applications
+    ODMs
+    Wrappers
+    Integrations
+  end
+
+  low_level("Low-Level API")
+  libcouchbase("libcouchbase"):2
+
+  dependencies("System\nDependencies")
+  block:deps:2
+    columns 2
+    libc
+    libevent
+    libev
+    libuv
+    OpenSSL
+  end
+----
+
+A few important points to note:
+
+* `libcouchbase` provides only a low-level API, which typically requires
+  additional coding effort on the developer's side, such as transcoding,
+  building payloads for the management API, and handling multi-threaded access.
+
+* `libcouchbase` does not include an I/O library and expects one to be provided
+  by the system (such as `libevent`, `libev`, or `libuv`).
+
+=== C++ SDK
+
+[mermaid]
+----
+block-beta
+  columns 3
+
+  developer("Developer")
+  block:user:2
+    columns 2
+    Applications
+    ODMs
+    Integrations
+  end
+
+  high_level("High-Level\nPublic API")
+  block:public:2
+    columns 2
+    CRUD
+    Query
+    Transcoders
+    Transactions
+    Management
+  end
+
+  low_level("Low-Level\nPrivate API")
+  private("Internal API for Wrappers"):2
+
+  bundled_dependencies("Bundled\nDependencies")
+  block:bundled:2
+    ASIO
+    BoringSSL
+  end
+
+  system_dependencies("System\nDependencies")
+  block:system:2
+    libc
+    openssl("OpenSSL (if not bundled)")
+  end
+----
+
+Notable differences in the C++ SDK:
+
+* **High-Level API**: The C++ SDK provides a high-level API that offers an
+  object-oriented, more structured interface for applications.
+
+* **Low-Level API**: The low-level API is private and intended solely for use by
+  official wrappers. Any changes to it are coordinated directly with the
+  developers of these wrappers (e.g., Python, Node.js, Ruby, and PHP).
+
+* **I/O Layer**: The I/O layer is no longer pluggable, with `ASIO` being the
+  only available option. This change allows the library to gain more control,
+  ensure thread safety, and provide better accessibility for application
+  developers.
+
+* **OpenSSL and BoringSSL**: In addition to supporting system OpenSSL, the
+  library can bundle `BoringSSL` to enhance portability and reduce external
+  dependencies.
+
+== API Concepts
+
+This section outlines some differences between the two libraries from the user's
+perspective.
+
+=== Connection Management
+
+The C++ SDK follows the SDKv3 API structure, which operates with entities like
+`Cluster`, `Bucket`, `Scope`, and `Collection`. In contrast, with
+`libcouchbase`, the application first creates a cluster-level connection and
+then 'converts' it into a bucket-level connection using the `lcb_open()` call,
+after which scope and collection parameters must be provided for each operation.
+
+==== Open Cluster
+
+Libcouchbase.
+
+[source,c++]
+----
+std::string connection_string{ "couchbase://127.0.0.1" };
+std::string username{ "Administrator" };
+std::string password{ "password" };
+
+lcb_CREATEOPTS *options{ nullptr };
+lcb_createopts_create(&options, LCB_TYPE_CLUSTER);
+lcb_createopts_connstr(options,
+        connection_string.data(), connection_string.size());
+lcb_createopts_credentials(options,
+        username.data(), username.size(),
+        password.data(), password.size());
+
+lcb_create(&instance, options);
+lcb_createopts_destroy(options);
+
+lcb_connect(instance);
+lcb_wait(instance, LCB_WAIT_DEFAULT);
+----
+
+C++ SDK.
+
+[source,c++]
+----
+std::string connection_string{ "couchbase://127.0.0.1" };
+std::string username{ "Administrator" };
+std::string password{ "password" };
+
+auto options = couchbase::cluster_options(username, password);
+auto future = couchbase::cluster::connect(connection_string, options);
+auto [err, instance] = future.get();
+----
+
+==== Open Bucket
+
+Libcouchbase.
+
+The application should use a callback to check the result of the operation. If
+`lcb_open()` succeeds, the `instance` is converted to the `LCB_TYPE_BUCKET`
+type.
+
+[source,c++]
+----
+void open_callback(lcb_INSTANCE *instance, lcb_STATUS status)
+{
+    // check status, use instance in the bucket context
+}
+----
+
+[source,c++]
+----
+std::string bucket_name{ "default" };
+
+lcb_set_open_callback(instance, open_callback);
+lcb_open(instance, bucket_name.data(), bucket_name.size());
+lcb_wait(instance, LCB_WAIT_DEFAULT);
+----
+
+
+C++ SDK.
+
+The bucket object can be used immediately. Multiple buckets can be opened on the
+same cluster object, reusing underlying I/O objects such as the event loop and,
+if possible, sockets. `libcouchbase`, however, requires a separate
+`lcb_INSTANCE` object for each bucket, and by default, it does not share
+resources between them.
+
+[source,c++]
+----
+std::string bucket_name{ "default" };
+
+auto bucket = cluster.bucket(bucket_name);
+----
+
+=== Operations
+
+`libcouchbase` provides a callback-based interface, where the callback is
+typically registered only once and is associated with the `lcb_INSTANCE` object
+rather than with individual operations. To bind a callback to a specific
+operation, a pointer to some state, often referred to as a `cookie` in the
+documentation, must be used. The cookie should be set on the operation object
+during the scheduling phase and then extracted in the callback.
+
+Another important detail is that `libcouchbase` offers a low-level interface for
+operations and does not perform any transcoding of values; everything is handled
+as byte buffers.
+
+[source,c++]
+----
+struct store_result
+{
+    lcb_STATUS status{};
+    std::uint64_t cas{};
+};
+
+void store_callback(lcb_INSTANCE *instance, int cbtype, const lcb_RESPSTORE *resp)
+{
+    store_result *result{ nullptr };
+    lcb_respstore_cookie(resp, reinterpret_cast<void **>(&result));
+
+    result->status = lcb_respstore_status(resp);
+    lcb_respstore_cas(resp, &result->cas);
+}
+
+struct get_result
+{
+    lcb_STATUS status{};
+    std::uint64_t cas{};
+    std::string value{};
+    std::uint32_t flags{};
+};
+
+void get_callback(lcb_INSTANCE *instance, int cbtype, const lcb_RESPGET *resp)
+{
+    store_result *result{ nullptr };
+    lcb_respstore_cookie(resp, reinterpret_cast<void **>(&result));
+
+    result->status = lcb_respget_status(resp);
+    lcb_respget_cas(resp, &result->cas);
+    lcb_respget_flags(resp, &result->flags);
+
+    const char *buf{ nullptr };
+    std::size_t buf_len{};
+    lcb_respget_value(resp, &buf, &buf_len);
+    result->value.assign(buf, buf_len);
+}
+----
+
+[source,c++]
+----
+lcb_install_callback(instance, LCB_CALLBACK_STORE, (lcb_RESPCALLBACK)store_callback);
+lcb_install_callback(instance, LCB_CALLBACK_GET, (lcb_RESPCALLBACK)get_callback);
+----
+
+[source,c++]
+----
+std::string scope_name{ "my_app" };
+std::string collection_name{ "inventory" };
+
+std::string key{ "the_key" };
+std::string value{ "{\"foo\": 42}" };
+
+{
+    store_result result{};
+    lcb_CMDSTORE *cmd{ nullptr };
+    lcb_cmdstore_create(&cmd, LCB_STORE_UPSERT);
+    lcb_cmdstore_collection(cmd, key.data(), key.size());
+    lcb_cmdstore_key(cmd, key.data(), key.size());
+    lcb_cmdstore_value(cmd, value.data(), value.size());
+    lcb_cmdstore_datatype(cmd, LCB_VALUE_F_JSON);
+    lcb_store(instance, reinterpret_cast<void *>(&result), cmd); // schedule
+    lcb_cmdstore_destroy(cmd);
+    lcb_wait(instance, LCB_WAIT_DEFAULT); // wait for completion
+}
+
+{
+    get_result result{};
+    lcb_CMDGET *cmd{ nullptr };
+    lcb_cmdget_create(&cmd);
+    lcb_cmdget_collection(cmd, key.data(), key.size());
+    lcb_cmdget_key(cmd, key.data(), key.size());
+    lcb_get(instance, reinterpret_cast<void *>(&result), cmd); // schedule
+    lcb_cmdget_destroy(cmd);
+    lcb_wait(instance, LCB_WAIT_DEFAULT); // wait for completion
+}
+----
+
+The C++ SDK simplifies much of the boilerplate code and allows handlers to be
+local to the operation scheduling site.
+
+Additionally, the C++ SDK supports transcoders, enabling automatic value
+conversion.
+
+[source,c++]
+----
+#include <tao/json.hpp>
+
+struct the_value
+{
+    std::uint32_t foo;
+};
+
+template<>
+struct tao::json::traits<the_value> {
+  template<template<typename...> class Traits>
+  static void assign(tao::json::basic_value<Traits>& v, const the_value& p)
+  {
+    v = {
+      { "foo", p.foo },
+    };
+  }
+
+  template<template<typename...> class Traits>
+  static the_value as(const tao::json::basic_value<Traits>& v)
+  {
+    the_value result;
+    const auto& object = v.get_object();
+    result.foo = object.at("foo").template as<std::uint32_t>();
+    return result;
+  }
+};
+
+struct store_result
+{
+    std::error_code status{};
+    std::uint64_t cas{};
+};
+
+struct get_result
+{
+    std::error_code status{};
+    std::uint64_t cas{};
+    the_value value{};
+};
+----
+
+[source,c++]
+----
+std::string scope_name{ "my_app" };
+std::string collection_name{ "inventory" };
+
+std::string key{ "the_key" };
+the_value value{ 42 };
+
+auto collection = bucket.scope(scope_name).collection(collection_name);
+
+{
+    auto future = collection.upsert(key, value, {});
+    auto [err, resp] = future.get();
+
+    store_result result{};
+    result.status = err.ec();
+    result.cas = resp.cas().value();
+}
+
+{
+    auto future = collection.get(key, {});
+    auto [err, resp] = future.get();
+
+    get_result result{};
+    result.status = err.ec();
+    result.cas = resp.cas().value();
+    result.value = resp.content_as<the_value>();
+}
+----
+
+The code above could be rewritten to callbacks (using C++20 `std::latch` for
+example).
+
+[source,c++]
+----
+store_result store{};
+get_result get{};
+
+std::latch latch(2);
+
+collection.upsert(key, value, {}, [&latch, &store](auto err, auto resp) {
+    store.status = err.ec();
+    store.cas = resp.cas().value();
+    latch.count_down();
+});
+
+collection.get(key, {}, [&latch, &get](auto err, auto resp) {
+    get.status = err.ec();
+    get.cas = resp.cas().value();
+    get.value = resp.content_as<the_value>();
+    latch.count_down();
+});
+
+latch.wait();
+----

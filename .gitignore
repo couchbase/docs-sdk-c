@@ -1,0 +1,3 @@
+*.pdf
+.asciidoctor
+diag-mermaid-md5*.png
