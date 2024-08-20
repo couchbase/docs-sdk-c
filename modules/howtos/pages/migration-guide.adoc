@@ -399,3 +399,71 @@ collection.get(key, {}, [&latch, &get](auto err, auto resp) {
 
 latch.wait();
 ----
+
+=== Query
+
+As with any other operations `libcouchbase` separates scheduling operation, and
+handling results, and expects the application to carry state through the cookie,
+as shown in the example below. It also performs only shallow parsing of the
+response, and emits rows as a byte buffers, so it is duty of the application to
+parse rows. Meta-data (like metrics, profile and detailed error information) is
+delivered as a row, and the application should use `lcb_respquery_status` to
+distinguish it from regular row.
+
+Also note, that parameters have to be JSON-encoded by the application, as in the
+example below it encodes positional parameters into JSON array.
+
+[source,c++]
+----
+struct query_result
+{
+    lcb_STATUS status{};
+    std::string meta{};
+    std::vector<std::string> rows{};
+};
+
+void row_callback(lcb_INSTANCE *instance, int type, const lcb_RESPQUERY *resp)
+{
+    query_result *result{ nullptr };
+    lcb_respquery_cookie(resp, reinterpret_cast<void **>(&result));
+
+    result->status = lcb_respquery_status(resp);
+
+    const char *buf;
+    std::size_t buf_len;
+    lcb_respquery_row(resp, &buf, &buf_len);
+
+    if (lcb_respquery_is_final(resp)) {
+        result->rows.emplace_back(buf, buf_len);
+    } else {
+        result->meta.assign(buf, buf_len);
+    }
+}
+----
+
+[source,c++]
+----
+std::string query = std::format(
+    "SELECT * FROM `{}` WHERE $1 in interests LIMIT 1", bucket_name);
+
+lcb_CMDQUERY *cmd{ nullptr };
+lcb_cmdquery_create(&cmd);
+lcb_cmdquery_statement(cmd, query.data(), query.size());
+
+std::string params = "[\"African Swallows\"]";
+lcb_cmdquery_positional_params(cmd, params.data(), params.data());
+
+std::string name{ "pretty" };
+std::string value{ "false" };
+lcb_cmdquery_option(cmd, name.data(), name.size(), value.data(), value.size());
+
+query_result result;
+lcb_cmdquery_callback(cmd, row_callback);
+lcb_query(instance, reinterpret_cast<void *>(&result), cmd);
+lcb_cmdquery_destroy(cmd);
+lcb_wait(instance, LCB_WAIT_DEFAULT);
+----
+
+The C++ SDK differs in a way that it allows for easier discovery for all
+accessible options of the query. The parameters and result values are transcoded
+automatically whenever it is necessary.
