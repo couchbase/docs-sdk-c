@@ -443,19 +443,17 @@ void row_callback(lcb_INSTANCE *instance, int type, const lcb_RESPQUERY *resp)
 
 [source,c++]
 ----
-std::string query = std::format(
-    "SELECT * FROM `{}` WHERE $1 in interests LIMIT 1", bucket_name);
+std::string scope_name{ "inventory" };
+std::string query{ "SELECT * FROM hotel WHERE country IN $1 LIMIT 10" };
 
 lcb_CMDQUERY *cmd{ nullptr };
 lcb_cmdquery_create(&cmd);
+lcb_cmdquery_scope_name(cmd, scope_name.data(), scope_name.size());
 lcb_cmdquery_statement(cmd, query.data(), query.size());
 
-std::string params = "[\"African Swallows\"]";
+std::string params = "[\"United States\", \"United Kingdom\"]";
 lcb_cmdquery_positional_params(cmd, params.data(), params.data());
-
-std::string name{ "pretty" };
-std::string value{ "false" };
-lcb_cmdquery_option(cmd, name.data(), name.size(), value.data(), value.size());
+lcb_cmdquery_readonly(cmd, true);
 
 query_result result;
 lcb_cmdquery_callback(cmd, row_callback);
@@ -467,3 +465,16 @@ lcb_wait(instance, LCB_WAIT_DEFAULT);
 The C++ SDK differs in a way that it allows for easier discovery for all
 accessible options of the query. The parameters and result values are transcoded
 automatically whenever it is necessary.
+
+[source,c++]
+----
+std::string scope_name{ "inventory" };
+std::string query{ "SELECT * FROM hotel WHERE country IN $1 LIMIT 10" };
+
+auto scope = bucket.scope(scope_name);
+auto future = scope.query(query);
+auto [error, query_result] = future.get();
+for (const auto& row : query_result.rows_as_json()) {
+    std::cout << row["hotel"]["title"] << "\n";
+}
+----
