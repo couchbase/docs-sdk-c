@@ -26,6 +26,52 @@ any changes to expected behavior are noted in the release notes that follow.
 
 
 
+=== Version 3.3.14 (12 November 2024)
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.14/index.html[API Reference]
+
+* https://jira.issues.couchbase.com/browse/CCBC-1653[CCBC-1653]:
+Libcouchbase now correctly honors the timeout setting for Analytics query, when it is changed to a non-default value.
+* https://jira.issues.couchbase.com/browse/CCBC-1651[CCBC-1651]:
+Previously, the library did not release memory of the packets that never got a chance to be flushed to the network buffer,
+if libcouchbase was still trying to connect sockets.
+This has been fixed, so that purged packets get their memory released, it thus fixes a memory leak in case of network issues.
+* https://jira.issues.couchbase.com/browse/CCBC-1646[CCBC-1646]:
+Implemented Server groups for replica reads --
+allow to restrict replica set to a selected server group.
+This feature allows to implement network optimization when traffic cost between server groups is higher than in the local group.
+In this case the application might select preferred server group in the connection options, and later opt-in for local operations during replica reads.
+* https://jira.issues.couchbase.com/browse/CCBC-1555[CCBC-1555]:
+Removed extra prefix in tapset probes.
+* https://jira.issues.couchbase.com/browse/CCBC-1598[CCBC-1598]:
+Fixed documentation issues for cbc tools.
+* Fixed tests on 7.6 Server.
+
+==== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14.sha256sum[libcouchbase-3.3.14.sha256sum]
+| Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14.tar.gz[libcouchbase-3.3.14.tar.gz]
+| Amazon Linux 2023             | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_amzn2023_x86_64.tar[libcouchbase-3.3.14_amzn2023_x86_64.tar]
+| Amazon Linux 2                | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_amzn2_x86_64.tar[libcouchbase-3.3.14_amzn2_x86_64.tar]
+| Enterprise Linux 8            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_rhel8_x86_64.tar[libcouchbase-3.3.14_rhel8_x86_64.tar]
+| Enterprise Linux 9            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_rhel9_x86_64.tar[libcouchbase-3.3.14_rhel9_x86_64.tar]
+| Ubuntu 22.04 (jammy)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_ubuntu2204_jammy_amd64.tar[libcouchbase-3.3.14_ubuntu2204_jammy_amd64.tar]
+| Ubuntu 24.04 (noble)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_ubuntu2404_noble_amd64.tar[libcouchbase-3.3.14_ubuntu2404_noble_amd64.tar]
+| Debian 11 (bullseye)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_debian11_bullseye_amd64.tar[libcouchbase-3.3.14_debian11_bullseye_amd64.tar]
+| Debian 12 (bookworm)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_debian12_bookworm_amd64.tar[libcouchbase-3.3.14_debian12_bookworm_amd64.tar]
+| Visual Studio 2015 (VC14)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_vc14_amd64.zip[libcouchbase-3.3.14_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_vc15_amd64.zip[libcouchbase-3.3.14_vc15_amd64.zip]
+| Visual Studio 2019 (VC16)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_vc16_amd64.zip[libcouchbase-3.3.14_vc16_amd64.zip]
+| Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_vc14_amd64_openssl.zip[libcouchbase-3.3.14_vc14_amd64_openssl.zip]
+| Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_vc15_amd64_openssl.zip[libcouchbase-3.3.14_vc15_amd64_openssl.zip]
+| Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_vc16_amd64_openssl.zip[libcouchbase-3.3.14_vc16_amd64_openssl.zip]
+|===
+
+
+
 === Version 3.3.13 (13 September 2024)
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.13/index.html[API Reference]
