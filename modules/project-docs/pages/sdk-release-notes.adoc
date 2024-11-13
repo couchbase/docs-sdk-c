@@ -24,16 +24,28 @@ We always recommend using the latest version of the SDK -- it contains all of th
 All patch releases for each dot minor release should be API compatible, and safe to upgrade;
 any changes to expected behavior are noted in the release notes that follow.
 
+
+
 === Version 3.3.14 (12 November 2024)
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.14/index.html[API Reference]
 
-* https://jira.issues.couchbase.com/browse/CCBC-1653[CCBC-1653]: Fix setting timeout for analytics query.
-* https://jira.issues.couchbase.com/browse/CCBC-1651[CCBC-1651]: Ensure that purged packets get their memory released, it fixes memory leak in case of network issues.
-* https://jira.issues.couchbase.com/browse/CCBC-1646[CCBC-1646]: Server groups for replica reads.
-* https://jira.issues.couchbase.com/browse/CCBC-1555[CCBC-1555]: Remove extra prefix in tapset probes.
-* https://jira.issues.couchbase.com/browse/CCBC-1598[CCBC-1598]: Fix documentation for cbc tools.
-* Fix tests on 7.6 server
+* https://jira.issues.couchbase.com/browse/CCBC-1653[CCBC-1653]:
+Libcouchbase now correctly honors the timeout setting for Analytics query, when it is changed to a non-default value.
+* https://jira.issues.couchbase.com/browse/CCBC-1651[CCBC-1651]:
+Previously, the library did not release memory of the packets that never got a chance to be flushed to the network buffer,
+if libcouchbase was still trying to connect sockets.
+This has been fixed, so that purged packets get their memory released, it thus fixes a memory leak in case of network issues.
+* https://jira.issues.couchbase.com/browse/CCBC-1646[CCBC-1646]:
+Implemented Server groups for replica reads --
+allow to restrict replica set to a selected server group.
+This feature allows to implement network optimization when traffic cost between server groups is higher than in the local group.
+In this case the application might select preferred server group in the connection options, and later opt-in for local operations during replica reads.
+* https://jira.issues.couchbase.com/browse/CCBC-1555[CCBC-1555]:
+Removed extra prefix in tapset probes.
+* https://jira.issues.couchbase.com/browse/CCBC-1598[CCBC-1598]:
+Fixed documentation issues for cbc tools.
+* Fixed tests on 7.6 Server.
 
 ==== Downloads
 
