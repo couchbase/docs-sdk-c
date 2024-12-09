@@ -282,7 +282,7 @@ E.....@.@.............+....Z.'yZ..#........
 
 // == Using DNS SRV records
 
-include::7.1@sdk:shared:partial$dnssrv-pars.adoc[tag=dnssrv]
+include::7.6@sdk:shared:partial$dnssrv-pars.adoc[tag=dnssrv-rev]
 
 The C SDK always tries to use the SRV records, if the connection string contains a single hostname and the feature is not
 disabled explicitly with connection string option `dnssrv=off`.
