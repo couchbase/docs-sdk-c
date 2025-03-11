@@ -25,6 +25,35 @@ All patch releases for each dot minor release should be API compatible, and safe
 any changes to expected behavior are noted in the release notes that follow.
 
 
+=== Version 3.3.15 (14 December 2024)
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.15/index.html[API Reference]
+
+* CCBC-1652: Allow to force SASL when client certificate is being used.
+* Windows binaries now linked with OpenSSL 3.
+
+==== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15.sha256.txt[libcouchbase-3.3.15.sha256sum]
+| Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15.tar.gz[libcouchbase-3.3.15.tar.gz]
+| Amazon Linux 2023             | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_amzn2023_x86_64.tar[libcouchbase-3.3.15_amzn2023_x86_64.tar]
+| Amazon Linux 2                | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_amzn2_x86_64.tar[libcouchbase-3.3.15_amzn2_x86_64.tar]
+| Enterprise Linux 8            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_rhel8_x86_64.tar[libcouchbase-3.3.15_rhel8_x86_64.tar]
+| Enterprise Linux 9            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_rhel9_x86_64.tar[libcouchbase-3.3.15_rhel9_x86_64.tar]
+| Ubuntu 22.04 (jammy)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_ubuntu2204_jammy_amd64.tar[libcouchbase-3.3.15_ubuntu2204_jammy_amd64.tar]
+| Ubuntu 24.04 (noble)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_ubuntu2404_noble_amd64.tar[libcouchbase-3.3.15_ubuntu2404_noble_amd64.tar]
+| Debian 11 (bullseye)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_debian11_bullseye_amd64.tar[libcouchbase-3.3.15_debian11_bullseye_amd64.tar]
+| Debian 12 (bookworm)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_debian12_bookworm_amd64.tar[libcouchbase-3.3.15_debian12_bookworm_amd64.tar]
+| Visual Studio 2015 (VC14)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc14_amd64.zip[libcouchbase-3.3.15_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc15_amd64.zip[libcouchbase-3.3.15_vc15_amd64.zip]
+| Visual Studio 2019 (VC16)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc16_amd64.zip[libcouchbase-3.3.15_vc16_amd64.zip]
+| Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc14_amd64_openssl3.zip[libcouchbase-3.3.15_vc14_amd64_openssl3.zip]
+| Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc15_amd64_openssl3.zip[libcouchbase-3.3.15_vc15_amd64_openssl3.zip]
+| Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc16_amd64_openssl3.zip[libcouchbase-3.3.15_vc16_amd64_openssl3.zip]
+|===
 
 === Version 3.3.14 (12 November 2024)
 
@@ -52,7 +81,7 @@ Fixed documentation issues for cbc tools.
 [cols="12,^8,23"]
 |===
 | Platform                      | Architecture | File
-| Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14.sha256sum[libcouchbase-3.3.14.sha256sum]
+| Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14.sha256.txt[libcouchbase-3.3.14.sha256sum]
 | Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14.tar.gz[libcouchbase-3.3.14.tar.gz]
 | Amazon Linux 2023             | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_amzn2023_x86_64.tar[libcouchbase-3.3.14_amzn2023_x86_64.tar]
 | Amazon Linux 2                | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.14_amzn2_x86_64.tar[libcouchbase-3.3.14_amzn2_x86_64.tar]
