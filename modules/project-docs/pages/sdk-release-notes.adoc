@@ -50,9 +50,11 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.15/index.html[API Refe
 | Visual Studio 2015 (VC14)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc14_amd64.zip[libcouchbase-3.3.15_vc14_amd64.zip]
 | Visual Studio 2017 (VC15)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc15_amd64.zip[libcouchbase-3.3.15_vc15_amd64.zip]
 | Visual Studio 2019 (VC16)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc16_amd64.zip[libcouchbase-3.3.15_vc16_amd64.zip]
+| Visual Studio 2022 (VC17)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc17_amd64.zip[libcouchbase-3.3.15_vc17_amd64.zip]
 | Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc14_amd64_openssl3.zip[libcouchbase-3.3.15_vc14_amd64_openssl3.zip]
 | Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc15_amd64_openssl3.zip[libcouchbase-3.3.15_vc15_amd64_openssl3.zip]
 | Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc16_amd64_openssl3.zip[libcouchbase-3.3.15_vc16_amd64_openssl3.zip]
+| Visual Studio 2022 TLS (VC17) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.15_vc17_amd64_openssl3.zip[libcouchbase-3.3.15_vc17_amd64_openssl3.zip]
 |===
 
 === Version 3.3.14 (12 November 2024)
