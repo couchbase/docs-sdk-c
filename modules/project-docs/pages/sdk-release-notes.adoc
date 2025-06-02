@@ -29,18 +29,19 @@ any changes to expected behavior are noted in the release notes that follow.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.16/index.html[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-1664[CCBC-1664]: Register read event watcher for KV socket if duplex is enabled.
-  Fixes missing configuration updates on newer server versions (7.6.5+).
+* https://issues.couchbase.com/browse/CCBC-1664[CCBC-1664]: 
+Register read event watcher for KV socket if duplex is enabled.
+Fixes missing configuration updates on newer server versions (7.6.5+).
 
-* https://issues.couchbase.com/browse/CCBC-1662[CCBC-1662]: Ignore server-side notification during bootstrap.
-  Libcouchbase reports protocol error and stop bootstrapping the connection if
-  the server sends configuration notification during the initial handshake.
+* https://issues.couchbase.com/browse/CCBC-1662[CCBC-1662]: 
+Ignore server-side notification during bootstrap.
+Libcouchbase reports protocol error and stop bootstrapping the connection if the server sends configuration notification during the initial handshake.
 
 * Define `LCB_CC_STRING` for MS VS 17 to fix packaging scripts.
 
-* https://issues.couchbase.com/browse/CCBC-1658[CCBC-1658]: Add support for encrypted TLS keys.
-  The key password should be specified in connection options with
-  `lcb_createopts_tls_key_password()`.
+* https://issues.couchbase.com/browse/CCBC-1658[CCBC-1658]: 
+Add support for encrypted TLS keys.
+The key password should be specified in connection options with `lcb_createopts_tls_key_password()`.
 
 ==== Downloads
 
@@ -78,7 +79,9 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.16/index.html[API Refe
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.15/index.html[API Reference]
 
-* https://issues.couchbase.com/browse/CCBC-1652[CCBC-1652]: Allow to force SASL when client certificate is being used.
+* https://issues.couchbase.com/browse/CCBC-1652[CCBC-1652]: 
+Allow to force SASL when client certificate is being used.
+
 * Windows binaries now linked with OpenSSL 3.
 
 ==== Downloads
