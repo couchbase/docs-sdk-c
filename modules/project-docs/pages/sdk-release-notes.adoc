@@ -29,6 +29,9 @@ any changes to expected behavior are noted in the release notes that follow.
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.16/index.html[API Reference]
 
+This is a maintenance release and includes several bugs fixes and stability improvements.
+Most notably it brings enhancements in "Faster Failover" algorithm implementation that is supported by the recent server releases.
+
 * https://issues.couchbase.com/browse/CCBC-1664[CCBC-1664]: 
 Register read event watcher for KV socket if duplex is enabled.
 Fixes missing configuration updates on newer server versions (7.6.5+).
