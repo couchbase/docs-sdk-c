@@ -32,9 +32,10 @@ https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.17/index.html[API Refe
 This is a maintenance release.
 
 * https://issues.couchbase.com/browse/CCBC-1666[CCBC-1666]:
-Do not schedule config request during shutdown. With completion-based IO
-(libuv, Windows IOCP), the library might try to schedule configuration update
-on already deallocated pipeline and cause use-after-free condition.
+Configuration manager was not correctly handling `LCB_ERR_REQUEST_CANCELED` during instance destruction.
+With completion-based IO (`libuv`, Windows `IOCP`), the library could try to schedule a configuration update on and already deallocated pipeline and cause a use-after-free condition.
+To fix the issue, the configuration manager has now been updated to handle `LCB_ERR_REQUEST_CANCELED` and return without issuing a new request.
+
 
 ==== Downloads
 
@@ -85,7 +86,7 @@ Libcouchbase reports protocol error and stop bootstrapping the connection if the
 * Define `LCB_CC_STRING` for MS VS 17 to fix packaging scripts.
 
 * https://issues.couchbase.com/browse/CCBC-1658[CCBC-1658]:
-Add support for encrypted TLS keys.
+Added support for encrypted TLS keys.
 The key password should be specified in connection options with `lcb_createopts_tls_key_password()`.
 
 ==== Downloads
