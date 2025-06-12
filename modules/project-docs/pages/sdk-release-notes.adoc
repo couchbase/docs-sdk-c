@@ -33,7 +33,7 @@ This is a maintenance release.
 
 * https://issues.couchbase.com/browse/CCBC-1666[CCBC-1666]:
 Configuration manager was not correctly handling `LCB_ERR_REQUEST_CANCELED` during instance destruction.
-With completion-based IO (`libuv`, Windows `IOCP`), the library could try to schedule a configuration update on and already deallocated pipeline and cause a use-after-free condition.
+With completion-based IO (`libuv`, Windows `IOCP`), the library could try to schedule a configuration update on an already deallocated pipeline and cause a use-after-free condition.
 To fix the issue, the configuration manager has now been updated to handle `LCB_ERR_REQUEST_CANCELED` and return without issuing a new request.
 
 
