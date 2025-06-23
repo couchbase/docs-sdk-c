@@ -5,7 +5,7 @@
 
 [abstract]
 {description}
-It is also used by the Node.js, PHP, and Python SDKs to communicate with the Couchbase Server.
+It was used by older versions of the Node.js, PHP, and Python SDKs to communicate with the Couchbase Server.
 
 
 include::partial$installation.adoc[]
