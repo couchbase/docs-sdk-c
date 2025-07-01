@@ -80,8 +80,11 @@ Libcouchbase (the C SDK) is tested and supported on the following platforms:
 * Red Hat Enterprise Linux 7, 8, & 9 (from LCB 3.3.5)
 * CentOS 7
 * Ubuntu (LTS) 16.04 (_Xenial_), 18.04 (_Bionic_), 20.04 (_Focal_), & 22.04 (_Jammy_ -- from LCB 3.3.3)
-* Debian 10 (_Buster_) & 11 (_Bullseye_)
+* Debian 10 (_Buster_), Debian 11 (_Bullseye_), and (since LCB 3.13) Debian 12 (_Bookworm_).
 * Alpine Linux (Since LCB 3.2.5)
+
+NOTE: Some of the OS versions listed above were supported at time of LCB 3.3 release, but have since gone End of Life, so are no longer supported.
+See the xref:sdk-release-notes.adoc#latest-release[release notes page] for the platforms built with the latest release.
 
 
 [discrete]
