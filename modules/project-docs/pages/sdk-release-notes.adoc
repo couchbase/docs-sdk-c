@@ -25,6 +25,95 @@ All patch releases for each dot minor release should be API compatible, and safe
 any changes to expected behavior are noted in the release notes that follow.
 
 
+=== Version 3.3.18 (10 September 2025)
+
+https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.18/index.html[API Reference]
+
+This is a maintenance release.
+
+* https://issues.couchbase.com/browse/CCBC-1672[CCBC-1672]:
+Fixed protocol violation on new connections.
+In certain cases, extra bytes could be sent at the start of a new connection.
+Most of the time, this caused the server to drop the connection and the client
+would reconnect automatically, so users did not notice. However, in rare cases
+the server would accept the data as valid, leading to protocol issues. This has
+been corrected so that invalid data is properly discarded and connections stay
+consistent.
+
+* https://issues.couchbase.com/browse/CCBC-1671[CCBC-1671]:
+Send requests to all replica nodes for strategy "ANY".
+This change makes implementation of `get_any_replica` behave the same way as
+other SDKs.
+
+  - The old behavior: "get any replica" would send requests sequentially one by
+    one. So that next request will be dispatched only when previous fails.
+
+  - The new behavior: "get any replica" send requests to active and replica
+    nodes simulaneously and returns only first response to the user, discarding
+    everything else.
+
+* https://issues.couchbase.com/browse/CCBC-1669[CCBC-1669]:
+Fail `get_all_replicas` only if none nodes are available.
+
+* https://issues.couchbase.com/browse/CCBC-1668[CCBC-1668]:
+Do not assume that missing active node means none available for replica read.
+With this change reading replica will be more reliable during failover and
+rebalance events.
+
+* https://issues.couchbase.com/browse/CCBC-1667[CCBC-1667]:
+Do not schedule config update during instance termination. This change fixes
+use-after-free during `lcb_destroy`.
+
+* https://issues.couchbase.com/browse/CCBC-1674[CCBC-1674]:
+Do not use non-owning spans to release memory with `NETBUF_LIBC_PROXY`.
+Fix use-after-free for build with `NETBUF_LIBC_PROXY` when snappy compression
+is enabled. This is special build when caching allocator is replaced with just
+libc malloc. It is used only during development and testing, and never enabled
+in production.
+
+* https://issues.couchbase.com/browse/CCBC-1673[CCBC-1673]:
+Do not return block with `deallocs` as free in `find_free_block` of the netbuf
+subsystem.
+
+* Raise minimum cmake version to 3.17
+
+* Log local port to make it easier to correlate logs with the server
+
+==== Downloads
+
+[cols="12,^8,23"]
+|===
+| Platform                      | Architecture | File
+| Checksums                     | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18.sha256.txt[libcouchbase-3.3.18.sha256sum]
+| Source Archive                | Any          | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18.tar.gz[libcouchbase-3.3.18.tar.gz]
+| Amazon Linux 2023             | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_amzn2023_x86_64.tar[libcouchbase-3.3.18_amzn2023_x86_64.tar]
+| Amazon Linux 2023             | aarch64      | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_amzn2023_aarch64.tar[libcouchbase-3.3.18_amzn2023_aarch64.tar]
+| Amazon Linux 2                | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_amzn2_x86_64.tar[libcouchbase-3.3.18_amzn2_x86_64.tar]
+| Amazon Linux 2                | aarch64      | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_amzn2_aarch64.tar[libcouchbase-3.3.18_amzn2_aarch64.tar]
+| Enterprise Linux 8            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_rhel8_x86_64.tar[libcouchbase-3.3.18_rhel8_x86_64.tar]
+| Enterprise Linux 8            | aarch64      | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_rhel8_aarch64.tar[libcouchbase-3.3.18_rhel8_aarch64.tar]
+| Enterprise Linux 9            | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_rhel9_x86_64.tar[libcouchbase-3.3.18_rhel9_x86_64.tar]
+| Enterprise Linux 9            | aarch64      | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_rhel9_aarch64.tar[libcouchbase-3.3.18_rhel9_aarch64.tar]
+| Enterprise Linux 10           | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_rhel10_x86_64.tar[libcouchbase-3.3.18_rhel10_x86_64.tar]
+| Enterprise Linux 10           | aarch64      | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_rhel10_aarch64.tar[libcouchbase-3.3.18_rhel10_aarch64.tar]
+| Ubuntu 22.04 (jammy)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_ubuntu2204_jammy_amd64.tar[libcouchbase-3.3.18_ubuntu2204_jammy_amd64.tar]
+| Ubuntu 22.04 (jammy)          | aarch64      | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_ubuntu2204_jammy_arm64.tar[libcouchbase-3.3.18_ubuntu2204_jammy_arm64.tar]
+| Ubuntu 24.04 (noble)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_ubuntu2404_noble_amd64.tar[libcouchbase-3.3.18_ubuntu2404_noble_amd64.tar]
+| Ubuntu 24.04 (noble)          | aarch64      | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_ubuntu2404_noble_arm64.tar[libcouchbase-3.3.18_ubuntu2404_noble_arm64.tar]
+| Debian 11 (bullseye)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_debian11_bullseye_amd64.tar[libcouchbase-3.3.18_debian11_bullseye_amd64.tar]
+| Debian 11 (bullseye)          | aarch64      | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_debian11_bullseye_arm64.tar[libcouchbase-3.3.18_debian11_bullseye_arm64.tar]
+| Debian 12 (bookworm)          | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_debian12_bookworm_amd64.tar[libcouchbase-3.3.18_debian12_bookworm_amd64.tar]
+| Debian 12 (bookworm)          | aarch64      | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_debian12_bookworm_arm64.tar[libcouchbase-3.3.18_debian12_bookworm_arm64.tar]
+| Visual Studio 2015 (VC14)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_vc14_amd64.zip[libcouchbase-3.3.18_vc14_amd64.zip]
+| Visual Studio 2017 (VC15)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_vc15_amd64.zip[libcouchbase-3.3.18_vc15_amd64.zip]
+| Visual Studio 2019 (VC16)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_vc16_amd64.zip[libcouchbase-3.3.18_vc16_amd64.zip]
+| Visual Studio 2022 (VC17)     | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_vc17_amd64.zip[libcouchbase-3.3.18_vc17_amd64.zip]
+| Visual Studio 2015 TLS (VC14) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_vc14_amd64_openssl3.zip[libcouchbase-3.3.18_vc14_amd64_openssl3.zip]
+| Visual Studio 2017 TLS (VC15) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_vc15_amd64_openssl3.zip[libcouchbase-3.3.18_vc15_amd64_openssl3.zip]
+| Visual Studio 2019 TLS (VC16) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_vc16_amd64_openssl3.zip[libcouchbase-3.3.18_vc16_amd64_openssl3.zip]
+| Visual Studio 2022 TLS (VC17) | x86_64       | https://packages.couchbase.com/clients/c/libcouchbase-3.3.18_vc17_amd64_openssl3.zip[libcouchbase-3.3.18_vc17_amd64_openssl3.zip]
+|===
+
 === Version 3.3.17 (11 June 2025)
 
 https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.17/index.html[API Reference]
