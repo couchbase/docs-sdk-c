@@ -1,6 +1,7 @@
 = Client Settings
 :description: Client settings
 :nav-title: Client Settings
+:page-toclevels: 2
 :page-topic-type: reference
 :page-aliases: ROOT:client-settings
 
