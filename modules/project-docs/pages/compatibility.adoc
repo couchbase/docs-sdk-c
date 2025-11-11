@@ -5,7 +5,7 @@ Plus notes on Cloud, networks, and AWS Lambda.
 :page-aliases: ROOT:overview,ROOT:compatibility-versions-features,compatibility-versions-features
 :page-toclevels: 2
 :sdk_api: 3.3
-:server_version: 7.1
+:server_version: 8.0
 
 
 [abstract]
@@ -47,13 +47,13 @@ It is best to upgrade either the SDK or the Couchbase version you are using.
 | *✔*
 | *✔*
 
-| *Server 7.1-7.6*
-| *◎*
-| *◎*
+| *Server 7.1-8.0*
+| *✖*
+| *✖*
 | *✔* ①
 |===
 
-① The C SDK 3.3.12 is compatible with Server 7.6, but does not contain APIs for some of the 
+① The C SDK 3.3.12+ is compatible with Server 7.6 - 8.0, but does not contain APIs for some of the 
 xref:7.6@server:introduction:whats-new.adoc[newer features],
 specifically LCB 3.3.x does not contain APIs for Vector Search, Scoped Search Indexes, KV Range Scan, or Sub-Doc Read-from-Replica.
 
@@ -76,11 +76,11 @@ Libcouchbase (the C SDK) is tested and supported on the following platforms:
 [discrete]
 === GNU/Linux
 
-* Amazon Linux 2
-* Red Hat Enterprise Linux 7, 8, & 9 (from LCB 3.3.5)
+* Amazon Linux 2 & 2023
+* Red Hat Enterprise Linux 7, 8, 9 (from LCB 3.3.5), & 10 (from LCB 3.3.18)
 * CentOS 7
-* Ubuntu (LTS) 16.04 (_Xenial_), 18.04 (_Bionic_), 20.04 (_Focal_), & 22.04 (_Jammy_ -- from LCB 3.3.3)
-* Debian 10 (_Buster_), Debian 11 (_Bullseye_), and (since LCB 3.13) Debian 12 (_Bookworm_).
+* Ubuntu (LTS) 22.04 (_Jammy_ -- from LCB 3.3.3) & 24.04 (_Noble_ -- from 3.3.13)
+* Debian 11 (_Bullseye_), and (since LCB 3.13) Debian 12 (_Bookworm_).
 * Alpine Linux (Since LCB 3.2.5)
 
 NOTE: Some of the OS versions listed above were supported at time of LCB 3.3 release, but have since gone End of Life, so are no longer supported.
@@ -90,13 +90,13 @@ See the xref:sdk-release-notes.adoc#latest-release[release notes page] for the p
 [discrete]
 === Microsoft Windows
 
-Any MS-supported version compatible with Visual Studio 2015 (VC14) or 2017 (VC15).
+Any MS-supported version compatible with Visual Studio 2015 (VC14), 2017 (VC15), 2019 (VC16), or 2022 (VC17).
 
 [discrete]
 === Mac OS X
 
 The current and previous two releases of OS X.
-At time of writing (December 2023): 14 (Sonoma), 13 (Ventura), and 12 (Monterey).
+At time of writing (December 2023):  15 (Sequoia), 14 (Sonoma), and 13 (Ventura).
 M1 ARM architecture is fully supported in the 3.3 C SDK.
 ****
 
@@ -113,7 +113,7 @@ Libcouchbase (C SDK) 3.3 supports AWS Amazon Graviton2 and Apple M1 ARM processo
 [.table-merge-cells]
 [cols="7,5,6,5"]
 |===
-| | Server 6.0 | Server 6.5 & 6.6 | Server 7.0 - 7.6
+| | Server 6.0 | Server 6.5 & 6.6 | Server 7.0 - 8.0
 
 | Enhanced Durability
 3+| All SDK versions
@@ -124,10 +124,6 @@ Libcouchbase (C SDK) 3.3 supports AWS Amazon Graviton2 and Apple M1 ARM processo
 
 | Analytics
 3+| Since 2.10
-
-| Distributed ACID Transactions
-| Not Supported
-2+| C++ Transactions 1.0.0 with Server 6.6 and upwardsfootnote:[{cpp} Transactions installs its own version of LCB.]
 
 | Collections
 | Not Supported
@@ -143,10 +139,20 @@ Libcouchbase (C SDK) 3.3 supports AWS Amazon Graviton2 and Apple M1 ARM processo
 2+| Since SDK 3.0.2
 |===
 
+
+// removed deprecated transactions from the table
+////
+| Distributed ACID Transactions
+| Not Supported
+2+| C++ Transactions 1.0.0 with Server 6.6 and upwardsfootnote:[{cpp} Transactions installs its own version of LCB.]
+////
+
+
+
 include::{cb_server_version}@sdk:shared:partial$network-requirements.adoc[]
 
 include::{cb_server_version}@sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]
 
-include::7.5@sdk:shared:partial$api-version.adoc[tag=api-version]
+include::8.0@sdk:shared:partial$api-version.adoc[tag=api-version]
 
 include::{version-server}@sdk:shared:partial$archive.adoc[tag=link]
