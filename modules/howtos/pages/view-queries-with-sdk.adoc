@@ -1,13 +1,13 @@
 = MapReduce Views Using the C SDK with Couchbase Server
 :description: You can use MapReduce views to create queryable indexes in Couchbase Data Platform.
 :navtitle: MapReduce Views
-:page-topic-type: howto
+:page-edition: Deprecated
 :page-aliases: ROOT:view-queries-with-sdk
 
 [abstract]
 {description}
 
-include::{cb_server_version}@sdk:shared:partial$views.adoc[tag=deprecate]
+include::8.0@sdk:shared:partial$views.adoc[tag=deprecate2]
 
 
 include::{cb_server_version}@sdk:shared:partial$views.adoc[tag=views-intro]
