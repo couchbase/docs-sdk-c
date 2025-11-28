@@ -265,6 +265,8 @@ Included are the header files, release and debug variants of the DLLs and import
 Note that the C SDK does not have any preferred installation path, and it is up to you to determine where to place ``libcouchbase.dll``.
 
 Be sure to select the proper package for the compiler and architecture your application is using.
+Binaries are linked from the release notes page for each libcouchbase release --
+we strongly recommend xref:project-docs:sdk-release-notes.adoc#latest-release[downloading the latest release].
 
 [NOTE]
 ====
