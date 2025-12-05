@@ -2,12 +2,15 @@
 :description: Fields within a document can be securely encrypted by the SDK, to support FIPS-140-2 compliance.
 :page-topic-type: howto
 :page-edition: Enterprise Edition
-:page-status: Developer Preview
 :page-aliases: ROOT:encrypting-using-sdk.adoc
 
 [abstract]
 {description}
 
 Field Level Encryption is normally carried out at a higher level than _libcouchbase_ (LCB).
-It is available in all of the LCB 'wrapper' SDKs: Node.js, PHP, Python.
 It is not available directly in LCB. 
+
+If this is a requirement, we suggest considering a migration to the xref:cxx-sdk:hello-world:overview.adoc[{cpp}] SDK,
+which includes xref:cxx-sdk:howtos:encrypting-using-sdk.adoc[Field Level Encryption].
+
+Alternately, take a look at Capella Operational and self-managed Couchbase Server's xref:server:learn:security/native-encryption-at-rest-overview.adoc[Native Encryption at Rest] feature.
