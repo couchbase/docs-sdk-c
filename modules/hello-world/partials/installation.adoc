@@ -29,9 +29,9 @@ To configure the repository:
 | Amazon Linux 2023  | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/amzn2023/x86_64
 | Amazon Linux 2     | AArch64 | \https://packages.couchbase.com/clients/c/repos/rpm/amzn2/aarch64
 | Amazon Linux 2     | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/amzn2/x86_64
-| Enterprise Linux 7 | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/el7/x86_64
 | Enterprise Linux 8 | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/el8/x86_64
 | Enterprise Linux 9 | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/el9/x86_64
+| Enterprise Linux 10 | 64-bit | \https://packages.couchbase.com/clients/c/repos/rpm/el10/x86_64
 |===
 
 . Create a `couchbase.repo` file in your `/etc/yum.repos.d` directory.  It should look similar to the following:
@@ -40,8 +40,8 @@ To configure the repository:
 ----
 [couchbase]
 enabled = 1
-name = libcouchbase package for centos7 x86_64
-baseurl = https://packages.couchbase.com/clients/c/repos/rpm/el7/x86_64
+name = libcouchbase package for centos10 x86_64
+baseurl = https://packages.couchbase.com/clients/c/repos/rpm/el10/x86_64
 gpgcheck = 1
 gpgkey = https://packages.couchbase.com/clients/c/repos/rpm/couchbase.key
 ----
@@ -61,12 +61,10 @@ Repositories are available for the following distributions:
 [cols=".<2,.^9"]
 |===
 | Distribution            | Repository Entry
-| Ubuntu 16.04 ("xenial") | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu1604 xenial xenial/main``
-| Ubuntu 18.04 ("bionic") | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu1804 bionic bionic/main``
-| Ubuntu 20.04 ("focal")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu2004 focal focal/main``
 | Ubuntu 22.04 ("jammy")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu2204 jammy jammy/main``
-| Debian 10 ("buster")    | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian10 buster buster/main``
+| Ubuntu 24.04 ("noble")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/ubuntu2404 noble noble/main``
 | Debian 11 ("bullseye")  | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian11 bullseye bullseye/main``
+| Debian 12 ("bookworm")    | ``deb \https://packages.couchbase.com/clients/c/repos/deb/debian12 bookworm bookworm/main``
 |===
 
 Note that only Ubuntu LTS (long term support) releases are supported.
@@ -118,6 +116,8 @@ $ sudo yum check-update
 $ sudo yum search libcouchbase
 ----
 
+// I think we can remove this now?
+////
 Starting from 3.3.1 libcouchbase RPMs for CentOS 7 require OpenSSL 1.1, because Couchbase Capella
 https://docs.couchbase.com/cloud/security/security.html#security-highlights[requires modern cyphers].
 
@@ -130,6 +130,7 @@ sudo yum install -y epel-release
 ----
 $ sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
 ----
+////
 ====
 
 
