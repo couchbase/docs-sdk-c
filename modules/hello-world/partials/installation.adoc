@@ -115,22 +115,6 @@ $ sudo yum check-update
 ----
 $ sudo yum search libcouchbase
 ----
-
-// I think we can remove this now?
-////
-Starting from 3.3.1 libcouchbase RPMs for CentOS 7 require OpenSSL 1.1, because Couchbase Capella
-https://docs.couchbase.com/cloud/security/security.html#security-highlights[requires modern cyphers].
-
-[source,console]
-----
-sudo yum install -y epel-release
-----
-
-[source,console]
-----
-$ sudo yum install libcouchbase3 libcouchbase-devel libcouchbase3-tools
-----
-////
 ====
 
 
