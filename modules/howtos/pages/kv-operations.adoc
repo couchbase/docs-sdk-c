@@ -142,7 +142,7 @@ var result = await collection.Replace("document-key", document,
 Expiration sets an explicit time to live (TTL) for a document.
 We'll discuss modifying `Expiration` in more details xref:#expiration-ttl[below].
 For a discussion of item (Document) _vs_ Bucket expiration, see the
-xref:7.1@server:learn:buckets-memory-and-storage/expiration.adoc#expiration-bucket-versus-item[Expiration Overview page].
+xref:{version-common}@server:learn:buckets-memory-and-storage/expiration.adoc#expiration-bucket-versus-item[Expiration Overview page].
 
 [source,csharp]
 ----
@@ -168,7 +168,7 @@ include::devguide:example$c/cas.cc[tag=cas]
 
 See the {lcb_doc_src_link}/modules/devguide/examples/c/cas.cc[code sample^] for use in context.
 ////
-In Couchbase Server releases before 6.5, Durability was set with these two options -- see the xref:https://docs.couchbase.com/dotnet-sdk/2.7/durability.html[6.0 Durability documentation] -- covering  how many replicas the operation must be propagated to and how many persisted copies of the modified record must exist.
+In Couchbase Server releases before 6.5, Durability was set with these two options -- see the xref:https://docs-archive.couchbase.com/dotnet-sdk/2.7/durability.html[6.0 Durability documentation] -- covering  how many replicas the operation must be propagated to and how many persisted copies of the modified record must exist.
 Couchbase Data Platform 6.5 refines these two options, with xref:6.5@server:learn:data/durability.adoc[Synchronous Replication] -- although they remain essentially the same in use -- see xref:#durability[Durability, below].
 ////
 
@@ -350,7 +350,7 @@ See the {lcb_doc_src_link}/modules/devguide/examples/c/counter.cc[code sample^] 
 TIP: Setting the document expiry time only works when a document is created, and it is not possible to update the expiry time of an existing counter document with the Increment method -- to do this during an increment, use with the `Touch()` method.
 
 
-include::7.1@sdk:shared:partial$atomic.adoc[tag=xdcr]
+include::{version-common}@sdk:shared:partial$atomic.adoc[tag=xdcr]
 
 
 == Additional Resources
