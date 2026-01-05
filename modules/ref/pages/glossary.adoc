@@ -1,1 +1,1 @@
-include::7.0@sdk:pages:partial$glossary.adoc[]
+include::8.0@sdk:pages:partial$glossary.adoc[]
