@@ -7,8 +7,9 @@ nav:
 asciidoc:
   attributes:
     version-server: '8.0'
+    version-common: '8.0'
     name-sdk: C SDK
-    cb_server_version: '7.1'
+    cb_server_version: '8.0'
     lcb_current_version: '3.3'
     lcb_api_link: https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.18
     lcb_src_link: https://github.com/couchbase/libcouchbase/blob/3.3.18
