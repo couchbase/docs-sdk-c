@@ -4,5 +4,5 @@
 [abstract]
 {description}
 
-Please see the xref:7.1@server:learn:data/scopes-and-collections.adoc[Collections Overview documents] in the Server docs.
+Please see the xref:{version-common}@server:learn:data/scopes-and-collections.adoc[Collections Overview documents] in the Server docs.
 
