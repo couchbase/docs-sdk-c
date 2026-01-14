@@ -1,5 +1,5 @@
 = Distributed Transactions from the C SDK
-:description: The C++ Transactions built upon the C SDK.
+:description: {cpp} Transactions built upon the C SDK have been replaced with native {cpp} SDK ACID transactions.
 :navtitle: ACID Transactions
 :page-topic-type: howto
 :page-aliases: acid-transactions
@@ -9,8 +9,10 @@
 {description}
 
 
-Transactions are not available directly via the C SDK. Although our {cpp} Distributed ACID Transactions are built upon the C SDK it doesn't expose any C symbols explicitly. 
-Applications built using C SDK and {cpp} Transactions can run in parallel without interfering with each other -- 
-more details on our xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc[C++ Distributed Transactions] pages.
+Transactions are not available directly via the C SDK. 
+
+Previously a version of {cpp} Distributed ACID Transactions was built upon the C SDK, although not exposing any C symbols explicitly. 
+This has now been deprecated, and customers are recommended to explore
+xref:cxx-sdk:howtos:distributed-acid-transactions-from-the-sdk.adoc[native {cpp} SDK ACID transactions].
 
 
