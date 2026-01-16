@@ -3,6 +3,7 @@
 :nav-title: Documents & Doc Ops
 :page-topic-type: concept
 :page-aliases: ROOT:documents,ROOT:documents-basics,ROOT:documents-atomic
+:page-toclevels: 2
 :link-with-underscores: {lcb_api_link}/group__lcb-counter.html#gab4462a5e34c3d94fbce946cb6c5351d1
 
 [abstract]
