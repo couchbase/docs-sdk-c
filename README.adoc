@@ -42,4 +42,4 @@ See the contributing guide to learn more.
 
 == Docs License
 
-©2025 Couchbase, Inc. This work is licensed under CC BY-NC-SA 4.0.
+©2026 Couchbase, Inc. This work is licensed under CC BY-NC-SA 4.0.
