@@ -119,4 +119,4 @@ For community help, visit the https://forums.couchbase.com/c/c-sdk/7[Couchbase f
 include::{version-common}@sdk:shared:partial$archive.adoc[tag=link]
 
 
-include::{version-common}@sdk:shared:partial$columnar-available.adoc[tag=initial-availability]
+include::{version-common}@sdk:shared:partial$columnar-available.adoc[tag=initial-availability-o]
