@@ -15,7 +15,8 @@
 .Advanced Data Operations
 * xref:howtos:concurrent-async-apis.adoc[Async & Batching APIs]
 * xref:howtos:concurrent-document-mutations.adoc[Concurrent Document Mutations]
-* xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc[{cpp} Distributed ACID Transactions]
+// * xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc[{cpp} Distributed ACID Transactions]
+* xref:howtos:distributed-acid-transactions-from-the-sdk.adoc[Couchbase ACID Transactions]
 //* xref:howtos:durability.adoc[Durability]
 
 .Managing Couchbase

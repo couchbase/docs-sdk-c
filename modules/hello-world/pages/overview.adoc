@@ -88,7 +88,7 @@ The documentation supplements the practical Howto docs with references and xref:
 [.content]
 Leverage the new Couchbase Server Scopes and Collection features to build multi-tenant micro-service application.
 
-* xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc[{cpp} Distributed ACID Transactions from the C SDK]
+// * xref:1.0@cxx-txns::distributed-acid-transactions-from-the-sdk.adoc[{cpp} Distributed ACID Transactions from the C SDK]
 * xref:cbc.adoc[LCB includes our command line tools]
 
 

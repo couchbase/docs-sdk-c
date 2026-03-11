@@ -1,18 +1,18 @@
-= Distributed Transactions from the C SDK
-:description: {cpp} Transactions built upon the C SDK have been replaced with native {cpp} SDK ACID transactions.
-:navtitle: ACID Transactions
-:page-topic-type: howto
-:page-aliases: acid-transactions
+= Using Couchbase Transactions
+// :reftext: Distributed ACID Transactions from the Rust SDK
+:description: Distributed ACID Transactions are not available for the C SDK. Strong durable gurarantees within a single bucket, and some re-architecture, may achieve similar ends within the C SDK.
+:page-toclevels: 2
 
-
+////
 [abstract]
 {description}
+////
 
 
-Transactions are not available directly via the C SDK. 
-
+Distributed ACID Transactions are not available for the C SDK.
 Previously a version of {cpp} Distributed ACID Transactions was built upon the C SDK, although not exposing any C symbols explicitly. 
 This has now been deprecated, and customers are recommended to explore
 xref:cxx-sdk:howtos:distributed-acid-transactions-from-the-sdk.adoc[native {cpp} SDK ACID transactions].
 
 
+include::{version-common}@sdk:shared:partial$acid-transactions.adoc[tag=other]
