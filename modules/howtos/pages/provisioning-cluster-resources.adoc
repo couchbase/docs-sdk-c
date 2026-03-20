@@ -125,7 +125,7 @@ For those occasions when you do, please see the relevant API docs:
 
 // * Query
 
-// * Search - note & link to FTS page & API?
+// * Search - note & link to FTS/Search Service page & API?
 
 == View Management
 
