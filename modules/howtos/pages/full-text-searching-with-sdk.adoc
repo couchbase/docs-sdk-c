@@ -1,5 +1,5 @@
-= Full Text Search (FTS) Using the C SDK with Couchbase Server
-:description: You can use the Full-Text Search service (FTS) to create queryable full-text indexes in Couchbase Server.
+= Search Service Using the C SDK with Couchbase Server
+:description: You can use the Search service to create queryable Search indexes in Couchbase Server.
 :navtitle: Searching from the SDK
 :page-topic-type: howto
 
@@ -8,14 +8,14 @@
 {description}
 
 
-Full-Text Search or FTS allows you to create, manage, and query full text indexes on JSON documents stored in Couchbase buckets.
+Search Service allows you to create, manage, and query Search indexes on JSON documents stored in Couchbase buckets.
 It uses natural language processing for querying documents, provides relevance scoring on the results of your queries, and has fast indexes for querying a wide range of possible text searches.
-Some of the supported query types include simple queries like Match and Term queries; range queries like Date Range and Numeric Range; and compound queries for conjunctions, disjunctions, and/or boolean queries.
-The C SDK exposes an API for performing FTS queries which abstracts some of the complexity of using the underlying REST API.
+Some of the supported query types include queries like Match and Term queries, range queries like Date Range and Numeric Range, compound queries for conjunctions, disjunctions, and boolean queries.
+The C SDK exposes an API for performing Search queries which abstracts some of the complexity of using the underlying REST API.
 
 NOTE: When using a Couchbase version < 6.5 you must create a valid Bucket connection using `cluster.Bucket(name)` before you can use Search.
 
-// As of Couchbase Server 6.5, FTS...
+// As of Couchbase Server 6.5, Search Service (FTS)...
 
 == Getting Started
 
