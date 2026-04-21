@@ -120,3 +120,67 @@ include::{version-common}@sdk:shared:partial$archive.adoc[tag=link]
 
 
 include::{version-common}@sdk:shared:partial$columnar-available.adoc[tag=initial-availability-o]
+
+
+////
+== icon:code[] Couchbase Operational Cluster Feature Compatibility
+
+// include::project-docs:deployment.adoc[tag=feature-compat]
+
+
+All of the SDKs have API compatibility with most of the features in Couchbase Operational Clusters --
+whether self-managed, or Capella.
+The following table covers possible exceptions, and gives the version of the C SDK (libcouchbase) and Couchbase Server with which some features were introduced.
+
+Note that the xref:cxx:hello-world:overview.adoc[Couchbase {cpp} SDK] is a more featureful SDK --
+with broader coverage of recent Couchbase Server features --
+as well as a more modern API.
+
+
+.Couchbase Server and SDK Supported Version Matrix
+[.table-merge-cells]
+[cols="8,5,5,5"]
+|===
+| | Server 7.2 | Server 7.6.x  | Server 8.0
+
+| KV Range Scan
+| N/A
+2+| Unsupported
+
+| Zone aware replica reads
+| N/A
+2+| 3.3.14
+
+| Vector Search with Search Vector Index
+| N/A
+2+| Unsupported
+
+| Vector Query using Hyperscale Vector Index
+2+| N/A
+| Unsupported ①
+
+| Vector Query using Composite (GSI & vector) index
+2+| N/A
+| Unsupported ①
+
+| Distributed ACID Transactions  
+3+| Unsupported
+
+| DNS SRV refresh for serverless environments (AWS Lambda, Azure Functions, and GCP Functions)
+3+| Unsupported
+
+| Circuit Breakers
+3+| Unsupported
+
+| OTel 
+3+| Unsupported
+
+| Field Level Encryption 
+3+| Unsupported
+
+| Cloud Native Gateway  
+3+| Unsupported
+|===
+
+<1> As part of the standard SDK {sqlpp} API, it should be compatible with all versions of the SDK -- but it has not been tested.
+////
