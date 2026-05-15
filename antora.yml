@@ -12,6 +12,6 @@ asciidoc:
     name_platform_c: 'c'
     cb_server_version: '8.0'
     lcb_current_version: '3.3'
-    lcb_api_link: https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.18
-    lcb_src_link: https://github.com/couchbase/libcouchbase/blob/3.3.18
+    lcb_api_link: https://docs.couchbase.com/sdk-api/couchbase-c-client-3.3.19
+    lcb_src_link: https://github.com/couchbase/libcouchbase/blob/3.3.19
     lcb_doc_src_link: https://github.com/couchbase/docs-sdk-c/blob/release/3.3
