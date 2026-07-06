@@ -3,7 +3,7 @@
 :navtitle: Release Notes
 :page-topic-type: project-doc
 :page-aliases: ROOT:sdk-release-notes,ROOT:relnotes-c-sdk,ROOT:release-notes,ROOT:download-install,ROOT:download-list
-:name_platform_lc: 'c'
+:name_platform_lc: c
 
 
 [abstract]
